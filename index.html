@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Live Chat</title>
+    <link rel="stylesheet" href="./css/style.css" />
   </head>
   <body>
     <header>
@@ -14,48 +15,51 @@
       </nav>
     </header>
     <main>
-      <section id="sidebar">
-        <div class="container">
-          <div class="container-body">
-            <div class="label">My chats (2)</div>
-            <div class="content">
-              <div class="chat-item">
-                <div class="chat-item-avatar">Tina Cornell</div>
-                <div class="chat-item-content">
-                  <p class="chat-item-title">Visitor</p>
-                  <p class="chat-item-text">The test message</p>
-                </div>
-                <div class="chat-item-info">
-                  <span class="chat-item-time">15s</span>
-                </div>
+      <section id="sidebar" class="container">
+        <div class="container-body">
+          <div class="label">My chats (2)</div>
+          <div class="content">
+            <div class="chat-item">
+              <div class="chat-item-avatar">TC</div>
+              <div class="chat-item-content">
+                <p class="chat-item-title">Tina Cornell</p>
+                <p class="chat-item-text">The test message</p>
               </div>
-              <div class="chat-item">
-                <div class="chat-item-avatar">TU</div>
-                <div class="chat-item-content">
-                  <p class="chat-item-title">Test User</p>
-                  <p class="chat-item-text">
-                    Long messages should end with ellipses.
-                  </p>
-                </div>
-                <div class="chat-item-info">
-                  <span class="chat-item-time">35m</span>
-                  <span class="chat-item-badge">2</span>
-                </div>
+              <div class="chat-item-info">
+                <span class="chat-item-time">15s</span>
+              </div>
+            </div>
+            <div class="chat-item">
+              <div class="chat-item-avatar">TU</div>
+              <div class="chat-item-content">
+                <p class="chat-item-title">Test User</p>
+                <p class="chat-item-text">
+                  Long messages should end with ellipses.
+                </p>
+              </div>
+              <div class="chat-item-info">
+                <span class="chat-item-time">35m</span>
               </div>
             </div>
           </div>
         </div>
       </section>
-      <section id="main">
-        <div class="container">
-          <div class="container__title">Tina Cornell</div>
-          <div class="container__body">
-            <div class="chat-message">
-              <div class="chat-message-avatar"></div>
+      <section id="main" class="container">
+        <div class="container-title">Tina Cornell</div>
+        <div class="container-body">
+          <div class="chat-message-container">
+            <div class="chat-message-title">Tina Cornell</div>
+            <div class="chat-message-group">
+              <div class="chat-message-avatar">TC</div>
               <div class="chat-message-content">
-                <p class="chat-message-text">
-                  Long messages should end with ellipses.
-                </p>
+                <div class="chat-message-box">
+                  <div class="chat-message-text">
+                    Hi, I'm looking for wireless noise-canceling headphones.
+                  </div>
+                </div>
+                <div class="chat-message-box">
+                  <div class="chat-message-text">Ideally white ones.</div>
+                </div>
               </div>
             </div>
           </div>
