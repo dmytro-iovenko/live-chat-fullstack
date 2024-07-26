@@ -17,6 +17,8 @@
   --text: black;
   --text-avatar: white;
   --text-grey: grey;
+  --message-in: lightgrey;
+  --message-out: lightblue;
   /* Avatar colors */
   --avatar-1: #227093;
   --avatar-2: #ff5252;
@@ -80,7 +82,6 @@ main {
         margin-left: 0.5rem;
       }
       .content {
-        font-size: 0.85rem;
         display: flex;
         flex-direction: column;
         margin: 0.5rem 0;
@@ -91,14 +92,12 @@ main {
           color: var(--text-grey);
           border-radius: 0.5rem;
           display: flex;
-          /* align-items: center; */
           gap: 0.5rem;
           padding: 0.5rem;
           .chat-item-avatar {
             border-radius: 0.5rem;
             background-color: var(--avatar-2);
             color: var(--text-avatar);
-            font-weight: bold;
             min-width: 2.5rem;
             min-height: 2.5rem;
             display: flex;
@@ -106,6 +105,7 @@ main {
             justify-content: center;
           }
           .chat-item-content {
+            font-size: 0.85rem;
             flex-grow: 1;
             overflow: hidden;
             > * {
@@ -120,8 +120,112 @@ main {
           .chat-item-info {
             display: flex;
             flex-direction: column;
-            .chat-item-time {
-              font-size: 1rem;
+          }
+        }
+      }
+      .chat-container {
+        .chat-messages {
+          display: flex;
+          flex-direction: column;
+          gap: 0.25rem;
+          /* all chat messages */
+          .chat-message {
+            display: flex;
+            flex-direction: column;
+            .chat-message-title {
+              display: none;
+              font-size: 0.85rem;
+              color: var(--text-grey);
+            }
+            .chat-message-group {
+              display: flex;
+              gap: 0.25rem;
+              align-items: start;
+              .chat-message-avatar {
+                visibility: hidden;
+                background-color: var(--avatar-2);
+                border-radius: 0.5rem;
+                color: var(--text-avatar);
+                min-width: 2.5rem;
+                min-height: 2.5rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+              }
+              .chat-message-content {
+                padding: 0.5rem;
+                min-height: 2.5rem;
+                .chat-message-text {
+                  overflow-wrap: anywhere;
+                }
+              }
+            }
+          }
+          /* all incoming messages */
+          .message-in {
+            .chat-message-title {
+              margin-left: 2.75rem;
+            }
+            .chat-message-content {
+              background-color: var(--message-in);
+              border-top-right-radius: 0.5rem;
+              border-bottom-right-radius: 0.5rem;
+            }
+          }
+          /* the first incoming message in the group */
+          .message-in:first-child,
+          .message-out + :not(.message-out) {
+            .chat-message-content {
+              border-top-left-radius: 0.5rem;
+            }
+            .chat-message-title {
+              display: block;
+            }
+            .chat-message-avatar {
+              visibility: visible;
+            }
+          }
+          /* the last incoming message in the group */
+          .message-in:last-child,
+          .message-in:has(+ :not(.message-in)) {
+            .chat-message-content {
+              border-bottom-left-radius: 0.5rem;
+            }
+          }
+          /* all outcoming messages */
+          .message-out {
+            align-self: flex-end;
+            .chat-message-title {
+              margin-right: 2.75rem;
+              text-align: end;
+            }
+            .chat-message-group {
+              flex-direction: row-reverse;
+            }
+            .chat-message-content {
+              background-color: var(--message-out);
+              border-top-left-radius: 0.5rem;
+              border-bottom-left-radius: 0.5rem;
+            }
+          }
+          /* the first outcoming message in the group */
+          .message-out:first-child,
+          .message-in + :not(.message-in) {
+            .chat-message-content {
+              border-top-right-radius: 0.5rem;
+            }
+            .chat-message-title {
+              display: block;
+            }
+            .chat-message-avatar {
+              visibility: visible;
+            }
+          }
+          /* the last outcoming message in the group */
+          .message-out:last-child,
+          .message-out:has(+ :not(.message-out)) {
+            .chat-message-content {
+              border-bottom-right-radius: 0.5rem;
             }
           }
         }
