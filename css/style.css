@@ -19,7 +19,7 @@
   --text: black;
   --text-avatar: white;
   --text-grey: grey;
-  --message-in: lightgrey;
+  --message-in: #eee;
   --message-out: lightblue;
   /* Avatar colors */
   --avatar-1: #227093;
@@ -29,10 +29,10 @@
 }
 
 .bg-primary {
-    background-color: var(--primary);
+  background-color: var(--primary);
 }
 .bg-secondary {
-    background-color: var(--secondary);
+  background-color: var(--secondary);
 }
 
 *,
@@ -140,42 +140,51 @@ main {
         display: flex;
         flex-direction: column;
         .message-area {
-          /* background-color: yellow; */
           border: 1px solid var(--border);
           box-shadow: 0 0 0.5rem 0 var(--border);
           padding: 0.5rem;
-          textarea {
-            background-color: var(--highlight);
-            border: 1px solid var(--border);
-            border-radius: 0.5rem;
-            height: 5rem;
-            width: 100%;
-            resize: none;
-            padding: 0.5rem;
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+          .message-box {
+            #message-text {
+              border: 1px solid var(--border);
+              border-radius: 0.5rem;
+              height: 5rem;
+              width: 100%;
+              resize: none;
+              vertical-align: top;
+              padding: 0.5rem;
+            }
+            #message-text:focus {
+              outline: none;
+              background-color: var(--highlight);
+              box-shadow: 0 0 10px var(--border);
+            }
           }
           .message-buttons {
             display: flex;
             justify-content: space-between;
-            gap: 0.25rem;
-          }
-          .message-area-btn:hover {
-            background-color: var(--highlight);
-          }
-          .message-area-btn {
-            border: 1px solid var(--border);
-            border-radius: 0.5rem;
-            height: 2rem;
-            min-width: 2rem;
-            color: var(--text);
-            /* font-weight: bold; */
-            text-decoration: none;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 0.5rem;
-          }
-          .placeholder {
-            flex: 1;
+            gap: 0.5rem;
+            .message-area-btn:hover {
+              background-color: var(--highlight);
+              box-shadow: 0 0 10px var(--border);
+            }
+            .message-area-btn {
+              border: 1px solid var(--border);
+              border-radius: 0.5rem;
+              height: 2rem;
+              min-width: 2rem;
+              color: var(--text);
+              text-decoration: none;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              padding: 0.25rem;
+            }
+            .placeholder {
+              flex: 1;
+            }
           }
         }
         .chat-messages {
@@ -210,6 +219,19 @@ main {
               .chat-message-content {
                 padding: 0.5rem;
                 min-height: 2.5rem;
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+                .chat-message-image {
+                  display: flex;
+                  img {
+                    max-width: 18rem;
+                    border-radius: 0.5rem;
+                  }
+                  + .chat-message-text {
+                    max-width: 18rem;
+                  }
+                }
                 .chat-message-text {
                   overflow-wrap: anywhere;
                 }
@@ -297,7 +319,7 @@ main {
             border-bottom: 1px solid var(--border);
             padding: 0.25rem 1rem;
             font-weight: bold;
-        }
+          }
         }
         .tbody {
           display: table-row-group;
@@ -314,6 +336,8 @@ main {
             border-right: 1px solid var(--border);
             .tflex {
               display: flex;
+              align-items: center;
+              white-space: nowrap;
               gap: 0.5rem;
               > div {
                 display: flex;
@@ -323,13 +347,13 @@ main {
                 border-radius: 50%;
                 color: var(--text-avatar);
                 min-width: 1.5rem;
-                min-height: 1.5rem;
+                height: 1.5rem;
                 font-size: 0.7rem;
                 display: flex;
                 align-items: center;
                 justify-content: center;
               }
-           }
+            }
           }
           .th:first-child,
           .td:first-child {
@@ -350,4 +374,11 @@ main {
   #main {
     flex-grow: 1;
   }
+  /* .container-body {
+    width: 100vw;
+  } */
+  /* #visitors-container {
+    width: calc(100vw-4rem);
+    overflow-x:auto;
+  } */
 }
