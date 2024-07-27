@@ -1,0 +1,15 @@
+.flag {
+  width: 2rem;
+  height: 2rem;
+  background-size: cover;
+}
+
+.flag-us {
+  background-image: url("https://flagsapi.com/US/flat/64.png");
+}
+.flag-ca {
+  background-image: url("https://flagsapi.com/CA/flat/64.png");
+}
+.flag-fr {
+  background-image: url("https://flagsapi.com/FR/flat/64.png");
+}

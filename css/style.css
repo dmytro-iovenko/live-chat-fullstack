@@ -1,3 +1,5 @@
+@import url(flag-icons.css);
+
 /* body {
     border: 2px solid red;
     header {
@@ -25,6 +27,14 @@
   /* Theme color */
   --theme: var(--primary);
 }
+
+.bg-primary {
+    background-color: var(--primary);
+}
+.bg-secondary {
+    background-color: var(--secondary);
+}
+
 *,
 *::before,
 *::after {
@@ -142,7 +152,7 @@ main {
             width: 100%;
             resize: none;
             padding: 0.5rem;
-        }
+          }
           .message-buttons {
             display: flex;
             justify-content: space-between;
@@ -272,6 +282,63 @@ main {
             .chat-message-content {
               border-bottom-right-radius: 0.5rem;
             }
+          }
+        }
+      }
+      .table {
+        display: table;
+        width: 100%;
+        .theader {
+          display: table-header-group;
+          .th {
+            display: table-cell;
+            vertical-align: middle;
+            border-right: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            padding: 0.25rem 1rem;
+            font-weight: bold;
+        }
+        }
+        .tbody {
+          display: table-row-group;
+          .tr:hover {
+            background-color: var(--highlight);
+          }
+        }
+        .tr {
+          display: table-row;
+          .td {
+            display: table-cell;
+            vertical-align: middle;
+            padding: 0 1rem;
+            border-right: 1px solid var(--border);
+            .tflex {
+              display: flex;
+              gap: 0.5rem;
+              > div {
+                display: flex;
+                align-items: center;
+              }
+              .avatar {
+                border-radius: 50%;
+                color: var(--text-avatar);
+                min-width: 1.5rem;
+                min-height: 1.5rem;
+                font-size: 0.7rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+              }
+           }
+          }
+          .th:first-child,
+          .td:first-child {
+            padding-left: 0;
+          }
+          .th:last-child,
+          .td:last-child {
+            padding-right: 0;
+            border-right: none;
           }
         }
       }
