@@ -103,15 +103,99 @@ main {
     .container-body {
       padding: 1rem;
       flex-grow: 1;
-      .label {
+      /* .label {
         font-size: 1.2rem;
         font-weight: bold;
         margin-left: 0.5rem;
+      } */
+
+      /* Pure CSS Accordion: START --*/
+      /* https://codepen.io/raubaca/pen/PZzpVe */
+      .tab{
+        overflow: hidden;;
       }
-      .content {
+      .tab input {
+        position: absolute;
+        opacity: 0;
+        z-index: -1;
+      }
+      .tab-content {
+        max-height: 0;
+        overflow: hidden;
+        transition: all 0.35s;
+      }
+      .tab-content > div {
+        transition: all 0.35s;
+      }
+      .tab input:checked ~ .tab-content {
+        max-height: 100%;
+      }
+      .tab input:not(:checked) ~ .tab-content > div {
+        transform: translateY(-100%);
+      }
+      .tab-label {
         display: flex;
-        flex-direction: column;
-        margin: 0.5rem 0;
+        cursor: pointer;
+        justify-content: space-between;
+        font-size: 1rem;
+      }
+      .tab-label::after {
+        content: "\276F";
+        min-width: 1rem;
+        min-height: 1rem;
+        text-align: center;
+        transition: all 0.35s;
+      }
+      .tab input:checked + div > .tab-label::after {
+        transform-origin: center center;
+        transform: rotate(90deg);
+      }
+      /*-- Pure CSS Accordion: END --*/
+
+      .section-title {
+        /* font-size: 1.2rem; */
+        font-weight: bold;
+        padding: 0.5rem 0;
+        margin-bottom: 1rem;
+        border-bottom: 1px solid var(--border);
+      }
+      .section-content {
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+        /* overflow: hidden; */
+        .section-column,
+        .input {
+          width: 100%;
+          display: flex;
+          flex-direction: column;
+          gap: 0.25rem;
+          position: relative;
+          /* background-color: #00a449; */
+        }
+        .input {
+          .icon {
+            position: absolute;
+            height: 1rem;
+            width: 1rem;
+            bottom: 1rem;
+            right: 0.5rem;
+            cursor: pointer;
+          }
+          .float-text {
+            position: absolute;
+            right: 0;
+            font-size: 0.8rem;
+            a {
+              text-decoration: none;
+            }
+          }
+        }
+        .input:has(input[disabled]) {
+          .icon {
+            fill: var(--border);
+          }
+        }
         .chat-item:hover {
           background-color: var(--highlight);
         }
@@ -382,50 +466,6 @@ main {
           .td:last-child {
             padding-right: 0;
             border-right: none;
-          }
-        }
-      }
-      .section-title {
-        font-size: 1.2rem;
-        font-weight: bold;
-        padding: 0.5rem 0;
-        margin-bottom: 1rem;
-        border-bottom: 1px solid var(--border);
-      }
-      .section-content {
-        display: flex;
-        justify-content: space-between;
-        gap: 1rem;
-        .section-column,
-        .input {
-          width: 100%;
-          display: flex;
-          flex-direction: column;
-          gap: 0.25rem;
-          position: relative;
-          /* background-color: #00a449; */
-        }
-        .input {
-          .icon {
-            position: absolute;
-            height: 1rem;
-            width: 1rem;
-            bottom: 1rem;
-            right: 0.5rem;
-            cursor: pointer;
-          }
-          .float-text {
-            position: absolute;
-            right: 0;
-            font-size: 0.8rem;
-            a {
-              text-decoration: none;
-            }
-          }
-        }
-        .input:has(input[disabled]) {
-          .icon {
-            fill: var(--border);
           }
         }
       }
