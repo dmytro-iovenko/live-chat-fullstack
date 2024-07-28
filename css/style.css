@@ -42,7 +42,21 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) var(--highlight);
 }
+*::-webkit-scrollbar {
+  width: 0.5rem;
+}
+*::-webkit-scrollbar-track {
+  background: var(--highlight);
+}
+*::-webkit-scrollbar-thumb {
+  background-color: var(--highlight);
+  border-radius: 20px;
+  border: 1px solid var(--border);
+}
+
 body {
   display: flex;
   flex-direction: column;
@@ -95,6 +109,7 @@ main {
     border-right: 1px solid var(--border);
   }
   section {
+    position: relative;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -108,6 +123,11 @@ main {
     .container-body {
       padding: 1rem;
       flex-grow: 1;
+      overflow: hidden;
+      .chat-messages {
+        overflow-y: auto;
+        /* margin-right: -1rem; */
+      }
       /* .label {
         font-size: 1.2rem;
         font-weight: bold;
@@ -156,7 +176,6 @@ main {
         transform: rotate(90deg);
       }
       /*-- Pure CSS Accordion: END --*/
-
       .section-title {
         /* font-size: 1.2rem; */
         font-weight: bold;
@@ -243,9 +262,10 @@ main {
         height: 100%;
         display: flex;
         flex-direction: column;
+        gap: 1rem;
         .message-area {
+          background-color: var(--background);
           border: 1px solid var(--border);
-          box-shadow: 0 0 0.5rem 0 var(--border);
           padding: 0.5rem;
           display: flex;
           flex-direction: column;
@@ -493,7 +513,7 @@ main {
     }
   }
   .popup {
-    position: absolute;
+    position: relative;
     bottom: 0;
     left: 0;
     width: 100%;
@@ -567,7 +587,6 @@ main {
     /* color: var(--border); */
     border: 1px solid var(--border);
   }
-
 }
 
 @keyframes slide-in-bottom {
