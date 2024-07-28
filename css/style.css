@@ -22,17 +22,18 @@
   --message-in: #eee;
   --message-out: lightblue;
   /* Avatar colors */
-  --avatar-1: #227093;
-  --avatar-2: #ff5252;
+  --avatar-1: #8609ff;
+  --avatar-2: #9146ff;
+  --avatar-3: #328dff;
+  --avatar-4: #a372ff;
+  --avatar-5: #00a449;
+  --avatar-6: #ca0005;
+  --avatar-7: #ff5100;
+  --avatar-8: #b08c00;
+  --avatar-9: #00893c;
+  --avatar-0: #06f;
   /* Theme color */
   --theme: var(--primary);
-}
-
-.bg-primary {
-  background-color: var(--primary);
-}
-.bg-secondary {
-  background-color: var(--secondary);
 }
 
 *,
@@ -56,6 +57,7 @@ header {
   nav {
     height: 100%;
     display: flex;
+    align-items: center;
     a {
       height: 100%;
       padding: 1rem;
@@ -64,6 +66,19 @@ header {
     }
     a:hover {
       background-color: var(--highlight);
+    }
+    .profile,
+    .profile:hover {
+      border-radius: 50%;
+      background-color: var(--primary);
+      color: var(--text-avatar);
+      width: 1rem;
+      height: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+      margin-right: 1rem;
     }
   }
 }
@@ -108,13 +123,13 @@ main {
           padding: 0.5rem;
           .chat-item-avatar {
             border-radius: 0.5rem;
-            background-color: var(--avatar-2);
             color: var(--text-avatar);
             min-width: 2.5rem;
             min-height: 2.5rem;
             display: flex;
             align-items: center;
             justify-content: center;
+            user-select: none;
           }
           .chat-item-content {
             font-size: 0.85rem;
@@ -207,7 +222,6 @@ main {
               align-items: start;
               .chat-message-avatar {
                 visibility: hidden;
-                background-color: var(--avatar-2);
                 border-radius: 0.5rem;
                 color: var(--text-avatar);
                 min-width: 2.5rem;
@@ -215,6 +229,7 @@ main {
                 display: flex;
                 align-items: center;
                 justify-content: center;
+                user-select: none;
               }
               .chat-message-content {
                 padding: 0.5rem;
@@ -352,6 +367,10 @@ main {
                 display: flex;
                 align-items: center;
                 justify-content: center;
+                user-select: none;
+              }
+              .tdropdown {
+                display: inline-block;
               }
             }
           }
@@ -365,6 +384,101 @@ main {
             border-right: none;
           }
         }
+      }
+      .section-title {
+        font-size: 1.2rem;
+        font-weight: bold;
+        padding: 0.5rem 0;
+        margin-bottom: 1rem;
+        border-bottom: 1px solid var(--border);
+      }
+      .section-content {
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+        .section-column,
+        .input {
+          width: 100%;
+          display: flex;
+          flex-direction: column;
+          gap: 0.25rem;
+          position: relative;
+          /* background-color: #00a449; */
+        }
+        .input {
+          .icon {
+            position: absolute;
+            height: 1rem;
+            width: 1rem;
+            bottom: 1rem;
+            right: 0.5rem;
+            cursor: pointer;
+          }
+          .float-text {
+            position: absolute;
+            right: 0;
+            font-size: 0.8rem;
+            a {
+                text-decoration: none;
+            }
+          }
+        }
+        .input:has(input[disabled]) {
+          .icon {
+            fill: var(--border);
+          }
+        }
+        /* https://www.w3schools.com/howto/howto_css_tooltip.asp */
+        .tooltip {
+          position: relative;
+          display: inline-block;
+        }
+        .tooltip .tooltiptext {
+          visibility: hidden;
+          width: 120px;
+          background-color: #555;
+          color: #fff;
+          text-align: center;
+          border-radius: 6px;
+          padding: 5px 0;
+          position: absolute;
+          z-index: 1;
+          bottom: 125%;
+          right: -0.5rem;
+          margin-left: -60px;
+          opacity: 0;
+          transition: opacity 0.3s;
+        }
+        .tooltip .tooltiptext::after {
+          content: "";
+          position: absolute;
+          top: 100%;
+          right: 0.6rem;
+          margin-left: -5px;
+          border-width: 5px;
+          border-style: solid;
+          border-color: #555 transparent transparent transparent;
+        }
+        .tooltip:hover .tooltiptext {
+          visibility: visible;
+          opacity: 1;
+        }
+      }
+
+      input {
+        border: 1px solid var(--border);
+        border-radius: 0.5rem;
+        /* width: 100%; */
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+      }
+      input:focus {
+        outline: none;
+        background-color: var(--highlight);
+        box-shadow: 0 0 10px var(--border);
+      }
+      label {
+        font-size: 0.8rem;
       }
     }
   }
