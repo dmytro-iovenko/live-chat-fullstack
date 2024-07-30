@@ -42,19 +42,9 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  scrollbar-width: thin;
-  scrollbar-color: var(--border) var(--highlight);
-}
-*::-webkit-scrollbar {
-  width: 0.5rem;
-}
-*::-webkit-scrollbar-track {
-  background: var(--highlight);
-}
-*::-webkit-scrollbar-thumb {
-  background-color: var(--highlight);
-  border-radius: 20px;
-  border: 1px solid var(--border);
+  /* scrollbar-width: thin;
+  scrollbar-color: var(--border) var(--highlight); */
+  /* -ms-overflow-style: none; */
 }
 
 body {
@@ -124,15 +114,26 @@ main {
       padding: 1rem;
       flex-grow: 1;
       overflow: hidden;
+
+      /* Custom Scrollbar: START */
       .chat-messages {
-        overflow-y: auto;
-        /* margin-right: -1rem; */
+        margin-right: -1rem;
+        padding-right: 0.5rem;
+        scrollbar-gutter: stable;
+        overflow-y: scroll;
       }
-      /* .label {
-        font-size: 1.2rem;
-        font-weight: bold;
-        margin-left: 0.5rem;
-      } */
+      .chat-messages::-webkit-scrollbar {
+        width: 0.5rem;
+        height: 1rem;
+      }
+      .chat-messages::-webkit-scrollbar-thumb {
+        background-color: var(--highlight);
+        border-radius: 0.25rem;
+      }
+      .chat-messages:hover::-webkit-scrollbar-thumb {
+        background-color: var(--border);
+      }
+      /* Custom Scrollbar: END */
 
       /* Pure CSS Accordion: START --*/
       /* https://codepen.io/raubaca/pen/PZzpVe */
