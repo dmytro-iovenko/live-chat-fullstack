@@ -47,6 +47,20 @@
   /* -ms-overflow-style: none; */
 }
 
+/* Custom Scrollbar: START */
+*::-webkit-scrollbar {
+  width: 0.5rem;
+  height: 1rem;
+}
+*::-webkit-scrollbar-thumb {
+  background-color: var(--highlight);
+  border-radius: 0.25rem;
+}
+*:hover::-webkit-scrollbar-thumb {
+  background-color: var(--border);
+}
+/* Custom Scrollbar: END */
+
 body {
   display: flex;
   flex-direction: column;
@@ -114,27 +128,12 @@ main {
       padding: 1rem;
       flex-grow: 1;
       overflow: hidden;
-
-      /* Custom Scrollbar: START */
-      .chat-messages {
+      .chat-container .chat-messages {
         margin-right: -1rem;
         padding-right: 0.5rem;
         scrollbar-gutter: stable;
         overflow-y: scroll;
       }
-      .chat-messages::-webkit-scrollbar {
-        width: 0.5rem;
-        height: 1rem;
-      }
-      .chat-messages::-webkit-scrollbar-thumb {
-        background-color: var(--highlight);
-        border-radius: 0.25rem;
-      }
-      .chat-messages:hover::-webkit-scrollbar-thumb {
-        background-color: var(--border);
-      }
-      /* Custom Scrollbar: END */
-
       /* Pure CSS Accordion: START --*/
       /* https://codepen.io/raubaca/pen/PZzpVe */
       .tab {
@@ -513,14 +512,46 @@ main {
         }
         .message-emoji {
           position: absolute;
-          top: -10rem;
+          top: -100%;
           left: 2rem;
           border: 1px solid var(--border);
           border-radius: 0.5rem;
           height: 12rem;
-          min-width: 12rem;
+          width: calc(100% - 4rem);
           background-color: var(--background);
           box-shadow: 0 0 10px var(--border);
+          .tabs-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            overflow: hidden;
+            height: 100%;
+            > input[type="radio"] {
+              padding: 0.25rem;
+              display: none;
+              &:checked + .tab-label {
+                border-bottom: 2px solid var(--primary);
+              }
+            }
+            > input[type="radio"]:not(:checked) + .tab-label + .tab-content {
+              /* hide inactive tabs */
+              display: none;
+            }
+            .tab-label {
+              padding: 0.25rem 1rem;
+              height: 2rem;
+            }
+            .tab-content {
+              display: block;
+              order: 99;
+              overflow-y: auto;
+              border-top: 1px solid var(--border);
+              width: 100%;
+              height: calc(100% - 3rem);
+              padding: 1rem;
+              margin-bottom: 1rem;
+            }
+          }
         }
       }
     }
