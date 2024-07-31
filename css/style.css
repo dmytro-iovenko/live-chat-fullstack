@@ -511,6 +511,17 @@ main {
             flex: 1;
           }
         }
+        .message-emoji {
+          position: absolute;
+          top: -10rem;
+          left: 2rem;
+          border: 1px solid var(--border);
+          border-radius: 0.5rem;
+          height: 12rem;
+          min-width: 12rem;
+          background-color: var(--background);
+          box-shadow: 0 0 10px var(--border);
+        }
       }
     }
   }
