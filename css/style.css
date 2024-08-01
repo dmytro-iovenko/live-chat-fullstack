@@ -542,7 +542,9 @@ main {
               height: 2rem;
             }
             .tab-content {
-              display: block;
+              display: flex;
+              flex-wrap: wrap;
+              gap: 0.5rem;
               order: 99;
               overflow-y: auto;
               border-top: 1px solid var(--border);
@@ -550,6 +552,17 @@ main {
               height: calc(100% - 3rem);
               padding: 1rem;
               margin-bottom: 1rem;
+              .emoji-icon {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-size: 1.5rem;
+                border-radius: 0.5rem;
+                cursor: pointer;
+              }
+              .emoji-icon:hover {
+                background-color: var(--highlight);
+              } 
             }
           }
         }
