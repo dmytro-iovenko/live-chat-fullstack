@@ -103,7 +103,7 @@ header {
 }
 main {
   position: relative;
-  max-height: calc(100vh-3.5rem);
+  /* max-height: calc(100vh - 3.5rem); */
   overflow: hidden;
   flex-grow: 1;
   display: flex;
