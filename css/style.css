@@ -465,6 +465,7 @@ main {
     }
     .container-footer {
       .message-area {
+        position: relative;
         width: 100%;
         background-color: var(--background);
         display: flex;
@@ -510,16 +511,26 @@ main {
             flex: 1;
           }
         }
+        .message-buttons:has(.emoji-btn:hover) ~ .message-emoji,
+        .message-emoji:hover {
+          transform: scale(1);
+        }
         .message-emoji {
           position: absolute;
           top: -100%;
-          left: 2rem;
-          border: 1px solid var(--border);
+          left: 0.5rem;
           border-radius: 0.5rem;
           height: 12rem;
-          width: calc(100% - 4rem);
+          width: 100%;
+          max-width: 25rem;
           background-color: var(--background);
+          border: 1px solid var(--border);
           box-shadow: 0 0 10px var(--border);
+          transform-origin: bottom left;
+          transform: scale(0);
+          transition-delay: 250ms;
+          transition-duration: 0.5s;
+          transition-property: height visibility scale;
           .tabs-container {
             display: flex;
             flex-wrap: wrap;
@@ -544,13 +555,12 @@ main {
             .tab-content {
               display: flex;
               flex-wrap: wrap;
-              gap: 0.5rem;
               order: 99;
               overflow-y: auto;
               border-top: 1px solid var(--border);
               width: 100%;
               height: calc(100% - 3rem);
-              padding: 1rem;
+              padding: 0.75rem;
               margin-bottom: 1rem;
               .emoji-icon {
                 display: flex;
@@ -562,7 +572,7 @@ main {
               }
               .emoji-icon:hover {
                 background-color: var(--highlight);
-              } 
+              }
             }
           }
         }
@@ -651,5 +661,14 @@ main {
 @keyframes slide-in-bottom {
   from {
     transform: translateY(100%);
+  }
+}
+
+@keyframes message-scale-out {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
   }
 }
