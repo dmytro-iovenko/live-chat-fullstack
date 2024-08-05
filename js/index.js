@@ -127,3 +127,13 @@ function createMessage(message = {}) {
 messages.forEach((message) => {
   chatMessages.appendChild(createMessage(message));
 });
+
+// A function to scroll content down
+function scrollDown(content) {
+  if (content.scrollHeight > content.clientHeight) {
+    content.scrollTop = content.scrollHeight;
+  }
+};
+
+// Scroll Chat Messages down
+scrollDown(chatMessages);
