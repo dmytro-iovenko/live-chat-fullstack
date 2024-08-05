@@ -73,7 +73,10 @@ function createMessage(message = {}) {
   const title = chat.appendChild(document.createElement("div"));
   title.classList.add("chat-message-title");
   title.textContent = message.title;
-  const content = chat.appendChild(document.createElement("div"));
+  const group = chat.appendChild(document.createElement("div"));
+  group.classList.add("chat-message-group");
+  const avatar = group.appendChild(createAvatar(message.title));
+  const content = group.appendChild(document.createElement("div"));
   content.classList.add("chat-message-content");
   if (message.image) {
     const image = content.appendChild(document.createElement("div"));
@@ -88,6 +91,36 @@ function createMessage(message = {}) {
     text.textContent = message.text;
   }
   return frag;
+
+  function createAvatar(username) {
+    const initials = getInitials(username);
+    const avatarClass = getAvatarClass(initials);
+
+    const frag = document.createDocumentFragment();
+    const avatar = frag.appendChild(document.createElement("div"));
+    avatar.classList.add("chat-message-avatar");
+    avatar.classList.add(avatarClass);
+    avatar.textContent = initials;
+
+    return avatar;
+
+    // Helper function to convert username into initials
+    function getInitials(username) {
+      const names = username.split(" ").slice(0, 2);
+      const initials = names.map((name) => name.charAt(0).toUpperCase()).join("");
+      return initials;
+    }
+
+    // Helper function to return unique avatar class from the initials
+    function getAvatarClass(initials) {
+      const uniqueMap = {};
+      for (let i = 0; i < initials.length; i++) {
+        const charCode = initials.charCodeAt(i);
+        uniqueMap[initials[i]] = (uniqueMap[initials[i]] || 0) + charCode;
+      }
+      return "avatar-" + (Object.values(uniqueMap).reduce((sum, num) => sum + num, 0) % 10);
+    }
+  }
 }
 
 // Loop through chat messages to display them
