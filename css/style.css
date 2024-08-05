@@ -316,6 +316,8 @@ main {
           }
           /* all messages in the inbound group */
           .message-in {
+            align-self: flex-start;
+            margin-right: 5rem;
             .chat-message-title {
               margin-left: 2.75rem;
             }
@@ -348,6 +350,7 @@ main {
           /* all messages in the outbound group */
           .message-out {
             align-self: flex-end;
+            margin-left: 5rem;
             .chat-message-title {
               margin-right: 2.75rem;
               text-align: end;
