@@ -146,6 +146,7 @@ emoji.addEventListener("click", (event) => {
   if (messageText && event.target.classList.contains("emoji-icon")) {
     const [start, end] = [messageText.selectionStart, messageText.selectionEnd];
     messageText.setRangeText(event.target.textContent, start, end, "select");
+    if (sendButton.disabled) sendButton.disabled = false;
   }
 });
 
