@@ -129,7 +129,7 @@
                 ></textarea>
               </div>
               <div class="message-buttons">
-                <a href="#" class="message-area-btn file-btn">
+                <a href="#" id="attach-btn" class="message-area-btn">
                   <svg
                     focusable="false"
                     aria-hidden="true"
@@ -141,7 +141,7 @@
                     ></path>
                   </svg>
                 </a>
-                <a href="#" class="message-area-btn emoji-btn">
+                <a href="#" id="emoji-btn" class="message-area-btn">
                   <svg
                     focusable="false"
                     aria-hidden="true"
@@ -157,7 +157,7 @@
                     ></path>
                   </svg>
                 </a>
-                <a href="#" class="message-area-btn gif-btn">
+                <a href="#" id="gif-btn" class="message-area-btn">
                   <svg
                     class=""
                     focusable="false"
@@ -171,7 +171,7 @@
                   </svg>
                 </a>
                 <span class="placeholder"></span>
-                <a href="#" class="message-area-btn send-btn" type="submit">
+                <button id="send-btn" class="message-area-btn" type="submit" disabled>
                   <svg
                     focusable="false"
                     aria-hidden="true"
@@ -181,7 +181,7 @@
                     <path d="M2.01 21 23 12 2.01 3 2 10l15 2-15 2z"></path>
                   </svg>
                   <!-- <span>Send</span> -->
-                </a>
+                </button>
               </div>
               <div class="message-emoji">
                 <div class="tabs-container">

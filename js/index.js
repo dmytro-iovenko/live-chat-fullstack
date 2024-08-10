@@ -63,6 +63,7 @@ const messages = [
 
 const chatMessages = document.getElementById("chat-messages");
 const messageText = document.getElementById("message-text");
+const sendButton = document.getElementById("send-btn");
 
 // A builder function to create message in the chat
 function createMessage(message = {}) {
@@ -145,5 +146,14 @@ emoji.addEventListener("click", (event) => {
   if (messageText && event.target.classList.contains("emoji-icon")) {
     const [start, end] = [messageText.selectionStart, messageText.selectionEnd];
     messageText.setRangeText(event.target.textContent, start, end, "select");
+  }
+});
+
+// Enable/Disable Send button
+messageText.addEventListener("input", (event) => {
+  if (sendButton.disabled && event.currentTarget.value !== "") {
+    sendButton.disabled = false;
+  } else if (event.currentTarget.value === "") {
+    sendButton.disabled = true;
   }
 });

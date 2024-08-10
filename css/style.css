@@ -494,11 +494,19 @@ main {
           display: flex;
           justify-content: space-between;
           gap: 0.5rem;
-          .message-area-btn:hover {
+          .message-area-btn:hover:enabled {
             background-color: var(--highlight);
             box-shadow: 0 0 10px var(--border);
           }
+          .message-area-btn:disabled {
+            fill: var(--border);
+            cursor: default;
+          }
+          .message-area-btn:enabled {
+            cursor: pointer;
+          }
           .message-area-btn {
+            background-color: var(--background);
             border: 1px solid var(--border);
             border-radius: 0.5rem;
             height: 2rem;
@@ -514,7 +522,7 @@ main {
             flex: 1;
           }
         }
-        .message-buttons:has(.emoji-btn:hover) ~ .message-emoji,
+        .message-buttons:has(#emoji-btn:hover) ~ .message-emoji,
         .message-emoji:hover {
           transform: scale(1);
         }
