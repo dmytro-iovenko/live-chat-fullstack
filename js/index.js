@@ -167,10 +167,16 @@ messageForm.addEventListener("submit", (event) => {
   const message = {
     id: Date.now(),
     title: "John Doe",
-    text: messageText.value,
+    text: encodeHTML(messageText.value),
     is_outgoing: true,
   };
   chatMessages.appendChild(createMessage(message));
   messageForm.reset();
   scrollDown(chatMessages);
+
+  // Return encoded (safe) text in html format
+  function encodeHTML(text) {
+    const encoded = text.replace(/[\u00A0-\u9999<>\&]/g, (i) => "&#" + i.charCodeAt(0) + ";");
+    return encoded.split(/\r?\n/).join("<br>");
+  }
 });
