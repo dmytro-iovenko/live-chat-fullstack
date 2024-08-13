@@ -165,10 +165,11 @@ messageForm.addEventListener("submit", (event) => {
   event.preventDefault();
   if (messageText.value === "") return;
   const message = {
-    id: Date.now(),
+    id: crypto.randomUUID(),
     title: "John Doe",
     text: encodeHTML(messageText.value),
     is_outgoing: true,
+    timestamp: Date.now(),
   };
   chatMessages.appendChild(createMessage(message));
   messageForm.reset();
