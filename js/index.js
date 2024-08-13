@@ -1,3 +1,6 @@
+const agentName = "John Doe";
+const customerName = "Mary Sue";
+
 const messages = [
   {
     id: 1,
@@ -65,6 +68,8 @@ const chatMessages = document.getElementById("chat-messages");
 const messageForm = document.getElementById("message-form");
 const messageText = document.getElementById("message-text");
 const sendButton = document.getElementById("send-btn");
+const chatTitle = document.getElementById("chat-title");
+chatTitle.textContent = customerName;
 
 // A builder function to create message in the chat
 function createMessage(message = {}) {
@@ -166,7 +171,7 @@ messageForm.addEventListener("submit", (event) => {
   if (messageText.value === "") return;
   const message = {
     id: crypto.randomUUID(),
-    title: "John Doe",
+    title: agentName,
     text: encodeHTML(messageText.value),
     is_outgoing: true,
     timestamp: Date.now(),
