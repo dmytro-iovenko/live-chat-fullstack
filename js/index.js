@@ -177,8 +177,9 @@ messageForm.addEventListener("submit", (event) => {
     timestamp: Date.now(),
   };
   chatMessages.appendChild(createMessage(message));
-  messageForm.reset();
   scrollDown(chatMessages);
+  messageForm.reset();
+  sendButton.disabled = true;
 
   // Return encoded (safe) text in html format
   function encodeHTML(text) {
