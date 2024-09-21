@@ -11,4 +11,14 @@ const createUser = async (req, res) => {
   }
 };
 
-export { createUser };
+// Asynchronous function to get all users
+const getUsers = async (req, res) => {
+  try {
+    const results = await User.find();
+    res.send(results).status(200);
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+export default { createUser, getUsers };
