@@ -10,4 +10,7 @@ router.get("/", userController.getUsers);
 // Define a route to create a new user
 router.post("/", userController.createUser);
 
+// Define a route to get user with the specified id
+router.get("/:id", userController.getUserById);
+
 export default router;

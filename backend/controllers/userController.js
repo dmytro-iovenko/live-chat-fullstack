@@ -7,7 +7,7 @@ const createUser = async (req, res) => {
     const result = await User.create(newUser);
     res.send(result).status(201);
   } catch (err) {
-    console.error(err);
+    res.send(err).status(400);
   }
 };
 
@@ -17,8 +17,17 @@ const getUsers = async (req, res) => {
     const results = await User.find();
     res.send(results).status(200);
   } catch (err) {
-    console.error(err);
+    res.send(err).status(400);
   }
 };
 
-export default { createUser, getUsers };
+// Asynchronous function to get all users
+const getUserById = async (req, res) => {
+  try {
+    const results = await User.findById(req.params.id);
+    res.send(results).status(200);
+  } catch (err) {
+    res.send(err).status(400);
+  }
+};
+export default { createUser, getUsers, getUserById };
