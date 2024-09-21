@@ -9,8 +9,12 @@ const userSchema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
+    unique: true,
   },
 });
+
+// Create an index on the 'email' field to enforce uniqueness
+userSchema.index({ email: 1 });
 
 // Create and export a model for 'users' collection using the schema
 export default mongoose.model("users", userSchema);

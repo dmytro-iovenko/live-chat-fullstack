@@ -1,6 +1,7 @@
 import express from "express";
-import "dotenv/config";
 import connectDb from "./db/conn.js";
+import userRoutes from "./routes/userRoutes.js";
+import "dotenv/config";
 
 // Define connection string
 const connectionString = process.env.ATLAS_URI;
@@ -13,6 +14,7 @@ const app = express();
 // Middleware to parse JSON request bodies
 app.use(express.json());
 
+app.use("/users", userRoutes);
 
 // Start express server
 app.listen(port, () => {
