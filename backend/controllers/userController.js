@@ -21,13 +21,27 @@ const getUsers = async (req, res) => {
   }
 };
 
-// Asynchronous function to get all users
+// Asynchronous function to get user with the specified id
 const getUserById = async (req, res) => {
   try {
-    const results = await User.findById(req.params.id);
-    res.send(results).status(200);
+    const user = await User.findById(req.params.id);
+    res.send(user).status(200);
   } catch (err) {
     res.send(err).status(400);
   }
 };
-export default { createUser, getUsers, getUserById };
+
+// Asynchronous function to update user with the specified id
+const updateUserById = async (req, res) => {
+  try {
+    const options = {
+      new: true, // return the modified document rather than the original
+    };
+    const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, options);
+    res.send(updatedUser).status(200);
+  } catch (err) {
+    res.send(err).status(400);
+  }
+};
+
+export default { createUser, getUsers, getUserById, updateUserById };

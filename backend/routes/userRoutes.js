@@ -13,4 +13,7 @@ router.post("/", userController.createUser);
 // Define a route to get user with the specified id
 router.get("/:id", userController.getUserById);
 
+// Define a route to update user with the specified id
+router.patch("/:id", userController.updateUserById);
+
 export default router;
