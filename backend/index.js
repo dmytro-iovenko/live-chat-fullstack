@@ -10,6 +10,9 @@ const port = process.env.PORT || 3000;
 // Create express instance
 const app = express();
 
+// Middleware to parse JSON request bodies
+app.use(express.json());
+
 
 // Start express server
 app.listen(port, () => {
