@@ -16,4 +16,7 @@ router.get("/:id", userController.getUserById);
 // Define a route to update user with the specified id
 router.patch("/:id", userController.updateUserById);
 
+// Define a route to delete user with the specified id
+router.delete("/:id", userController.deleteUserById);
+
 export default router;

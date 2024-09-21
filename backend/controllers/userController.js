@@ -44,4 +44,14 @@ const updateUserById = async (req, res) => {
   }
 };
 
-export default { createUser, getUsers, getUserById, updateUserById };
+// Asynchronous function to update user with the specified id
+const deleteUserById = async (req, res) => {
+  try {
+    const deletedUser = await User.findByIdAndDelete(req.params.id);
+    res.send(deletedUser).status(200);
+  } catch (err) {
+    res.send(err).status(400);
+  }
+};
+
+export default { createUser, getUsers, getUserById, updateUserById, deleteUserById };
