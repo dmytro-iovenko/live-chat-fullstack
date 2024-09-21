@@ -1,11 +1,10 @@
 import User from "../models/user.js";
 
-// Asynchronous function to handle user creation
+// Asynchronous function to create a new user
 const createUser = async (req, res) => {
   try {
-    const newUser = req.body;
-    const result = await User.create(newUser);
-    res.send(result).status(201);
+    const newUser= await User.create(req.body);
+    res.send(newUser).status(201);
   } catch (err) {
     res.send(err).status(400);
   }
@@ -14,8 +13,8 @@ const createUser = async (req, res) => {
 // Asynchronous function to get all users
 const getUsers = async (req, res) => {
   try {
-    const results = await User.find();
-    res.send(results).status(200);
+    const users = await User.find();
+    res.send(users).status(200);
   } catch (err) {
     res.send(err).status(400);
   }
