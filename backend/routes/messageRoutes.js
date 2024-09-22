@@ -20,4 +20,9 @@ router
   // Define a route to delete message with the specified id
   .delete(messageController.deleteMessageById);
 
+router
+  .route("/:id/status")
+  // Define a route to get status of message with the specified id
+  .get(messageController.getMessageStatusById);
+
 export default router;

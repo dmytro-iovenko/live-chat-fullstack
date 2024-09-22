@@ -53,12 +53,27 @@ const updateMessageById = async (req, res) => {
 
 // Asynchronous function to delete message with the specified id
 const deleteMessageById = async (req, res) => {
-    try {
-      const deletedMessage = await Message.findByIdAndDelete(req.params.id);
-      res.send(deletedMessage).status(200);
-    } catch (err) {
-      res.send(err).status(400);
+  try {
+    const deletedMessage = await Message.findByIdAndDelete(req.params.id);
+    res.send(deletedMessage).status(200);
+  } catch (err) {
+    res.send(err).status(400);
+  }
+};
+
+// Asynchronous function to get message with the specified id
+const getMessageStatusById = async (req, res) => {
+  try {
+    const message = await Message.findById(req.params.id);
+    // Handle case where message is not found
+    if (!message) {
+      return res.send({ error: "Message not found" }).status(404);
     }
-  };
-  
-export default { createMessage, getMessages, getMessageById, updateMessageById, deleteMessageById };
+    const status = message.status;
+    res.send({ status }).status(200);
+  } catch (err) {
+    res.send(err).status(400);
+  }
+};
+
+export default { createMessage, getMessages, getMessageById, updateMessageById, deleteMessageById, getMessageStatusById };
