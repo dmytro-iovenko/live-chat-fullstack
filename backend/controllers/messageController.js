@@ -14,4 +14,14 @@ const createMessage = async (req, res) => {
   }
 };
 
-export default { createMessage };
+// Asynchronous function to get all messages
+const getMessages = async (req, res) => {
+  try {
+    const messages = await Message.find();
+    res.send(messages).status(200);
+  } catch (err) {
+    res.send(err).status(400);
+  }
+};
+
+export default { createMessage, getMessages };

@@ -6,6 +6,8 @@ const router = express.Router();
 
 router
   .route("/")
+  // Define a route to get all users
+  .get(messageController.getMessages)
   // Define a route to create a new message
   .post(messageController.createMessage);
 
