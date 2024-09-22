@@ -14,6 +14,8 @@ router
 router
   .route("/:id")
   // Define a route to get message with the specified id
-  .get(messageController.getMessageById);
+  .get(messageController.getMessageById)
+  // Define a route to update message with the specified id
+  .patch(messageController.updateMessageById);
 
 export default router;

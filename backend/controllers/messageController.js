@@ -26,12 +26,29 @@ const getMessages = async (req, res) => {
 
 // Asynchronous function to get message with the specified id
 const getMessageById = async (req, res) => {
-    try {
-      const message = await Message.findById(req.params.id);
-      res.send(message).status(200);
-    } catch (err) {
-      res.send(err).status(400);
-    }
-  };
-  
-export default { createMessage, getMessages, getMessageById };
+  try {
+    const message = await Message.findById(req.params.id);
+    res.send(message).status(200);
+  } catch (err) {
+    res.send(err).status(400);
+  }
+};
+
+// Asynchronous function to update text of the message with the specified id
+const updateMessageById = async (req, res) => {
+  try {
+    const query = {
+      $set: { text: req.body.text || "" },
+    };
+    const options = {
+      new: true, // return the modified document rather than the original
+      runValidators: true, // trigger schema validation
+    };
+    const updatedMessage = await Message.findByIdAndUpdate(req.params.id, query, options);
+    res.send(updatedMessage).status(200);
+  } catch (err) {
+    res.send(err).status(400);
+  }
+};
+
+export default { createMessage, getMessages, getMessageById, updateMessageById };
