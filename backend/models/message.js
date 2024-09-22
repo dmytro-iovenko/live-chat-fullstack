@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import User from "./user.js";
 
 // Define Message schema
 const messageSchema = new mongoose.Schema(
@@ -11,6 +12,13 @@ const messageSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: [true, "The author_id is required"],
+      validate: {
+        validator: async (value) => {
+          const user = await User.findById(value);
+          return !!user; // Returns true if the user exists, false otherwise
+        },
+        message: "Invalid author_id: User does not exist",
+      },
     },
     status: {
       type: String,

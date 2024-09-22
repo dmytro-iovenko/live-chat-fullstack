@@ -1,6 +1,7 @@
 import express from "express";
 import connectDb from "./db/conn.js";
 import userRoutes from "./routes/userRoutes.js";
+import messageRoutes from "./routes/messageRoutes.js";
 import "dotenv/config";
 
 // Define connection string
@@ -14,7 +15,9 @@ const app = express();
 // Middleware to parse JSON request bodies
 app.use(express.json());
 
+// Process custom routes
 app.use("/users", userRoutes);
+app.use("/messages", messageRoutes);
 
 // Start express server
 app.listen(port, () => {
