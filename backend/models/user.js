@@ -10,7 +10,7 @@ const isValidEmail = (email) => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,})+$/.tes
 // Check that email is not from the domain "example.com"
 const isNotExampleCom = (email) => !/example\.com$/.test(email);
 
-// Define a schema for 'users' collection
+// Define User schema
 const userSchema = new mongoose.Schema(
   {
     name: {
@@ -33,12 +33,13 @@ const userSchema = new mongoose.Schema(
       },
     },
   },
-  { timestamps: true } // assign createdAt and updatedAt fields
+  {
+    timestamps: { createdAt: "created_at", updatedAt: "updated_at" }, // assign created_at and updated_at fields
+  }
 );
-// unique: [true, "The email already exists"],
 
 // Create an index on the 'email' field to enforce uniqueness
 userSchema.index({ email: 1 });
 
 // Create and export a model for 'users' collection using the schema
-export default mongoose.model("users", userSchema);
+export default mongoose.model("User", userSchema);
