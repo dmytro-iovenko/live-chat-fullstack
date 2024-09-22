@@ -16,6 +16,8 @@ router
   // Define a route to get message with the specified id
   .get(messageController.getMessageById)
   // Define a route to update message with the specified id
-  .patch(messageController.updateMessageById);
+  .patch(messageController.updateMessageById)
+  // Define a route to delete message with the specified id
+  .delete(messageController.deleteMessageById);
 
 export default router;

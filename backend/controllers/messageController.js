@@ -51,4 +51,14 @@ const updateMessageById = async (req, res) => {
   }
 };
 
-export default { createMessage, getMessages, getMessageById, updateMessageById };
+// Asynchronous function to delete message with the specified id
+const deleteMessageById = async (req, res) => {
+    try {
+      const deletedMessage = await Message.findByIdAndDelete(req.params.id);
+      res.send(deletedMessage).status(200);
+    } catch (err) {
+      res.send(err).status(400);
+    }
+  };
+  
+export default { createMessage, getMessages, getMessageById, updateMessageById, deleteMessageById };
