@@ -17,7 +17,8 @@ const createMessage = async (req, res) => {
 // Asynchronous function to get all messages
 const getMessages = async (req, res) => {
   try {
-    const messages = await Message.find();
+    const filter = req.filter;
+    const messages = await Message.find(filter);
     res.send(messages).status(200);
   } catch (err) {
     res.send(err).status(400);
@@ -93,4 +94,12 @@ const updateMessageStatusById = async (req, res) => {
   }
 };
 
-export default { createMessage, getMessages, getMessageById, updateMessageById, deleteMessageById, getMessageStatusById, updateMessageStatusById };
+export default {
+  createMessage,
+  getMessages,
+  getMessageById,
+  updateMessageById,
+  deleteMessageById,
+  getMessageStatusById,
+  updateMessageStatusById,
+};

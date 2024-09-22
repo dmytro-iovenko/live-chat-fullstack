@@ -1,13 +1,14 @@
 import express from "express";
 import messageController from "../controllers/messageController.js";
+import filterMessagesByStatus from "../middlewares/filterMessagesByStatus.js";
 
 // Create Express Router instance
 const router = express.Router();
 
 router
   .route("/")
-  // Define a route to get all users
-  .get(messageController.getMessages)
+  // Define a route to get all messages
+  .get(filterMessagesByStatus, messageController.getMessages)
   // Define a route to create a new message
   .post(messageController.createMessage);
 
