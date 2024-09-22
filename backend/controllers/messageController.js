@@ -61,7 +61,7 @@ const deleteMessageById = async (req, res) => {
   }
 };
 
-// Asynchronous function to get message with the specified id
+// Asynchronous function to get status of message with the specified id
 const getMessageStatusById = async (req, res) => {
   try {
     const message = await Message.findById(req.params.id);
@@ -76,4 +76,21 @@ const getMessageStatusById = async (req, res) => {
   }
 };
 
-export default { createMessage, getMessages, getMessageById, updateMessageById, deleteMessageById, getMessageStatusById };
+// Asynchronous function to update status of message with the specified id
+const updateMessageStatusById = async (req, res) => {
+  try {
+    const query = {
+      $set: { status: req.body.status || "" },
+    };
+    const options = {
+      new: true, // return the modified document rather than the original
+      runValidators: true, // trigger schema validation
+    };
+    const updatedMessage = await Message.findByIdAndUpdate(req.params.id, query, options);
+    res.send(updatedMessage).status(200);
+  } catch (err) {
+    res.send(err).status(400);
+  }
+};
+
+export default { createMessage, getMessages, getMessageById, updateMessageById, deleteMessageById, getMessageStatusById, updateMessageStatusById };

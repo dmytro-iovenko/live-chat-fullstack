@@ -22,6 +22,7 @@ const messageSchema = new mongoose.Schema(
     },
     status: {
       type: String,
+      required: [true, "The status cannot be blank"],
       enum: ["seen", "unseen", "delivered"],
       default: "unseen",
     },

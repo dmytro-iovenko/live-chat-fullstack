@@ -23,6 +23,8 @@ router
 router
   .route("/:id/status")
   // Define a route to get status of message with the specified id
-  .get(messageController.getMessageStatusById);
+  .get(messageController.getMessageStatusById)
+  // Define a route to update status of message with the specified id
+  .patch(messageController.updateMessageStatusById);
 
 export default router;
