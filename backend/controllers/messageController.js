@@ -24,4 +24,14 @@ const getMessages = async (req, res) => {
   }
 };
 
-export default { createMessage, getMessages };
+// Asynchronous function to get message with the specified id
+const getMessageById = async (req, res) => {
+    try {
+      const message = await Message.findById(req.params.id);
+      res.send(message).status(200);
+    } catch (err) {
+      res.send(err).status(400);
+    }
+  };
+  
+export default { createMessage, getMessages, getMessageById };
