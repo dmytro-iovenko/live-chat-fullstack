@@ -15,6 +15,8 @@ router
 router
   .route("/:id")
   // Define a route to get chat with the specified id
-  .get(chatController.getChatById);
+  .get(chatController.getChatById)
+  // Define a route to delete chat with the specified id
+  .delete(chatController.deleteChatById);
 
 export default router;

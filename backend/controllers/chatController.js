@@ -45,4 +45,14 @@ const getChatById = async (req, res) => {
   }
 };
 
-export default { createChat, getChats, getChatById };
+// Asynchronous function to delete message with the specified id
+const deleteChatById = async (req, res) => {
+  try {
+    const deletedChat = await Chat.findByIdAndDelete(req.params.id);
+    res.send(deletedChat).status(200);
+  } catch (err) {
+    res.send(err).status(400);
+  }
+};
+
+export default { createChat, getChats, getChatById, deleteChatById };
