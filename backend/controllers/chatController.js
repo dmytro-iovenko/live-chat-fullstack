@@ -108,12 +108,14 @@ const addMessageToChat = async (req, res) => {
     const chat = await Chat.findById(req.params.id).session(session);
     // Add new message to messages array
     chat.messages.push(newMessage[0]._id);
-    // Save the document
-    await chat.save();
+    // Save updated chat
+    await chat.save({ session });
     // Commit transaction
     await session.commitTransaction();
     // Populate and return the updated chat
     const updatedChat = await Chat.findById(req.params.id).populate(["users", "messages"]).exec();
+    // Ensure virtual property is set on the fetched document
+    updatedChat._newMessage = newMessage[0];
     res.send(updatedChat).status(200);
   } catch (err) {
     // Abort transaction and rollback changes

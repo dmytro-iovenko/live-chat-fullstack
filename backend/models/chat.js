@@ -40,8 +40,28 @@ const chatSchema = new mongoose.Schema(
   },
   {
     timestamps: { createdAt: "created_at", updatedAt: "updated_at" },
+    toJSON: {
+      virtuals: true,
+      transform: (doc, ret) => {
+        const newMessage = ret.newMessage;
+        delete ret.newMessage;
+        delete ret.id;
+        const reordered = {
+          _id: doc._id,
+          newMessage,
+          ...ret,
+        };
+        return reordered;
+      },
+    },
   }
 );
+
+// Define a virtual property for newMessage
+chatSchema.virtual("newMessage").get(function () {
+  console.log("newMessage", this._newMessage);
+  return this._newMessage;
+});
 
 // Create compound index to query by both users and active status
 chatSchema.index({ users: 1, active: 1 });
