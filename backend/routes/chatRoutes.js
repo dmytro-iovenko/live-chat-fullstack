@@ -12,4 +12,9 @@ router
   // Define a route to create a new chat
   .post(chatController.createChat);
 
+router
+  .route("/:id")
+  // Define a route to get chat with the specified id
+  .get(chatController.getChatById);
+
 export default router;

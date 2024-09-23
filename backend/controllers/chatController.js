@@ -28,11 +28,21 @@ const createChat = async (req, res) => {
 const getChats = async (req, res) => {
   try {
     const filter = req.filter;
-    const chats = await Chat.find(filter).populate(["users", "messages"]);
+    const chats = await Chat.find(filter).populate(["users", "messages"]).exec();
     res.send(chats).status(200);
   } catch (err) {
     res.send(err).status(400);
   }
 };
 
-export default { createChat, getChats };
+// Asynchronous function to get chat with the specified id
+const getChatById = async (req, res) => {
+  try {
+    const chat = await Chat.findById(req.params.id).populate(["users", "messages"]).exec();
+    res.send(chat).status(200);
+  } catch (err) {
+    res.send(err).status(400);
+  }
+};
+
+export default { createChat, getChats, getChatById };
