@@ -22,6 +22,8 @@ router
 router
   .route("/:id/users")
   // Define a route to add user(s) to chat with the specified id
-  .post(chatController.addUsersToChatById);
+  .post(chatController.addUsersToChat)
+  // Define a route to delete user(s) from chat with the specified id
+  .delete(chatController.deleteUsersFromChat);
 
 export default router;

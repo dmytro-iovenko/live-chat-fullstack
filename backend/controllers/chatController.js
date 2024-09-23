@@ -55,8 +55,8 @@ const deleteChatById = async (req, res) => {
   }
 };
 
-// Asynchronous function to add user(s) to chat with the specified id
-const addUsersToChatById = async (req, res) => {
+// Asynchronous function to add users to chat with the specified id
+const addUsersToChat = async (req, res) => {
   try {
     const { users } = req.body;
     // Validate users
@@ -74,4 +74,23 @@ const addUsersToChatById = async (req, res) => {
   }
 };
 
-export default { createChat, getChats, getChatById, deleteChatById, addUsersToChatById };
+// Asynchronous function to delete users from chat with the specified id
+const deleteUsersFromChat = async (req, res) => {
+  try {
+    const { users } = req.body;
+    // Validate users
+    if (!Array.isArray(users) || !users.every((id) => mongoose.Types.ObjectId.isValid(id))) {
+      return res.send({ error: "Invalid users array" }).status(400);
+    }
+    const updatedChat = await Chat.findByIdAndUpdate(
+      req.params.id,
+      { $pullAll: { users: users } },
+      { new: true, runValidators: true }
+    );
+    res.send(updatedChat).status(200);
+  } catch (err) {
+    res.send(err).status(400);
+  }
+};
+
+export default { createChat, getChats, getChatById, deleteChatById, addUsersToChat, deleteUsersFromChat };
