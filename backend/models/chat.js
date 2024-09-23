@@ -22,13 +22,15 @@ const chatSchema = new mongoose.Schema(
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Message",
-        validate: {
-          validator: async (value) => {
-            const message = await Message.findById(value);
-            return !!message;
-          },
-          message: "Message does not exist",
-        },
+        // validate: {
+        //   validator: async function (value) {
+        //     console.log("this", this);
+        //     console.log(`this.$session() value: ${this.$session()}`);
+        //     const message = await Message.findById(value);
+        //     return !!message;
+        //   },
+        //   message: "Message does not exist",
+        // },
       },
     ],
     active: {
@@ -41,9 +43,45 @@ const chatSchema = new mongoose.Schema(
   }
 );
 
-
 // Create compound index to query by both users and active status
 chatSchema.index({ users: 1, active: 1 });
+
+// Pre-save hook for validation
+chatSchema.pre("save", async function (next) {
+  try {
+    for (const [index, messageId] of this.messages.entries()) {
+      const message = await Message.findById(messageId).session(this.$session());
+      if (!message) {
+        const error = new Error(`Message does not exist`);
+        error.value = messageId;
+        error.path = `messages.${index}`;
+        throw error;
+      }
+    }
+    next();
+  } catch (error) {
+    next({
+      errors: {
+        [error.path]: {
+          name: "ValidatorError",
+          message: [error.message],
+          properties: {
+            message: [error.message],
+            type: "user defined",
+            path: [error.path],
+            value: [error.value],
+          },
+          kind: "user defined",
+          path: [error.path],
+          value: [error.value],
+        },
+      },
+      _message: "Chat validation failed",
+      name: "ValidationError",
+      message: `Chat validation failed: ${error.path}: ${error.message}`,
+    });
+  }
+});
 
 // Create and export a model for 'chats' collection using the schema
 export default mongoose.model("Chat", chatSchema);

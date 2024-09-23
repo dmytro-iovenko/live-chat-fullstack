@@ -21,6 +21,21 @@ app.use("/users", userRoutes);
 app.use("/messages", messageRoutes);
 app.use("/chats", chatRoutes);
 
+// Error-handling Middleware
+app.use((err, req, res, next) => {
+  const time = new Date();
+  const status = err.status || 500;
+  res.status(status);
+  res.json({
+    status: status,
+    error: err.message,
+    timestamp: time,
+    path: req.url,
+  });
+  console.error("------");
+  console.error(`${time.toLocaleString()}: ${err.stack}`);
+});
+
 // Start express server
 app.listen(port, () => {
   console.log("Server is running on port:", port);
