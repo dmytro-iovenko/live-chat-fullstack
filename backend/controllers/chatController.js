@@ -24,4 +24,15 @@ const createChat = async (req, res) => {
   }
 };
 
-export default { createChat };
+// Asynchronous function to get all chats, filtered if necessary
+const getChats = async (req, res) => {
+  try {
+    const filter = req.filter;
+    const chats = await Chat.find(filter).populate(["users", "messages"]);
+    res.send(chats).status(200);
+  } catch (err) {
+    res.send(err).status(400);
+  }
+};
+
+export default { createChat, getChats };
