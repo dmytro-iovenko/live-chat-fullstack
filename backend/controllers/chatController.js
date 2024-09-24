@@ -127,6 +127,39 @@ const addMessageToChat = async (req, res) => {
   }
 };
 
+// Asynchronous function to delete message from chat with the specified id
+const deleteMessageFromChat = async (req, res) => {
+  let session;
+  try {
+    // Start session
+    session = await mongoose.startSession();
+    // Start transaction
+    session.startTransaction();
+    // Delete message with the specified id
+    const deletedMessage = await Message.findByIdAndDelete(req.params.messageId).session(session);
+    // Remove message ID from messages array
+    const chatUpdateResult = await Chat.updateOne(
+      { _id: req.params.id },
+      { $pull: { messages: req.params.messageId } },
+      { session }
+    );
+    // Commit transaction
+    await session.commitTransaction();
+    // Populate and return the updated chat
+    const updatedChat = await Chat.findById(req.params.id).populate(["users", "messages"]).exec();
+    // Ensure virtual property is set on the fetched document
+    updatedChat._deletedMessage = deletedMessage;
+    res.send(updatedChat).status(200);
+  } catch (err) {
+    // Abort transaction and rollback changes
+    session && (await session.abortTransaction());
+    res.send(err).status(400);
+  } finally {
+    // End session
+    session && (await session.endSession());
+  }
+};
+
 export default {
   createChat,
   getChats,
@@ -135,4 +168,5 @@ export default {
   addUsersToChat,
   deleteUsersFromChat,
   addMessageToChat,
+  deleteMessageFromChat,
 };

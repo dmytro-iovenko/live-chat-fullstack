@@ -44,11 +44,14 @@ const chatSchema = new mongoose.Schema(
       virtuals: true,
       transform: (doc, ret) => {
         const newMessage = ret.newMessage;
+        const deletedMessage = ret.deletedMessage;
         delete ret.newMessage;
+        delete ret.deletedMessage
         delete ret.id;
         const reordered = {
           _id: doc._id,
           newMessage,
+          deletedMessage,
           ...ret,
         };
         return reordered;
@@ -57,12 +60,16 @@ const chatSchema = new mongoose.Schema(
   }
 );
 
-// Define a virtual property for newMessage
+// Define a virtual property for newMessage and deletedMessage
 chatSchema.virtual("newMessage").get(function () {
   console.log("newMessage", this._newMessage);
   return this._newMessage;
 });
-
+chatSchema.virtual("deletedMessage").get(function () {
+    console.log("deletedMessage", this._deletedMessage);
+    return this._deletedMessage;
+  });
+  
 // Create compound index to query by both users and active status
 chatSchema.index({ users: 1, active: 1 });
 
