@@ -1,6 +1,7 @@
 import React from "react";
 import ChatList from "../ChatList/ChatList";
 import "./Main.css";
+import ChatTitle from "../ChatTitle/ChatTitle";
 
 /**
  * Props for the Section component.
@@ -33,15 +34,14 @@ const Section: React.FC<SectionProps> = ({ id, children }: SectionProps): JSX.El
  * @returns {JSX.Element} The Main component rendering the main content area.
  */
 const Main: React.FC = (): JSX.Element => {
+  const title: string = "Tina Cornell";
   return (
     <main>
       <Section id="sidebar">
         <ChatList />
       </Section>
       <Section id="main">
-        <div id="chat-title" className="container-title">
-          Tina Cornell
-        </div>
+        <ChatTitle title={title} />
         <div className="container-body">
           <div className="chat-container">
             <div id="chat-messages" className="chat-messages">
