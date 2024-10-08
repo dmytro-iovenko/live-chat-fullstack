@@ -1,31 +1,43 @@
+/* Header styling */
 header {
-  height: 3.5rem;
-  border-bottom: 1px solid var(--border);
-  nav {
-    height: 100%;
-    display: flex;
-    align-items: center;
-    a {
-      height: 100%;
-      padding: 1rem;
-      color: var(--text);
-      text-decoration: none;
-    }
-    a:hover {
-      background-color: var(--highlight);
-    }
-    .profile,
-    .profile:hover {
-      border-radius: 50%;
-      background-color: var(--primary);
-      color: var(--text-avatar);
-      width: 1rem;
-      height: 1rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      user-select: none;
-      margin-right: 1rem;
-    }
-  }
+  height: var(--header-height);
+  border-bottom: 1px solid rgb(var(--border));
+}
+
+/* Navigation styling */
+nav {
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+/* Link styling */
+nav a {
+  height: 100%;
+  padding: 1rem;
+  color: rgb(var(--text));
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+}
+
+nav a:hover {
+  background-color: rgb(var(--highlight));
+}
+
+/* Profile link styling */
+.profile {
+  border-radius: 50%;
+  background-color: rgb(var(--primary));
+  color: rgb(var(--text-avatar));
+  width: var(--profile-size);
+  height: var(--profile-size);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  margin-right: 1rem;
+}
+
+.profile:hover {
+  background-color: rgba(var(--primary), 0.9);
 }
