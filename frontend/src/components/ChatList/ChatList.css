@@ -1,0 +1,108 @@
+.container-body {
+    padding: 1rem;
+    flex-grow: 1;
+    overflow: hidden;
+    /* Pure CSS Accordion: START --*/
+    /* https://codepen.io/raubaca/pen/PZzpVe */
+    .tab {
+      overflow: hidden;
+    }
+    .tab input {
+      position: absolute;
+      opacity: 0;
+      z-index: -1;
+    }
+    .tab-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: all 0.35s;
+    }
+    .tab-content > div {
+      transition: all 0.35s;
+    }
+    .tab input:checked ~ .tab-content {
+      max-height: 100%;
+    }
+    .tab input:not(:checked) ~ .tab-content > div {
+      transform: translateY(-100%);
+    }
+    .tab-label {
+      display: flex;
+      cursor: pointer;
+      justify-content: space-between;
+      font-size: 1rem;
+    }
+    .tab-label::after {
+      content: "\276F";
+      min-width: 1rem;
+      min-height: 1rem;
+      text-align: center;
+      transition: all 0.35s;
+    }
+    .tab input:checked + div > .tab-label::after {
+      transform-origin: center center;
+      transform: rotate(90deg);
+    }
+    /*-- Pure CSS Accordion: END --*/
+    .section-title {
+      /* font-size: 1.2rem; */
+      font-weight: bold;
+      padding: 0.5rem 0;
+      margin-bottom: 1rem;
+      border-bottom: 1px solid rgb(var(--border));
+    }
+    .section-content {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      /* overflow: hidden; */
+      .section-column {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+        position: relative;
+        /* background-color: #00a449; */
+      }
+    }
+    label {
+      font-size: 0.8rem;
+    }
+    .chat-item:hover {
+        background-color: rgb(var(--highlight));
+      }
+      .chat-item {
+        color: rgb(var(--text-grey));
+        border-radius: 0.5rem;
+        display: flex;
+        gap: 0.5rem;
+        padding: 0.5rem;
+        .chat-item-avatar {
+          border-radius: 0.5rem;
+          color: rgb(var(--text-avatar));
+          min-width: 2.5rem;
+          min-height: 2.5rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          user-select: none;
+        }
+        .chat-item-content {
+          font-size: 0.85rem;
+          flex-grow: 1;
+          overflow: hidden;
+          > * {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+          .chat-item-title {
+            font-weight: bold;
+          }
+        }
+        .chat-item-info {
+          display: flex;
+          flex-direction: column;
+        }
+      }
+  }
