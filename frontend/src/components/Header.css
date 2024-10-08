@@ -1,0 +1,31 @@
+header {
+  height: 3.5rem;
+  border-bottom: 1px solid var(--border);
+  nav {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    a {
+      height: 100%;
+      padding: 1rem;
+      color: var(--text);
+      text-decoration: none;
+    }
+    a:hover {
+      background-color: var(--highlight);
+    }
+    .profile,
+    .profile:hover {
+      border-radius: 50%;
+      background-color: var(--primary);
+      color: var(--text-avatar);
+      width: 1rem;
+      height: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+      margin-right: 1rem;
+    }
+  }
+}
