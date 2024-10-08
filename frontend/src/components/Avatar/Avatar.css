@@ -1,0 +1,10 @@
+.chat-item-avatar {
+  border-radius: 0.5rem;
+  color: rgb(var(--text-avatar));
+  min-width: 2.5rem;
+  min-height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+}

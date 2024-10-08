@@ -2,19 +2,37 @@ import React from "react";
 import ChatList from "../ChatList/ChatList";
 import "./Main.css";
 
+/**
+ * Props for the Section component.
+ * Represents a section of the page that can contain child components.
+ */
 interface SectionProps {
-  id: string;
-  children: React.ReactNode;
+  id: string; // Unique identifier for the section
+  children: React.ReactNode; // Child components to be rendered
 }
 
-const Section: React.FC<SectionProps> = ({ id, children }) => {
+/**
+ * Section component that wraps content in a section element.
+ * Renders a section of the page with a specific ID and children.
+ * @param {SectionProps} props - The props for the Section component.
+ * @param {string} props.id - Unique identifier for the section.
+ * @param {React.ReactNode} props.children - Child components to be rendered.
+ * @returns {JSX.Element} The Section component rendering the provided children.
+ */
+const Section: React.FC<SectionProps> = ({ id, children }: SectionProps): JSX.Element => {
   return (
     <section id={id} className="container">
       {children}
     </section>
   );
 };
-const Main = () => {
+
+/**
+ * Main component that represents the main content area of the application.
+ * Combines sections for the chat list and chat conversation.
+ * @returns {JSX.Element} The Main component rendering the main content area.
+ */
+const Main: React.FC = (): JSX.Element => {
   return (
     <main>
       <Section id="sidebar">
