@@ -1,25 +1,62 @@
+import { useRef } from "react";
 import EmojiPicker from "../EmojiPicker/EmojiPicker";
 import "./MessageInput.css";
 
 /**
- * MessageArea component that provides a text area for typing messages.
- * Renders a textarea for user input.
+ * MessageTextArea component that renders a text area for user input.
+ * Handles changes to the text area and submits the message when conditions are met.
+ * @param {MessageInputProps} props - The props containing text area value, setter, and submit function.
  * @returns {JSX.Element} The MessageArea component.
  */
-const MessageTextArea: React.FC = (): JSX.Element => {
+const MessageTextArea: React.FC<MessageInputProps> = ({
+  textAreaValue,
+  setTextAreaValue,
+  onSubmit,
+}: MessageInputProps): JSX.Element => {
+  const textAreaRef = useRef<HTMLTextAreaElement>(null);
+  const handleClick = () => {
+    if (textAreaValue.trim() !== "") {
+      onSubmit();
+      setTextAreaValue("");
+    }
+  };
+
   return (
     <div className="message-box">
-      <textarea name="message-text" id="message-text" placeholder="Type a message..."></textarea>
+      <textarea
+        placeholder="Type a message..."
+        ref={textAreaRef}
+        onChange={(event) => {
+          setTextAreaValue(event.target.value);
+        }}
+        value={textAreaValue}
+        onKeyDown={(event) => {
+          if (event.key === "Enter" && (event.metaKey || event.ctrlKey)) {
+            handleClick();
+          }
+        }}></textarea>
     </div>
   );
 };
 
 /**
  * MessageButtons component that contains action buttons for sending and managing messages.
- * Renders buttons for attaching files, selecting emojis, and sending messages.
+ * Handles click event for the Send button and submits the message when conditions are met.
+ * @param {MessageInputProps} props - The props containing text area value, setter, and submit function.
  * @returns {JSX.Element} The MessageButtons component.
  */
-const MessageButtons: React.FC = (): JSX.Element => {
+const MessageButtons: React.FC<MessageInputProps> = ({
+  textAreaValue,
+  setTextAreaValue,
+  onSubmit,
+}: MessageInputProps): JSX.Element => {
+  const handleClick = () => {
+    if (textAreaValue.trim() !== "") {
+      onSubmit();
+      setTextAreaValue("");
+    }
+  };
+
   return (
     <div className="message-buttons">
       <a href="#" id="attach-btn" className="message-area-btn">
@@ -42,7 +79,7 @@ const MessageButtons: React.FC = (): JSX.Element => {
         </svg>
       </a>
       <span className="placeholder"></span>
-      <button id="send-btn" className="message-area-btn" type="submit" disabled>
+      <button id="send-btn" className="message-area-btn" onClick={handleClick}>
         <svg focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="SendIcon">
           <path d="M2.01 21 23 12 2.01 3 2 10l15 2-15 2z"></path>
         </svg>
@@ -52,19 +89,31 @@ const MessageButtons: React.FC = (): JSX.Element => {
 };
 
 /**
+ * Props for the MessageInput component.
+ * Contains the current value of the text area, a function to update the text area value, and a function to handle message submission.
+ * @interface MessageInputProps
+ */
+export interface MessageInputProps {
+  textAreaValue: string; // Current value of the text area
+  setTextAreaValue: (value: string) => void; // Function to update the text area value
+  onSubmit: () => void; // Function to handle message submission
+}
+
+/**
  * MessageInput component that contains the input area and buttons for sending messages.
- * Renders the form layout for message input.
+ * Renders a text area for input, buttons for actions, and an emoji picker.
+ * @param {MessageInputProps} props - The props containing text area value, setter, and submit function.
  * @returns {JSX.Element} The MessageForm component.
  */
-const MessageInput: React.FC = (): JSX.Element => {
+const MessageInput: React.FC<MessageInputProps> = (props: MessageInputProps): JSX.Element => {
   return (
-    <form id="message-form" action="#" method="post" className="popup-content">
+    <div id="message-form" className="popup-content">
       <div className="message-area">
-        <MessageTextArea />
-        <MessageButtons />
+        <MessageTextArea {...props} />
+        <MessageButtons {...props} />
         <EmojiPicker />
       </div>
-    </form>
+    </div>
   );
 };
 

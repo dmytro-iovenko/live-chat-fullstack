@@ -17,7 +17,7 @@ const EmojiPicker: React.FC<EmojiPickerProps> = () => {
   return (
     <div className="message-emoji">
       <div className="tabs-container">
-        <input type="radio" id="emoji-tab" name="tabs" checked={true} />
+        <input type="radio" id="emoji-tab" name="tabs" defaultChecked />
         <label htmlFor="emoji-tab" className="tab-label">
           Emoji
         </label>

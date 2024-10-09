@@ -7,7 +7,7 @@
       flex-direction: column;
       gap: 0.5rem;
       .message-box {
-        #message-text {
+        textarea {
           border: 1px solid rgb(var(--border));
           border-radius: 0.5rem;
           height: 5rem;
@@ -16,7 +16,7 @@
           vertical-align: top;
           padding: 0.5rem;
         }
-        #message-text:focus {
+        textarea:focus {
           outline: none;
           background-color: rgb(var(--highlight));
           box-shadow: 0 0 10px rgb(var(--border));

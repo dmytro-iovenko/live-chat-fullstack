@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import MessageItem, { MessageItemProps } from "../MessageItem/MessageItem";
 import "./MessageList.css";
 
@@ -17,8 +18,30 @@ interface MessageListProps {
  * @returns {JSX.Element} The MessageList component.
  */
 const MessageList: React.FC<MessageListProps> = ({ messages }: MessageListProps): JSX.Element => {
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  // A function to scroll content down
+  const scrollDown = (content: HTMLDivElement) => {
+    if (content.scrollHeight > content.clientHeight) {
+      content.scrollTop = content.scrollHeight;
+    }
+  };
+
+  // Run effect when messages change
+  useEffect(() => {
+    // Use timer to allow DOM updates to complete
+    const timeoutId = setTimeout(() => {
+      if (contentRef.current) {
+        scrollDown(contentRef.current);
+      }
+    }, 0);
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, [messages]);
+
   return (
-    <div id="chat-messages" className="chat-messages">
+    <div ref={contentRef} id="chat-messages" className="chat-messages">
       {messages.map((message) => (
         <MessageItem key={message.id} message={message} />
       ))}
