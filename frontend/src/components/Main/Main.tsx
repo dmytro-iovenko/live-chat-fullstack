@@ -1,7 +1,9 @@
 import React from "react";
 import ChatList from "../ChatList/ChatList";
-import "./Main.css";
 import ChatTitle from "../ChatTitle/ChatTitle";
+import ChatContainer from "../ChatContainer/ChatContainer";
+import ChatMessagesList from "../ChatMessageList/ChatMessageList";
+import "./Main.css";
 
 /**
  * Props for the Section component.
@@ -35,6 +37,7 @@ const Section: React.FC<SectionProps> = ({ id, children }: SectionProps): JSX.El
  */
 const Main: React.FC = (): JSX.Element => {
   const title: string = "Tina Cornell";
+  const messages: Array<any> = [];
   return (
     <main>
       <Section id="sidebar">
@@ -42,32 +45,9 @@ const Main: React.FC = (): JSX.Element => {
       </Section>
       <Section id="main">
         <ChatTitle title={title} />
-        <div className="container-body">
-          <div className="chat-container">
-            <div id="chat-messages" className="chat-messages">
-              {/*
-                <!-- https://tenor.com/gifapi/documentation#quickstart -->
-                <!-- <img src="https://media1.tenor.com/images/c7504b9fb03c95b3b5687d744687e11c/tenor.gif?itemid=7212866" width="324px" height="257px"> -->
-                <!-- <div className="chat-message message-in">
-                  <div className="chat-message-title">Tina Cornell</div>
-                  <div className="chat-message-group">
-                    <div className="chat-message-avatar avatar-4">TC</div>
-                    <div className="chat-message-content">
-                      <div className="chat-message-image">
-                        <img
-                          src="https://media1.tenor.com/images/c7504b9fb03c95b3b5687d744687e11c/tenor.gif?itemid=7212866"
-                        />
-                      </div>
-                      <div className="chat-message-text">
-                        Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                      </div>
-                    </div>
-                  </div>
-                </div> --> 
-                */}
-            </div>
-          </div>
-        </div>
+        <ChatContainer>
+          <ChatMessagesList messages={messages} />
+        </ChatContainer>
         <div className="container-footer popup">
           <form id="message-form" action="#" method="post" className="popup-content">
             <div className="message-area">
