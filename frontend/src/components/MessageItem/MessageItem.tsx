@@ -1,11 +1,11 @@
 import Avatar from "../Avatar/Avatar";
-import "./ChatMessage.css";
+import "./MessageItem.css";
 
 /**
  * Props for the Message component.
  * Contains the details of an individual chat message.
  */
-export interface ChatMessageProps {
+export interface MessageItemProps {
   id: number; // Unique identifier for the message
   title: string; // The title or username of the message sender
   text?: string; // The text content of the message
@@ -17,13 +17,13 @@ export interface ChatMessageProps {
 }
 
 /**
- * ChatMessage component that displays an individual chat message.
+ * MessageItem component that displays an individual chat message.
  * Renders the message content, sender's name, and avatar based on the message properties.
- * @param {ChatMessageProps} props - The props object containing the message data.
- * @param {ChatMessageProps} props.message - The message object containing details about the message.
- * @returns {JSX.Element} The Message component.
+ * @param {MessageItemProps} props - The props object containing the message data.
+ * @param {MessageItemProps} props.message - The message object containing details about the message.
+ * @returns {JSX.Element} The MessageItem component.
  */
-const ChatMessage: React.FC<{ message: ChatMessageProps }> = ({ message }): JSX.Element => {
+const MessageItem: React.FC<{ message: MessageItemProps }> = ({ message }): JSX.Element => {
   return (
     <div className={`chat-message ${message.is_outgoing ? "message-out" : "message-in"}`}>
       <div className="chat-message-title">{message.title}</div>
@@ -42,4 +42,4 @@ const ChatMessage: React.FC<{ message: ChatMessageProps }> = ({ message }): JSX.
   );
 };
 
-export default ChatMessage;
+export default MessageItem;
