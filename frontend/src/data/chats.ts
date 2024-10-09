@@ -26,12 +26,12 @@ export const chats: ChatProps[] = [
       {
         id: "3",
         text: "Hi Tina, sure, check these out!",
-        sender: users[9],
+        sender: "You",
       },
       {
         id: "4",
         text: "www.perfectsoud.com/GTXmasterheadphones",
-        sender: users[9],
+        sender: "You",
       },
       {
         id: "5",
@@ -39,12 +39,12 @@ export const chats: ChatProps[] = [
           src: "https://images.pexels.com/photos/2080611/pexels-photo-2080611.jpeg?auto=compress&cs=tinysrgb&w=320",
           alt: "GT-R-6",
         },
-        sender: users[9],
+        sender: "You",
       },
       {
         id: "6",
         text: "Customers love their durability too - just take a look at the reviews.",
-        sender: users[9],
+        sender: "You",
       },
       {
         id: "7",
@@ -54,7 +54,7 @@ export const chats: ChatProps[] = [
       {
         id: "8",
         text: "You can listen to 20 hours of music on a single charge! They are foldable and come with a trave case.",
-        sender: users[9],
+        sender: "You",
       },
       {
         id: "9",

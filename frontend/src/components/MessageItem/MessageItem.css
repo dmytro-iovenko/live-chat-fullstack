@@ -82,7 +82,7 @@
   align-self: flex-end;
   margin-left: 5rem;
   .chat-message-title {
-    margin-right: 2.75rem;
+    /* margin-right: 2.75rem; */
     text-align: end;
   }
   .chat-message-group {

@@ -13,7 +13,7 @@ export interface MessageItemProps {
     src: string; // URL for the message image
     alt?: string; // Alt text for the message image
   };
-  sender: UserProps; // The message sender
+  sender: UserProps | "You"; // The message sender
 }
 
 /**
@@ -24,13 +24,14 @@ export interface MessageItemProps {
  * @returns {JSX.Element} The MessageItem component.
  */
 const MessageItem: React.FC<{ message: MessageItemProps }> = ({ message }): JSX.Element => {
-  console.log(message)
-  const is_outgoing = message.sender.id === "10"
+  const username = message.sender === "You" ? message.sender : message.sender.name;
+  const isYou = message.sender === "You";
+
   return (
-    <div className={`chat-message ${is_outgoing ? "message-out" : "message-in"}`}>
-      <div className="chat-message-title">{message.sender.name}</div>
+    <div className={`chat-message ${isYou ? "message-out" : "message-in"}`}>
+      <div className="chat-message-title">{username}</div>
       <div className="chat-message-group">
-        <Avatar username={message.sender.name}></Avatar>
+        {!isYou && <Avatar username={username}></Avatar>}
         <div className="chat-message-content">
           {message.image && (
             <div className="chat-message-image">
