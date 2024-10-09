@@ -5,7 +5,7 @@ import ChatContainer from "../ChatContainer/ChatContainer";
 import ChatMessagesList from "../ChatMessageList/ChatMessageList";
 import { ChatMessageProps } from "../ChatMessage/ChatMessage";
 import "./Main.css";
-import ChatMessageForm from "../ChatMessageForm/ChatMessageForm";
+import MessageInput from "../MessageInput/MessageInput";
 import ChatFooter from "../ChatFooter/ChatFooter";
 
 // Dummy messages mocking a chat conversation
@@ -116,7 +116,7 @@ const Main: React.FC = (): JSX.Element => {
           <ChatMessagesList messages={messages} />
         </ChatContainer>
         <ChatFooter>
-          <ChatMessageForm />
+          <MessageInput />
         </ChatFooter>
       </Section>
     </main>
