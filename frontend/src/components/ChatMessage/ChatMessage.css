@@ -1,0 +1,116 @@
+/* all messages in the chat */
+.chat-message {
+  display: flex;
+  flex-direction: column;
+  .chat-message-title {
+    display: none;
+    font-size: 0.85rem;
+    color: rgb(var(--text-grey));
+  }
+  .chat-message-group {
+    display: flex;
+    gap: 0.25rem;
+    align-items: start;
+    .avatar {
+      visibility: hidden;
+      border-radius: 0.5rem;
+      color: rgb(var(--text-avatar));
+      min-width: 2.5rem;
+      min-height: 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+    }
+    .chat-message-content {
+      padding: 0.5rem;
+      min-height: 2.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      .chat-message-image {
+        display: flex;
+        img {
+          max-width: 18rem;
+          border-radius: 0.5rem;
+        }
+        + .chat-message-text {
+          max-width: 18rem;
+        }
+      }
+      .chat-message-text {
+        overflow-wrap: anywhere;
+      }
+    }
+  }
+}
+/* all messages in the inbound group */
+.message-in {
+  align-self: flex-start;
+  margin-right: 5rem;
+  .chat-message-title {
+    margin-left: 2.75rem;
+  }
+  .chat-message-content {
+    background-color: rgb(var(--message-in));
+    border-top-right-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+  }
+}
+/* the first message in the inbound group */
+.message-in:first-child,
+.message-out + :not(.message-out) {
+  .chat-message-content {
+    border-top-left-radius: 0.5rem;
+  }
+  .chat-message-title {
+    display: block;
+  }
+  .avatar {
+    visibility: visible;
+  }
+}
+/* the last message in the inbound group */
+.message-in:last-child,
+.message-in:has(+ :not(.message-in)) {
+  .chat-message-content {
+    border-bottom-left-radius: 0.5rem;
+  }
+}
+/* all messages in the outbound group */
+.message-out {
+  align-self: flex-end;
+  margin-left: 5rem;
+  .chat-message-title {
+    margin-right: 2.75rem;
+    text-align: end;
+  }
+  .chat-message-group {
+    flex-direction: row-reverse;
+  }
+  .chat-message-content {
+    background-color: rgb(var(--message-out));
+    border-top-left-radius: 0.5rem;
+    border-bottom-left-radius: 0.5rem;
+  }
+}
+/* the first message in the outbound group */
+.message-out:first-child,
+.message-in + :not(.message-in) {
+  .chat-message-content {
+    border-top-right-radius: 0.5rem;
+  }
+  .chat-message-title {
+    display: block;
+  }
+  .avatar {
+    visibility: visible;
+  }
+}
+/* the last message in the outbound group */
+.message-out:last-child,
+.message-out:has(+ :not(.message-out)) {
+  .chat-message-content {
+    border-bottom-right-radius: 0.5rem;
+  }
+}

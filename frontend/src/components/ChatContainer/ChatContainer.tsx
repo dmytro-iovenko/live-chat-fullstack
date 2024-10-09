@@ -1,3 +1,5 @@
+import "./ChatContainer.css";
+
 /**
  * ChatContainer component that serves as a wrapper for the chat interface.
  * @param {Object} props - The props object containing child components.

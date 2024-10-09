@@ -21,7 +21,7 @@ const Avatar: React.FC<AvatarProps> = ({ username }: AvatarProps): JSX.Element =
   const initials = getInitials(username);
   const avatarClass = getAvatarClass(initials);
 
-  return <div className={`chat-item-avatar ${avatarClass}`}>{initials}</div>;
+  return <div className={`avatar ${avatarClass}`}>{initials}</div>;
 
   /**
    * Helper function to convert username into initials.
@@ -42,7 +42,6 @@ const Avatar: React.FC<AvatarProps> = ({ username }: AvatarProps): JSX.Element =
    */
   function getAvatarClass(initials: string): string {
     const charSum = Array.from(initials).reduce((sum, char) => sum + char.charCodeAt(0), 0);
-    console.log(initials, charSum)
     return `avatar-${charSum % 10}`;
   }
 };
