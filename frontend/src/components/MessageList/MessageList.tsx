@@ -17,6 +17,7 @@ interface MessageListProps {
  * @returns {JSX.Element} The MessageList component.
  */
 const MessageList: React.FC<MessageListProps> = ({ messages }: MessageListProps): JSX.Element => {
+  console.log(messages)
   return (
     <div id="chat-messages" className="chat-messages">
       {messages.map((message) => (

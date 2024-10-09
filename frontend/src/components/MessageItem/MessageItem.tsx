@@ -1,3 +1,4 @@
+import { UserProps } from "../../data/users";
 import Avatar from "../Avatar/Avatar";
 import "./MessageItem.css";
 
@@ -6,14 +7,13 @@ import "./MessageItem.css";
  * Contains the details of an individual chat message.
  */
 export interface MessageItemProps {
-  id: number; // Unique identifier for the message
-  title: string; // The title or username of the message sender
+  id: string; // Unique identifier for the message
   text?: string; // The text content of the message
   image?: {
     src: string; // URL for the message image
     alt?: string; // Alt text for the message image
   };
-  is_outgoing: boolean; // Indicates if the message is outgoing
+  sender: UserProps; // The message sender
 }
 
 /**
@@ -24,11 +24,13 @@ export interface MessageItemProps {
  * @returns {JSX.Element} The MessageItem component.
  */
 const MessageItem: React.FC<{ message: MessageItemProps }> = ({ message }): JSX.Element => {
+  console.log(message)
+  const is_outgoing = message.sender.id === "10"
   return (
-    <div className={`chat-message ${message.is_outgoing ? "message-out" : "message-in"}`}>
-      <div className="chat-message-title">{message.title}</div>
+    <div className={`chat-message ${is_outgoing ? "message-out" : "message-in"}`}>
+      <div className="chat-message-title">{message.sender.name}</div>
       <div className="chat-message-group">
-        <Avatar username={message.title}></Avatar>
+        <Avatar username={message.sender.name}></Avatar>
         <div className="chat-message-content">
           {message.image && (
             <div className="chat-message-image">
