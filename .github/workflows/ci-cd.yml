@@ -14,6 +14,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+
+      - name: List Current and Frontend Directories
+        run: |
+          ls -la .
+          ls -la frontend
       
       - name: Install Frontend Dependencies
         run: |
