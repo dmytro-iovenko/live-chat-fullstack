@@ -12,16 +12,20 @@ import { ChatPropsCommon } from "../../data/chats";
  * @param {string} props.selectedChatId - ID of the currently selected chat, used for highlighting or tracking selection.
  * @returns {JSX.Element} The ChatList component containing all chat items.
  */
-const ChatList: React.FC<ChatPropsCommon> = ({ chats, setSelectedChat, selectedChatId }: ChatPropsCommon): JSX.Element => {
-//   const chats: Chats[] = [
-//     { id: 1, name: "Tina Cornell", message: "The test message", time: "15s" },
-//     { id: 2, name: "Collete Aicart", message: "Long messages should end with ellipses.", time: "35m" },
-//   ];
+const ChatList: React.FC<ChatPropsCommon> = ({
+  chats,
+  setSelectedChat,
+  selectedChatId,
+}: ChatPropsCommon): JSX.Element => {
+  //   const chats: Chats[] = [
+  //     { id: 1, name: "Tina Cornell", message: "The test message", time: "15s" },
+  //     { id: 2, name: "Collete Aicart", message: "Long messages should end with ellipses.", time: "35m" },
+  //   ];
 
   return (
     <div className="container-body">
       <div className="tab">
-        <input type="checkbox" id="cb1" />
+        <input type="checkbox" id="cb1" defaultChecked />
         <div className="section-title">
           <label htmlFor="cb1" className="tab-label">
             My chats ({chats.length})

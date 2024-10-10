@@ -1,4 +1,3 @@
-import { useRef } from "react";
 import EmojiPicker from "../EmojiPicker/EmojiPicker";
 import "./MessageInput.css";
 
@@ -12,8 +11,9 @@ const MessageTextArea: React.FC<MessageInputProps> = ({
   textAreaValue,
   setTextAreaValue,
   onSubmit,
+  textAreaRef,
 }: MessageInputProps): JSX.Element => {
-  const textAreaRef = useRef<HTMLTextAreaElement>(null);
+  // const textAreaRef = useRef<HTMLTextAreaElement>(null);
   const handleClick = () => {
     if (textAreaValue.trim() !== "") {
       onSubmit();
@@ -97,6 +97,7 @@ export interface MessageInputProps {
   textAreaValue: string; // Current value of the text area
   setTextAreaValue: (value: string) => void; // Function to update the text area value
   onSubmit: () => void; // Function to handle message submission
+  textAreaRef: React.RefObject<HTMLTextAreaElement>;
 }
 
 /**
@@ -106,12 +107,24 @@ export interface MessageInputProps {
  * @returns {JSX.Element} The MessageForm component.
  */
 const MessageInput: React.FC<MessageInputProps> = (props: MessageInputProps): JSX.Element => {
+  const { textAreaRef, setTextAreaValue } = props;
+
+  const handleEmojiSelect = (emoji: string) => {
+    const textArea = textAreaRef.current;
+    if (textArea) {
+      const [start, end] = [textArea.selectionStart, textArea.selectionEnd];
+      textArea.setRangeText(emoji, start, end, "select");
+      // textArea.focus();
+      setTextAreaValue(textArea.value);
+    }
+  };
+
   return (
     <div id="message-form" className="popup-content">
       <div className="message-area">
         <MessageTextArea {...props} />
         <MessageButtons {...props} />
-        <EmojiPicker />
+        <EmojiPicker onEmojiSelect={handleEmojiSelect} />
       </div>
     </div>
   );

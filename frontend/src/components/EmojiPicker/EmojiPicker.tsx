@@ -5,7 +5,7 @@ import emojis from "../../data/emoji";
  * Props for the EmojiPicker component.
  */
 interface EmojiPickerProps {
-  //TBD
+  onEmojiSelect: (emoji: string) => void;
 }
 
 /**
@@ -13,7 +13,7 @@ interface EmojiPickerProps {
  * Renders a list of emojis
  * @returns The EmojiPicker component.
  */
-const EmojiPicker: React.FC<EmojiPickerProps> = () => {
+const EmojiPicker: React.FC<EmojiPickerProps> = ({ onEmojiSelect }) => {
   return (
     <div className="message-emoji">
       <div className="tabs-container">
@@ -23,7 +23,7 @@ const EmojiPicker: React.FC<EmojiPickerProps> = () => {
         </label>
         <div className="tab-content">
           {emojis.map((emoji, index) => (
-            <div key={index} className="emoji-icon">
+            <div key={index} className="emoji-icon" onClick={() => onEmojiSelect(emoji)}>
               {emoji}
             </div>
           ))}

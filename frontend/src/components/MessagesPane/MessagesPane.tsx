@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import MessagesPaneBody from "../MessagesPaneBody/MessagesPaneBody";
 import MessagesPaneFooter from "../MessagesPaneFooter/MessagesPaneFooter";
 import MessagesPaneHeader from "../MessagesPaneHeader/MessagesPaneHeader";
@@ -32,6 +32,7 @@ interface MessagePaneProps {
 const MessagesPane: React.FC<MessagePaneProps> = ({ chat, chats, onUpdateChats }: MessagePaneProps): JSX.Element => {
   const [chatMessages, setChatMessages] = useState(chat.messages);
   const [textAreaValue, setTextAreaValue] = useState("");
+  const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
   // Ensure that the displayed messages update to reflect the currently selected chat from the sidebar.
   useEffect(() => {
@@ -62,7 +63,7 @@ const MessagesPane: React.FC<MessagePaneProps> = ({ chat, chats, onUpdateChats }
         <MessageList messages={chatMessages} chatId={chat.id} />
       </MessagesPaneBody>
       <MessagesPaneFooter>
-        <MessageInput textAreaValue={textAreaValue} setTextAreaValue={setTextAreaValue} onSubmit={handleSubmit} />
+        <MessageInput textAreaValue={textAreaValue} setTextAreaValue={setTextAreaValue} onSubmit={handleSubmit} textAreaRef={textAreaRef}/>
       </MessagesPaneFooter>
     </section>
   );
