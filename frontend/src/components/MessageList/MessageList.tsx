@@ -4,20 +4,22 @@ import "./MessageList.css";
 
 /**
  * Props for the ChatMessageList component.
- * Represents an array of chat messages to be rendered.
+ * Contains the messages to be displayed and the ID of the current chat.
  */
 interface MessageListProps {
   messages: MessageItemProps[]; // Array of message objects
+  chatId: string; // Unique identifier for the current chat, used to trigger re-rendering
 }
 
 /**
  * MessageList component that renders a list of chat messages.
- * Dynamically creates Message components based on the provided messages array.
+ * Automatically scrolls to the latest message when messages change or the chat is switched.
  * @param {MessageListProps} props - The props object containing the messages.
  * @param {MessageItemProps[]} props.messages - An array of message objects to render.
+ * @param {string} props.chatId - The ID of the current chat, used to determine when to scroll.
  * @returns {JSX.Element} The MessageList component.
  */
-const MessageList: React.FC<MessageListProps> = ({ messages }: MessageListProps): JSX.Element => {
+const MessageList: React.FC<MessageListProps> = ({ messages, chatId }: MessageListProps): JSX.Element => {
   const contentRef = useRef<HTMLDivElement>(null);
 
   // A function to scroll content down
@@ -38,7 +40,7 @@ const MessageList: React.FC<MessageListProps> = ({ messages }: MessageListProps)
     return () => {
       clearTimeout(timeoutId);
     };
-  }, [messages]);
+  }, [messages, chatId]);
 
   return (
     <div ref={contentRef} id="chat-messages" className="chat-messages">

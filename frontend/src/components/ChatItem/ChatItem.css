@@ -1,4 +1,5 @@
-.chat-item:hover {
+.chat-item:hover,
+.chat-item.selected {
   background-color: rgb(var(--highlight));
 }
 .chat-item {
