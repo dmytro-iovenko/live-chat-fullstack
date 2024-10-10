@@ -1,0 +1,40 @@
+.avatar {
+  border-radius: 0.5rem;
+  color: rgb(var(--text-avatar));
+  min-width: 2.5rem;
+  min-height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+}
+.avatar-1 {
+  background-color: rgb(var(--avatar-1));
+}
+.avatar-2 {
+  background-color: rgb(var(--avatar-2));
+}
+.avatar-3 {
+  background-color: rgb(var(--avatar-3));
+}
+.avatar-4 {
+  background-color: rgb(var(--avatar-4));
+}
+.avatar-5 {
+  background-color: rgb(var(--avatar-5));
+}
+.avatar-6 {
+  background-color: rgb(var(--avatar-6));
+}
+.avatar-7 {
+  background-color: rgb(var(--avatar-7));
+}
+.avatar-8 {
+  background-color: rgb(var(--avatar-8));
+}
+.avatar-9 {
+  background-color: rgb(var(--avatar-9));
+}
+.avatar-0 {
+  background-color: rgb(var(--avatar-0));
+}

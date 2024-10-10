@@ -1,0 +1,28 @@
+.chat-item:hover,
+.chat-item.selected {
+  background-color: rgb(var(--highlight));
+}
+.chat-item {
+  color: rgb(var(--text-grey));
+  border-radius: 0.5rem;
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  .chat-item-content {
+    font-size: 0.85rem;
+    flex-grow: 1;
+    overflow: hidden;
+    > * {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .chat-item-title {
+      font-weight: bold;
+    }
+  }
+  .chat-item-info {
+    display: flex;
+    flex-direction: column;
+  }
+}

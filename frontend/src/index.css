@@ -1,0 +1,211 @@
+:root {
+  /* font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif; */
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+
+  /* Main colors */
+  --primary: 34, 112, 147; /*        #227093 */
+  --secondary: 255, 82, 82; /*       #ff5252 */
+  --background: 255, 255, 255; /*    white */
+  --highlight: 238, 238, 238; /*     #eee */
+  --border: 211, 211, 211; /*        lightgrey */
+  --text: 0, 0, 0; /*                black */
+  --text-avatar: 255, 255, 255; /*   white */
+  --text-grey: 128, 128, 128; /*     grey */
+  --message-in: 238, 238, 238; /*    #eee */
+  --message-out: 173, 216, 230; /*   lightblue */
+
+  /* Avatar colors */
+  --avatar-1: 255, 87, 51; /*        #FF5733 (Vivid Red) */
+  --avatar-2: 0, 128, 128; /*        #008080 (Bright Green) */
+  --avatar-3: 51, 87, 255; /*        #3357FF (Bright Blue) */
+  --avatar-4: 255, 51, 161; /*       #FF33A1 (Bright Pink) */
+  --avatar-5: 240, 213, 0; /*        #F0D500 (Bright Yellow) */
+  --avatar-6: 255, 140, 51; /*       #FF8C33 (Bright Orange) */
+  --avatar-7: 106, 51, 255; /*       #6A33FF (Vivid Purple) */
+  --avatar-8: 51, 255, 240; /*       #33FFF0 (Aqua) */
+  --avatar-9: 255, 51, 120; /*       #FF3378 (Coral) */
+  --avatar-0: 51, 255, 140; /*       #33FF8C (Turquoise) */
+
+  /* Theme color */
+  --theme: rgb(var(--primary));
+
+  /* Header properties */
+  --header-height: 3.5rem;
+  --profile-size: 2rem;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Custom Scrollbar: START */
+*::-webkit-scrollbar {
+  width: 0.5rem;
+  height: 1rem;
+}
+*::-webkit-scrollbar-thumb {
+  background-color: var(--highlight);
+  border-radius: 0.25rem;
+}
+*:hover::-webkit-scrollbar-thumb {
+  background-color: rgb(var(--border));
+}
+/* Custom Scrollbar: END */
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-width: 320px;
+  height: 100vh;
+  background-color: rgb(var(--background));
+}
+section:not(:last-child) {
+  border-right: 1px solid rgb(var(--border));
+}
+section {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: calc(100vh - var(--header-height));
+}
+main {
+  position: relative;
+  /* max-height: calc(100vh - 3.5rem); */
+  overflow: hidden;
+  flex-grow: 1;
+  display: flex;
+  align-items: stretch;
+  transition: all 0.35s;
+}
+button {
+  padding: 0.5rem 1rem;
+  border: none;
+  cursor: pointer;
+  border-radius: 0.5rem; /* Rounded corners */
+}
+button[type="submit"] {
+  color: rgb(var(--background));
+  background-color: rgb(var(--primary));
+}
+button[type="reset"] {
+  background-color: rgb(var(--border));
+  background-color: rgb(var(--background));
+  /* color: rgb(var(--border)); */
+  border: 1px solid rgb(var(--border));
+}
+
+@keyframes message-scale-out {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+/* other pages*/
+
+/* https://www.w3schools.com/howto/howto_css_tooltip.asp */
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: rgb(var(--border));
+  color: rgb(var(--text));
+  text-align: center;
+  font-size: 0.8rem;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  right: -0.5rem;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.tooltip .tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  right: 0.6rem;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: rgb(var(--border)) transparent transparent transparent;
+}
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+
+.table {
+  display: table;
+  width: 100%;
+  .theader {
+    display: table-header-group;
+    .th {
+      display: table-cell;
+      vertical-align: middle;
+      border-right: 1px solid rgb(var(--border));
+      border-bottom: 1px solid rgb(var(--border));
+      padding: 0.25rem 1rem;
+      font-weight: bold;
+    }
+  }
+  .tbody {
+    display: table-row-group;
+    .tr:hover {
+      background-color: rgb(var(--highlight));
+    }
+  }
+  .tr {
+    display: table-row;
+    .td {
+      display: table-cell;
+      vertical-align: middle;
+      padding: 0 1rem;
+      border-right: 1px solid rgb(var(--border));
+      .tflex {
+        display: flex;
+        align-items: center;
+        white-space: nowrap;
+        gap: 0.5rem;
+        > div {
+          display: flex;
+          align-items: center;
+        }
+        .avatar {
+          border-radius: 50%;
+          color: rgb(var(--text-avatar));
+          min-width: 1.5rem;
+          height: 1.5rem;
+          font-size: 0.7rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          user-select: none;
+        }
+        .tdropdown {
+          display: inline-block;
+        }
+      }
+    }
+    .th:first-child,
+    .td:first-child {
+      padding-left: 0;
+    }
+    .th:last-child,
+    .td:last-child {
+      padding-right: 0;
+      border-right: none;
+    }
+  }
+}
