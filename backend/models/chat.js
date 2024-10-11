@@ -5,6 +5,7 @@ import Message from "./message.js";
 // Define Chat schema
 const chatSchema = new mongoose.Schema(
   {
+    sender: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     users: [
       {
         type: mongoose.Schema.Types.ObjectId,
@@ -46,7 +47,7 @@ const chatSchema = new mongoose.Schema(
         const newMessage = ret.newMessage;
         const deletedMessage = ret.deletedMessage;
         delete ret.newMessage;
-        delete ret.deletedMessage
+        delete ret.deletedMessage;
         delete ret.id;
         const reordered = {
           _id: doc._id,
@@ -62,16 +63,16 @@ const chatSchema = new mongoose.Schema(
 
 // Define a virtual property for newMessage and deletedMessage
 chatSchema.virtual("newMessage").get(function () {
-  console.log("newMessage", this._newMessage);
+  // console.log("newMessage", this._newMessage);
   return this._newMessage;
 });
 chatSchema.virtual("deletedMessage").get(function () {
-    console.log("deletedMessage", this._deletedMessage);
-    return this._deletedMessage;
-  });
-  
+  // console.log("deletedMessage", this._deletedMessage);
+  return this._deletedMessage;
+});
+
 // Create compound index to query by both users and active status
-chatSchema.index({ users: 1, active: 1 });
+// chatSchema.index({ users: 1, active: 1 });
 
 // Pre-save hook for validation
 chatSchema.pre("save", async function (next) {

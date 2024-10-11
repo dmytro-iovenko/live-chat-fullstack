@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import Chat from "../models/chat.js";
 import Message from "../models/message.js";
+import User from "../models/user.js";
 
 // Asynchronous function to create a new chat
 const createChat = async (req, res) => {
@@ -29,8 +30,28 @@ const createChat = async (req, res) => {
 const getChats = async (req, res) => {
   try {
     const filter = req.filter;
-    const chats = await Chat.find(filter).populate(["users", "messages"]).exec();
-    res.send(chats).status(200);
+    const chats = await Chat.find(filter).populate(["sender", "messages"]).exec();
+    // Process each chat and populate sender for messages
+    const populatedChats = await Promise.all(
+      chats.map(async (chat) => {
+        const messages = await Promise.all(
+          chat.messages.map(async (message) => {
+            if (message.sender instanceof mongoose.Types.ObjectId) {
+              const user = await User.findById(message.sender);
+              // console.log("1:", user);
+              if (user) {
+                return { ...message.toObject(), sender: user.name };
+              }
+            }
+            return { ...message.toObject() };
+          })
+        );
+        // console.log("2:", chat.messages);
+        return { ...chat.toObject(), messages };
+      })
+    );
+    // console.log("3: Done");
+    res.send(populatedChats).status(200);
   } catch (err) {
     res.send(err).status(400);
   }
