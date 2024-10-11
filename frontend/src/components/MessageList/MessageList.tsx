@@ -7,8 +7,8 @@ import "./MessageList.css";
  * Contains the messages to be displayed and the ID of the current chat.
  */
 interface MessageListProps {
-  messages: MessageItemProps[]; // Array of message objects
-  chatId: string; // Unique identifier for the current chat, used to trigger re-rendering
+  messages?: MessageItemProps[]; // Array of message objects
+  chatId?: string; // Unique identifier for the current chat, used to trigger re-rendering
 }
 
 /**
@@ -44,8 +44,8 @@ const MessageList: React.FC<MessageListProps> = ({ messages, chatId }: MessageLi
 
   return (
     <div ref={contentRef} id="chat-messages" className="chat-messages">
-      {messages.map((message) => (
-        <MessageItem key={message.id} message={message} />
+      {messages?.map((message) => (
+        <MessageItem key={message._id} message={message} />
       ))}
     </div>
   );

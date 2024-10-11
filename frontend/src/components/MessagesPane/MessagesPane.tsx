@@ -15,7 +15,7 @@ import "./MessagesPane.css";
  * @interface MessagePaneProps
  */
 interface MessagePaneProps {
-  chat: ChatProps; // Chat object containing messages and sender details
+  chat: ChatProps | null; // Chat object containing messages and sender details
   chats: ChatProps[]; // Array of all chat objects.
   onUpdateChats: (updatedChats: ChatProps[]) => void; // Function to update the chats array in the parent component.
 }
@@ -30,19 +30,20 @@ interface MessagePaneProps {
  * @returns {JSX.Element} The MessagesPane component.
  */
 const MessagesPane: React.FC<MessagePaneProps> = ({ chat, chats, onUpdateChats }: MessagePaneProps): JSX.Element => {
-  const [chatMessages, setChatMessages] = useState(chat.messages);
+  const [chatMessages, setChatMessages] = useState(chat?.messages);
   const [textAreaValue, setTextAreaValue] = useState("");
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
   // Ensure that the displayed messages update to reflect the currently selected chat from the sidebar.
   useEffect(() => {
-    setChatMessages(chat.messages);
-  }, [chat.messages]);
+    setChatMessages(chat?.messages);
+  }, [chat?.messages]);
 
   const handleSubmit = () => {
+    if (!chatMessages) return;
     const newId = (chatMessages.length + 1).toString();
     const newMessage: MessageItemProps = {
-      id: newId,
+      _id: newId,
       text: textAreaValue,
       sender: "You",
     };
@@ -52,18 +53,23 @@ const MessagesPane: React.FC<MessagePaneProps> = ({ chat, chats, onUpdateChats }
     setChatMessages(updatedMessages);
 
     // Update the specific chat object in the original chats array
-    const updatedChats = chats.map((c) => (c.id === chat.id ? { ...c, messages: updatedMessages } : c));
+    const updatedChats = chats.map((c) => (c._id === chat?._id ? { ...c, messages: updatedMessages } : c));
     onUpdateChats(updatedChats);
   };
 
   return (
     <section id="main" className="container">
-      <MessagesPaneHeader title={chat.sender.name} />
+      <MessagesPaneHeader title={chat?.sender.name} />
       <MessagesPaneBody>
-        <MessageList messages={chatMessages} chatId={chat.id} />
+        <MessageList messages={chatMessages} chatId={chat?._id} />
       </MessagesPaneBody>
       <MessagesPaneFooter>
-        <MessageInput textAreaValue={textAreaValue} setTextAreaValue={setTextAreaValue} onSubmit={handleSubmit} textAreaRef={textAreaRef}/>
+        <MessageInput
+          textAreaValue={textAreaValue}
+          setTextAreaValue={setTextAreaValue}
+          onSubmit={handleSubmit}
+          textAreaRef={textAreaRef}
+        />
       </MessagesPaneFooter>
     </section>
   );

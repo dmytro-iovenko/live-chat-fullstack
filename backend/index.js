@@ -3,6 +3,7 @@ import connectDb from "./db/conn.js";
 import userRoutes from "./routes/userRoutes.js";
 import messageRoutes from "./routes/messageRoutes.js";
 import chatRoutes from "./routes/chatRoutes.js";
+import cors from "cors";
 import "dotenv/config";
 
 // Define connection string
@@ -12,6 +13,9 @@ const port = process.env.PORT || 3000;
 
 // Create express instance
 const app = express();
+
+// Setup a cors middleware for our express app
+app.use(cors());
 
 // Middleware to parse JSON request bodies
 app.use(express.json());

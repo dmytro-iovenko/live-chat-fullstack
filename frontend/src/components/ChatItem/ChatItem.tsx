@@ -10,7 +10,7 @@ import { UserProps } from "../../data/users";
  * This interface defines the structure of the properties needed to render a chat item.
  */
 interface ChatItemProps {
-  id: string; // Unique identifier for the chat item
+  _id: string; // Unique identifier for the chat item
   sender: UserProps; // The user who sent the messages in the chat
   messages: MessageItemProps[]; // Array of messages exchanged in the chat
   selectedChatId?: string; // ID of the currently selected chat for highlighting (optional)
@@ -27,14 +27,14 @@ interface ChatItemProps {
  * @returns {JSX.Element} The ChatItem component displaying chat information.
  */
 const ChatItem: React.FC<ChatItemProps> = (props: ChatItemProps): JSX.Element => {
-  const { id, sender, messages, selectedChatId, setSelectedChat } = props;
-  const selected = selectedChatId === id ? " selected" : "";
+  const { _id, sender, messages, selectedChatId, setSelectedChat } = props;
+  const selected = selectedChatId === _id ? " selected" : "";
   const lastMessage = messages[messages.length - 1]?.text || "";
   return (
     <div
       className={"chat-item".concat(selected)}
       onClick={() => {
-        setSelectedChat({ id, sender, messages });
+        setSelectedChat({ _id, sender, messages });
       }}>
       <Avatar username={sender.name} />
       <div className="chat-item-content">
