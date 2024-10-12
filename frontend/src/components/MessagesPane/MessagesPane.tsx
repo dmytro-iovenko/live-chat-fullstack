@@ -6,7 +6,8 @@ import MessageInput from "../MessageInput/MessageInput";
 import MessageList from "../MessageList/MessageList";
 import { MessageItemProps } from "../MessageItem/MessageItem";
 import { ChatProps } from "../../data/chats";
-// import messages from "../../data/messages";
+import { v4 as uuid } from "uuid";
+import { addMessageToChat } from "../../services/apiClient"; // Adjust the import path
 import "./MessagesPane.css";
 
 /**
@@ -16,8 +17,7 @@ import "./MessagesPane.css";
  */
 interface MessagePaneProps {
   chat: ChatProps | null; // Chat object containing messages and sender details
-  chats: ChatProps[]; // Array of all chat objects.
-  onUpdateChats: (updatedChats: ChatProps[]) => void; // Function to update the chats array in the parent component.
+  onUpdateChats: (updatedChat: ChatProps | null) => void; // Function to update the chats array in the parent component.
 }
 
 /**
@@ -25,11 +25,10 @@ interface MessagePaneProps {
  * Renders the header, body, and footer for the messages pane, facilitating message viewing and sending.
  * @param {MessagePaneProps} props - The props containing chat information.
  * @param {ChatProps} props.chat - The chat object containing messages and sender details.
- * @param {ChatProps[]} props.chats - Array of all chat objects.
- * @param {(updatedChats: ChatProps[]) => void} props.onUpdateChats - Function to update the chats array in the parent component.
+ * @param {(updatedChat: ChatProps) => void} props.onUpdateChats - Function to update the chats array in the parent component.
  * @returns {JSX.Element} The MessagesPane component.
  */
-const MessagesPane: React.FC<MessagePaneProps> = ({ chat, chats, onUpdateChats }: MessagePaneProps): JSX.Element => {
+const MessagesPane: React.FC<MessagePaneProps> = ({ chat, onUpdateChats }: MessagePaneProps): JSX.Element => {
   const [chatMessages, setChatMessages] = useState(chat?.messages);
   const [textAreaValue, setTextAreaValue] = useState("");
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
@@ -39,22 +38,44 @@ const MessagesPane: React.FC<MessagePaneProps> = ({ chat, chats, onUpdateChats }
     setChatMessages(chat?.messages);
   }, [chat?.messages]);
 
-  const handleSubmit = () => {
-    if (!chatMessages) return;
-    const newId = (chatMessages.length + 1).toString();
-    const newMessage: MessageItemProps = {
-      _id: newId,
+  const handleSubmit = async () => {
+    if (!chat || !chatMessages) return;
+    const tempId = uuid();
+    const newMessage: Omit<MessageItemProps, "_id" | "status"> = {
       text: textAreaValue,
       sender: "You",
     };
 
     // Update the current messages array with the new message
-    const updatedMessages = [...chatMessages, newMessage];
+    const updatedMessages = [
+      ...chatMessages,
+      { ...newMessage, _id: tempId }, // Use temporary ID for local display
+    ];
     setChatMessages(updatedMessages);
 
+    try {
+      // Add a new message to the chat with the specified ID and store added message
+      const message = await addMessageToChat(chat._id, newMessage);
+      console.log(message);
+
+      // Update the message locally to use the MongoDB _id and status
+      const updatedChatMessages = updatedMessages.map((msg) =>
+        msg._id === tempId ? { ...msg, _id: message._id, status: message.status } : msg
+      );
+      console.log(updatedChatMessages);
+      setChatMessages(updatedChatMessages);
+
+      // Update the specific chat object in the original chats array
+      const updatedChat = { ...chat, messages: updatedChatMessages };
+      console.log(updatedChat);
+      onUpdateChats(updatedChat);
+    } catch (error) {
+      console.error("Error updating chats:", error);
+    }
+
     // Update the specific chat object in the original chats array
-    const updatedChats = chats.map((c) => (c._id === chat?._id ? { ...c, messages: updatedMessages } : c));
-    onUpdateChats(updatedChats);
+    const updatedChat = { ...chat, messages: updatedMessages };
+    onUpdateChats(updatedChat);
   };
 
   return (

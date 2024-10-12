@@ -10,9 +10,21 @@ const messageSchema = new mongoose.Schema(
       required: false,
     },
     image: {
+      type: {
+        type: String,
+        required: false,
+      },
       src: {
         type: String,
-        required: [true, "Image source is required"],
+        required: function () {
+          return this.image && this.image.src !== undefined;
+        },
+        validate: {
+          validator: function (value) {
+            return value !== undefined && value.length > 0;
+          },
+          message: "Image source is required",
+        },
       },
       alt: {
         type: String,
@@ -38,8 +50,8 @@ const messageSchema = new mongoose.Schema(
     status: {
       type: String,
       required: [true, "The status cannot be blank"],
-      enum: ["seen", "unseen", "delivered"],
-      default: "unseen",
+      enum: ["delivered", "seen"],
+      default: "delivered",
     },
   },
   {

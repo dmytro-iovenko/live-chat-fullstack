@@ -1,4 +1,3 @@
-import { UserProps } from "../../data/users";
 import Avatar from "../Avatar/Avatar";
 import "./MessageItem.css";
 
@@ -14,6 +13,7 @@ export interface MessageItemProps {
     alt?: string; // Alt text for the message image
   };
   sender: string; // The message sender
+  status?: "delivered" | "seen"; // The message status, restricted to specific values
 }
 
 /**
@@ -28,7 +28,9 @@ const MessageItem: React.FC<{ message: MessageItemProps }> = ({ message }): JSX.
 
   return (
     <div className={`chat-message ${isYou ? "message-out" : "message-in"}`}>
-      <div className="chat-message-title">{message.sender}</div>
+      <div className="chat-message-title">
+        {message.sender} | {message.status || "sending"}
+      </div>
       <div className="chat-message-group">
         {!isYou && <Avatar username={message.sender}></Avatar>}
         <div className="chat-message-content">

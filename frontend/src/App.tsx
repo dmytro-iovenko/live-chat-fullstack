@@ -3,9 +3,8 @@ import ChatsPane from "./components/ChatsPane/ChatsPane";
 import Header from "./components/Header/Header";
 import Main from "./components/Main/Main";
 import MessagesPane from "./components/MessagesPane/MessagesPane";
-import { /*chats, */ ChatProps } from "./data/chats";
-
-export const LIVECHAT_API_URL = import.meta.env.VITE_LIVECHAT_API_URL;
+import { ChatProps } from "./data/chats";
+import { getChats } from "./services/apiClient";
 
 const App = () => {
   const [chatList, setChatList] = useState<ChatProps[]>([]);
@@ -16,8 +15,7 @@ const App = () => {
     let isMounted = true;
     try {
       (async () => {
-        const response = isMounted && (await fetch(`${LIVECHAT_API_URL}/chats`));
-        const data = isMounted && (await response.json());
+        const data = await getChats();
         isMounted && console.log(data);
         isMounted && setChatList(data);
         if (data.length > 0) {
@@ -32,8 +30,9 @@ const App = () => {
     }
   }, []);
 
-  const handleUpdateChats = (updatedChats: ChatProps[]) => {
-    // console.log(updatedChats);
+  const handleUpdateChats = async (updatedChat: ChatProps | null) => {
+    // Update the specific chat object in the original chats array
+    const updatedChats = chatList?.map((c) => (c._id === updatedChat?._id ? updatedChat : c));
     setChatList(updatedChats);
   };
 
@@ -42,7 +41,7 @@ const App = () => {
       <Header />
       <Main>
         <ChatsPane chats={chatList} selectedChatId={selectedChat?._id} setSelectedChat={setSelectedChat} />
-        <MessagesPane chat={selectedChat} chats={chatList} onUpdateChats={handleUpdateChats} />
+        <MessagesPane chat={selectedChat} onUpdateChats={handleUpdateChats} />
       </Main>
     </>
   );

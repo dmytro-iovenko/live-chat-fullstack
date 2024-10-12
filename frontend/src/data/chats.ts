@@ -1,5 +1,5 @@
 import { MessageItemProps } from "../components/MessageItem/MessageItem";
-import users, { UserProps } from "./users";
+import { UserProps } from "./users";
 
 /**
  * Shared props for components that handle chat lists and selection.
