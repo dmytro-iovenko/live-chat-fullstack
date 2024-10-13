@@ -5,10 +5,16 @@ import Main from "./components/Main/Main";
 import MessagesPane from "./components/MessagesPane/MessagesPane";
 import { ChatProps } from "./data/chats";
 import { getChats } from "./services/apiClient";
+import { useAuth } from "./context/AuthContext";
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "./firebase/firebaseConfig";
 
 const App = () => {
+  const { user, loading } = useAuth();
   const [chatList, setChatList] = useState<ChatProps[]>([]);
   const [selectedChat, setSelectedChat] = useState<ChatProps | null>(null);
+  const [credentials, setCredentials] = useState({ email: "", password: "" });
+  const [isLoginMode, setIsLoginMode] = useState(true);
 
   // make initial request to backend on first render
   useEffect(() => {
@@ -36,13 +42,66 @@ const App = () => {
     setChatList(updatedChats);
   };
 
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setCredentials((prev) => ({ ...prev, [name]: value }));
+  };
+  const handleAuth = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const { email, password } = credentials;
+
+    try {
+      if (isLoginMode) {
+        await signInWithEmailAndPassword(auth, email, password);
+      } else {
+        await createUserWithEmailAndPassword(auth, email, password);
+      }
+    } catch (error) {
+      console.error(isLoginMode ? "Error logging in:" : "Error registering:", error);
+    }
+  };
+
+  const handleLogout = async () => {
+    await auth.signOut();
+  };
+
+  if (loading) return <div>Loading...</div>;
+
   return (
     <>
-      <Header />
-      <Main>
-        <ChatsPane chats={chatList} selectedChatId={selectedChat?._id} setSelectedChat={setSelectedChat} />
-        <MessagesPane chat={selectedChat} onUpdateChats={handleUpdateChats} />
-      </Main>
+      {user ? (
+        <>
+          <Header />
+          <Main>
+            <ChatsPane chats={chatList} selectedChatId={selectedChat?._id} setSelectedChat={setSelectedChat} />
+            <MessagesPane chat={selectedChat} onUpdateChats={handleUpdateChats} />
+          </Main>
+        </>
+      ) : (
+        <div>
+          <h2>{isLoginMode ? "Log In" : "Register"}</h2>
+          <form onSubmit={handleAuth}>
+            <input
+              type="email"
+              name="email"
+              placeholder="Email"
+              value={credentials.email}
+              onChange={handleInputChange}
+              required
+            />
+            <input
+              type="password"
+              name="password"
+              placeholder="Password"
+              value={credentials.password}
+              onChange={handleInputChange}
+              required
+            />
+            <button type="submit">{isLoginMode ? "Log In" : "Register"}</button>
+          </form>
+          <button onClick={() => setIsLoginMode(!isLoginMode)}>Switch to {isLoginMode ? "Register" : "Log In"}</button>
+        </div>
+      )}
     </>
   );
 };
