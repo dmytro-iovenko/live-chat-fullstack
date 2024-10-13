@@ -1,6 +1,7 @@
 import React from "react";
-import "./Header.css";
 import Avatar from "../Avatar/Avatar";
+import "./Header.css";
+import { UserProps } from "../../data/users";
 
 /**
  * Props for the NavLink component.
@@ -53,12 +54,17 @@ const ProfileLink: React.FC<ProfileLinkProps> = ({ href, username }: ProfileLink
   );
 };
 
+interface HeaderProps {
+  userData: UserProps | null; // User data
+  onLogout: () => void; // Logout function
+}
+
 /**
  * Header component that contains the navigation bar and profile link.
  * Renders navigation links and the user's profile link.
  * @returns {JSX.Element} The Header component rendering the navigation bar.
  */
-const Header: React.FC = (): JSX.Element => {
+const Header: React.FC<HeaderProps> = ({ userData, onLogout }): JSX.Element => {
   // Create an array of navigation links for dynamic rendering.
   const links = [
     { href: "#", label: "Chats" },
@@ -66,6 +72,8 @@ const Header: React.FC = (): JSX.Element => {
     { href: "/team.html", label: "Team" },
   ];
 
+  console.log(userData);
+  
   return (
     <header>
       <nav>
@@ -78,7 +86,14 @@ const Header: React.FC = (): JSX.Element => {
         {/* Add spacer to push profile link to the right */}
         <div style={{ flexGrow: 1 }} />
         {/* Render profile link */}
-        <ProfileLink href="/profile.html" username="John Doe" />
+        {userData ? (
+          <>
+            <ProfileLink href="/profile" username={userData.name} />
+          </>
+        ) : null}
+            <button onClick={onLogout} className="logout-button">
+              Logout
+            </button>
       </nav>
     </header>
   );

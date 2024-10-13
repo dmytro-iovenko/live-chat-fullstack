@@ -40,4 +40,14 @@ export const registerUser = async (userData: Omit<UserProps, "id">) => {
   return response.data;
 };
 
+/**
+ * Function to get user data by email from the backend.
+ * @param email - The email of the user to be fetched.
+ * @returns The user data object containing ID, email, and name.
+ */
+export const getUserByEmail = async (email: string): Promise<UserProps> => {
+  const response = await apiClient.get(`/users?email=${email}`);
+  return response.data.length > 0 ? response.data[0] : null;
+};
+
 export default apiClient;

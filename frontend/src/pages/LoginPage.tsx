@@ -1,15 +1,26 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { auth } from "../firebase/firebaseConfig";
 import AuthForm from "../components/AuthForm/AuthForm";
+import { getUserByEmail } from "../services/apiClient";
+import { UserProps } from "../data/users";
+
+/**
+ * Props for the LoginPage component.
+ * Contains the function to set user data in the parent component.
+ */
+interface LoginPageProps {
+  setUserData: (data: UserProps | null) => void; // Function to update user data
+}
 
 /**
  * LoginPage component that handles user login.
  * Manages form submission, error handling, and navigation after successful login.
+ * @param {LoginPageProps} props - The props for the LoginPage component.
  * @returns The LoginPage component.
  */
-const LoginPage: React.FC = () => {
+const LoginPage: React.FC<LoginPageProps> = ({ setUserData }: LoginPageProps) => {
   const navigate = useNavigate();
   const [error, setError] = useState<string | null>(null);
 
@@ -27,6 +38,18 @@ const LoginPage: React.FC = () => {
     try {
       // Attempt to sign in the user with Firebase using provided credentials
       await signInWithEmailAndPassword(auth, email, password);
+      // Get user data from the backend
+      const user = await getUserByEmail(email);
+      // Check if the user was not found in the database
+      if (!user) {
+        // Logout from Firebase
+        await signOut(auth);
+        setError("User authenticated, but not found in the database. Please contact the administrator for assistance.");
+        return;
+      }
+      // Save user data
+      setUserData(user);
+      console.log(user);
       navigate("/");
     } catch (error) {
       console.error("Error logging in:", error);
@@ -49,7 +72,10 @@ const LoginPage: React.FC = () => {
         setError("Incorrect password. Please try again.");
         break;
       case "auth/invalid-email":
-        setError("The email address is not valid.");
+        setError("The email address is not valid. Please check and try again.");
+        break;
+      case "auth/invalid-credential":
+        setError("The credentials provided are invalid. Please check and try again.");
         break;
       default:
         setError("Login failed. Please try again.");

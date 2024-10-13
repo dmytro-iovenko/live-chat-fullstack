@@ -5,15 +5,17 @@ import Header from "./components/Header/Header";
 import Main from "./components/Main/Main";
 import MessagesPane from "./components/MessagesPane/MessagesPane";
 import { ChatProps } from "./data/chats";
+import { UserProps } from "./data/users";
 import { getChats } from "./services/apiClient";
 import { useAuth } from "./context/AuthContext";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 
 const App: React.FC = () => {
-  const { user, loading } = useAuth();
+  const { user, loading, logout } = useAuth();
   const [chatList, setChatList] = useState<ChatProps[]>([]);
   const [selectedChat, setSelectedChat] = useState<ChatProps | null>(null);
+  const [userData, setUserData] = useState<UserProps | null>(null);
 
   // Initial request to backend on first render
   useEffect(() => {
@@ -42,21 +44,28 @@ const App: React.FC = () => {
     setChatList(updatedChats);
   };
 
+  const handleLogout = async () => {
+    await logout();
+    setUserData(null);
+  };
+
   if (loading) return <div>Loading...</div>;
 
   return (
     <Router>
-      <Header />
-      {user ? (
-        <Main>
-          <ChatsPane chats={chatList} selectedChatId={selectedChat?._id} setSelectedChat={setSelectedChat} />
-          <MessagesPane chat={selectedChat} onUpdateChats={handleUpdateChats} />
-        </Main>
+      {user && userData ? (
+        <>
+          <Header userData={userData} onLogout={handleLogout} />
+          <Main>
+            <ChatsPane chats={chatList} selectedChatId={selectedChat?._id} setSelectedChat={setSelectedChat} />
+            <MessagesPane chat={selectedChat} onUpdateChats={handleUpdateChats} />
+          </Main>
+        </>
       ) : (
         <>
           <Routes>
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/login" element={<LoginPage setUserData={setUserData} />} />
+            <Route path="/register" element={<RegisterPage setUserData={setUserData} />} />
             <Route path="*" element={<Navigate to="/login" />} />
           </Routes>
         </>

@@ -16,10 +16,14 @@ const createUser = async (req, res) => {
   }
 };
 
-// Asynchronous function to get all users
+// Asynchronous function to get users, either all or by filter
 const getUsers = async (req, res) => {
   try {
-    const users = await User.find();
+    const filter = {};
+    // Iterate through the keys of the query parameters to dynamically build the filter
+    Object.keys(req.query).forEach((key) => req.query[key] && (filter[key] = req.query[key]));
+    // Find users based on the filter
+    const users = await User.find(filter);
     res.send(users).status(200);
   } catch (err) {
     res.send(err).status(400);

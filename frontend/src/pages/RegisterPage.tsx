@@ -7,11 +7,19 @@ import { UserProps } from "../data/users";
 import { registerUser } from "../services/apiClient";
 
 /**
+ * Props for the RegisterPage component.
+ * Contains the function to set user data in the parent component.
+ */
+interface RegisterPageProps {
+  setUserData: (data: UserProps | null) => void; // Function to update user data
+}
+/**
  * RegisterPage component that handles user registration.
  * Manages form submission, error handling, and navigation after successful registration.
+ * @param {RegisterPageProps} props - The props for the RegisterPage component.
  * @returns The RegisterPage component.
  */
-const RegisterPage: React.FC = () => {
+const RegisterPage: React.FC<RegisterPageProps> = ({ setUserData }: RegisterPageProps) => {
   const navigate = useNavigate();
   const [error, setError] = useState<string | null>(null);
 
@@ -46,16 +54,18 @@ const RegisterPage: React.FC = () => {
     try {
       // Register the user with Firebase
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
+      const firebaseUser = userCredential.user;
 
       // Prepare user data to send to the backend
       const userData: Omit<UserProps, "id"> = {
         name,
-        email: user.email || "",
+        email: firebaseUser.email || "",
       };
 
       // Send the user data to the backend
-      await registerUser(userData);
+      const user = await registerUser(userData);
+      // Save new user data to state variable
+      setUserData(user);
       navigate("/");
     } catch (error) {
       console.error("Error registering:", error);
@@ -72,6 +82,7 @@ const RegisterPage: React.FC = () => {
   const handleFirebaseError = (error: any) => {
     switch (error.code) {
       case "auth/email-already-in-use":
+      case "auth/credential-already-in-use":
         setError("This email is already registered. Please use a different email.");
         break;
       case "auth/invalid-email":
