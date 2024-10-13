@@ -1,6 +1,7 @@
 import axios from "axios";
 import { MessageItemProps } from "../components/MessageItem/MessageItem";
 import { ChatProps } from "../data/chats";
+import { UserProps } from "../data/users";
 
 const apiClient = axios.create({
   baseURL: import.meta.env.VITE_LIVECHAT_API_URL,
@@ -28,3 +29,15 @@ export const addMessageToChat = async (chatId: string, message: Omit<MessageItem
   const response = await apiClient.post(`/chats/${chatId}/messages`, message);
   return response.data;
 };
+
+/**
+ * Function to register a new user in the backend.
+ * @param userData - The user data to be sent to the backend.
+ * @returns The response from the server after creating the user.
+ */
+export const registerUser = async (userData: Omit<UserProps, "id">) => {
+  const response = await apiClient.post("/users", userData);
+  return response.data;
+};
+
+export default apiClient;
