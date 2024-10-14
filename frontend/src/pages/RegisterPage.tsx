@@ -57,7 +57,7 @@ const RegisterPage: React.FC<RegisterPageProps> = ({ setUserData }: RegisterPage
       const firebaseUser = userCredential.user;
 
       // Prepare user data to send to the backend
-      const userData: Omit<UserProps, "id"> = {
+      const userData: Omit<UserProps, "_id"> = {
         name,
         email: firebaseUser.email || "",
       };

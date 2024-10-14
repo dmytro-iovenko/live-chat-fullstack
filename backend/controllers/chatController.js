@@ -29,8 +29,9 @@ const createChat = async (req, res) => {
 // Asynchronous function to get all chats, filtered if necessary
 const getChats = async (req, res) => {
   try {
-    const filter = req.filter;
-    const chats = await Chat.find(filter).populate(["sender", "messages"]).exec();
+    // Collect filters from req.locals.filter, if any
+    const filter = (req.locals && req.locals.filter) || {};
+    let chats = await Chat.find(filter).populate(["sender", "users", "messages"]).exec();
     // Process each chat and populate sender for messages
     const populatedChats = await Promise.all(
       chats.map(async (chat) => {

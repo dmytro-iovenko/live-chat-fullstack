@@ -6,7 +6,7 @@ import Main from "./components/Main/Main";
 import MessagesPane from "./components/MessagesPane/MessagesPane";
 import { ChatProps } from "./data/chats";
 import { UserProps } from "./data/users";
-import { getChats } from "./services/apiClient";
+import { getUserChats } from "./services/apiClient";
 import { useAuth } from "./context/AuthContext";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
@@ -19,10 +19,12 @@ const App: React.FC = () => {
 
   // Initial request to backend on first render
   useEffect(() => {
+    console.log(userData)
+    if (!userData || !userData._id) return;
     let isMounted = true;
     (async () => {
       try {
-        const data = await getChats();
+        const data = await getUserChats(userData._id);
         if (isMounted) {
           console.log(data);
           setChatList(data);
@@ -37,7 +39,7 @@ const App: React.FC = () => {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [userData]);
 
   const handleUpdateChats = async (updatedChat: ChatProps | null) => {
     const updatedChats = chatList.map((c) => (c._id === updatedChat?._id ? updatedChat : c));

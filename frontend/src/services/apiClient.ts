@@ -11,11 +11,11 @@ const apiClient = axios.create({
 });
 
 /**
- * Function to get all chats, filtered if necessary.
+ * Function to get all chats for the specified user, filtered if necessary.
  * @returns A promise that resolves to an array of ChatProps.
  */
-export const getChats = async (): Promise<ChatProps[]> => {
-  const response = await apiClient.get("/chats");
+export const getUserChats = async (userId: string | null): Promise<ChatProps[]> => {
+  const response = await apiClient.get(`/chats?userId=${userId}`);
   return response.data;
 };
 
@@ -35,7 +35,7 @@ export const addMessageToChat = async (chatId: string, message: Omit<MessageItem
  * @param userData - The user data to be sent to the backend.
  * @returns The response from the server after creating the user.
  */
-export const registerUser = async (userData: Omit<UserProps, "id">) => {
+export const registerUser = async (userData: Omit<UserProps, "_id">) => {
   const response = await apiClient.post("/users", userData);
   return response.data;
 };
