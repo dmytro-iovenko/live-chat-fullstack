@@ -29,15 +29,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setUser(null); // Clear the user state after logout
     } catch (error) {
       console.error("Error logging out:", error);
-      // Handle any errors that may occur during logout
     }
   };
 
-  return (
-    <AuthContext.Provider value={{ user, loading, logout }}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={{ user, loading, logout }}>{children}</AuthContext.Provider>;
 };
 
 export const useAuth = () => {

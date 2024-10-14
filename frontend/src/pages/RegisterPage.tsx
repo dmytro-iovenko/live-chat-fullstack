@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from "../firebase/firebaseConfig";
 import AuthForm from "../components/AuthForm/AuthForm";
 import { UserProps } from "../data/users";
@@ -55,13 +55,15 @@ const RegisterPage: React.FC<RegisterPageProps> = ({ setUserData }: RegisterPage
       // Register the user with Firebase
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const firebaseUser = userCredential.user;
-
+      // Update the displayName field
+      await updateProfile(firebaseUser, {
+        displayName: name,
+      });
       // Prepare user data to send to the backend
       const userData: Omit<UserProps, "_id"> = {
         name,
         email: firebaseUser.email || "",
       };
-
       // Send the user data to the backend
       const user = await registerUser(userData);
       // Save new user data to state variable

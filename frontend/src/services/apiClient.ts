@@ -1,4 +1,5 @@
 import axios from "axios";
+import { auth } from "../firebase/firebaseConfig";
 import { MessageItemProps } from "../components/MessageItem/MessageItem";
 import { ChatProps } from "../data/chats";
 import { UserProps } from "../data/users";
@@ -10,6 +11,21 @@ const apiClient = axios.create({
     "Content-Type": "application/json",
   },
 });
+
+// Add a request interceptor to include JWT token in headers
+apiClient.interceptors.request.use(
+  async (config) => {
+    const user = auth.currentUser;
+    if (user) {
+      const token = await user.getIdToken();
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
 
 /**
  * Function to get all chats for the specified user, filtered if necessary.

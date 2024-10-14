@@ -6,16 +6,47 @@ import Main from "./components/Main/Main";
 import MessagesPane from "./components/MessagesPane/MessagesPane";
 import { ChatProps } from "./data/chats";
 import { UserProps } from "./data/users";
-import { getUserChats } from "./services/apiClient";
+import { getUserByEmail, getUserChats } from "./services/apiClient";
 import { useAuth } from "./context/AuthContext";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
+import { signOut } from "firebase/auth";
+import { auth } from "./firebase/firebaseConfig";
 
 const App: React.FC = () => {
   const { user, loading, logout } = useAuth();
   const [chatList, setChatList] = useState<ChatProps[]>([]);
   const [selectedChat, setSelectedChat] = useState<ChatProps | null>(null);
   const [userData, setUserData] = useState<UserProps | null>(null);
+
+  // Check for token on initial load and set Firebase user
+  useEffect(() => {
+    let isMounted = true;
+    // Get user data from the backend
+    (async () => {
+      try {
+        if (user && user.email) {
+          const userData = await getUserByEmail(user.email);
+          if (isMounted) {
+            // Check if the user was not found in the database
+            if (!userData) {
+              // Logout from Firebase
+              await signOut(auth);
+              return;
+            }
+            // Save user data
+            setUserData(userData);
+            console.log(userData);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    })();
+    return () => {
+      isMounted = false;
+    };
+  }, [user]);
 
   // Initial request to backend on first render
   useEffect(() => {
@@ -54,14 +85,18 @@ const App: React.FC = () => {
 
   return (
     <Router>
-      {user && userData ? (
-        <>
-          <Header userData={userData} onLogout={handleLogout} />
-          <Main>
-            <ChatsPane chats={chatList} selectedChatId={selectedChat?._id} setSelectedChat={setSelectedChat} />
-            <MessagesPane chat={selectedChat} onUpdateChats={handleUpdateChats} userData={userData} />
-          </Main>
-        </>
+      {user ? (
+        userData ? (
+          <>
+            <Header userData={userData} onLogout={handleLogout} />
+            <Main>
+              <ChatsPane chats={chatList} selectedChatId={selectedChat?._id} setSelectedChat={setSelectedChat} />
+              <MessagesPane chat={selectedChat} onUpdateChats={handleUpdateChats} userData={userData} />
+            </Main>
+          </>
+        ) : (
+          <div>Loading...</div>
+        )
       ) : (
         <>
           <Routes>
@@ -70,6 +105,13 @@ const App: React.FC = () => {
             <Route path="*" element={<Navigate to="/login" />} />
           </Routes>
         </>
+      )}
+      {/* Redirect authenticated users trying to access login or register */}
+      {user && (
+        <Routes>
+          <Route path="/login" element={<Navigate to="/" replace />} />
+          <Route path="/register" element={<Navigate to="/" replace />} />
+        </Routes>
       )}
     </Router>
   );
