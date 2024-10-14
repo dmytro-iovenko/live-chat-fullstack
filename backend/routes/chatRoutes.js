@@ -1,7 +1,7 @@
 import express from "express";
 import chatController from "../controllers/chatController.js";
 import filterChatsByActive from "../middlewares/filterChatsByActive.js";
-import checkUserId from "../middlewares/checkUserId.js";
+import userAuth from "../middlewares/userAuth.js";
 
 // Create Express Router instance
 const router = express.Router();
@@ -9,32 +9,32 @@ const router = express.Router();
 router
   .route("/")
   // Define a route to get all chats, filtered if necessary
-  .get(checkUserId, filterChatsByActive, chatController.getChats)
+  .get(userAuth, filterChatsByActive, chatController.getChats)
   // Define a route to create a new chat
   .post(chatController.createChat);
 
 router
   .route("/:id")
   // Define a route to get chat with the specified id
-  .get(checkUserId, chatController.getChatById)
+  .get(userAuth, chatController.getChatById)
   // Define a route to delete chat with the specified id
-  .delete(checkUserId, chatController.deleteChatById);
+  .delete(userAuth, chatController.deleteChatById);
 
 router
   .route("/:id/users")
   // Define a route to add user(s) to chat with the specified id
-  .post(checkUserId, chatController.addUsersToChat)
+  .post(userAuth, chatController.addUsersToChat)
   // Define a route to delete user(s) from chat with the specified id
-  .delete(checkUserId, chatController.deleteUsersFromChat);
+  .delete(userAuth, chatController.deleteUsersFromChat);
 
 router
   .route("/:id/messages")
   // Define a route to add message to chat with the specified id
-  .post(checkUserId, chatController.addMessageToChat);
+  .post(userAuth, chatController.addMessageToChat);
 
 router
   .route("/:id/messages/:messageId")
   // Define a route to delete message from chat with the specified id
-  .delete(checkUserId, chatController.deleteMessageFromChat);
+  .delete(userAuth, chatController.deleteMessageFromChat);
 
 export default router;

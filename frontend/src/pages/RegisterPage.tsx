@@ -11,7 +11,7 @@ import { registerUser } from "../services/apiClient";
  * Contains the function to set user data in the parent component.
  */
 interface RegisterPageProps {
-  setUserData: (data: UserProps | null) => void; // Function to update user data
+    setIsLoggedIn: (data: boolean) => void; // Function to update user data
 }
 /**
  * RegisterPage component that handles user registration.
@@ -19,7 +19,7 @@ interface RegisterPageProps {
  * @param {RegisterPageProps} props - The props for the RegisterPage component.
  * @returns The RegisterPage component.
  */
-const RegisterPage: React.FC<RegisterPageProps> = ({ setUserData }: RegisterPageProps) => {
+const RegisterPage: React.FC<RegisterPageProps> = ({ setIsLoggedIn }: RegisterPageProps) => {
   const navigate = useNavigate();
   const [error, setError] = useState<string | null>(null);
 
@@ -62,12 +62,12 @@ const RegisterPage: React.FC<RegisterPageProps> = ({ setUserData }: RegisterPage
       // Prepare user data to send to the backend
       const userData: Omit<UserProps, "_id"> = {
         name,
-        email: firebaseUser.email || "",
+        email: firebaseUser.email ?? "",
       };
       // Send the user data to the backend
-      const user = await registerUser(userData);
-      // Save new user data to state variable
-      setUserData(user);
+      await registerUser(userData);
+      // Set flag to indicate successful login
+      setIsLoggedIn(true);
       navigate("/");
     } catch (error) {
       console.error("Error registering:", error);

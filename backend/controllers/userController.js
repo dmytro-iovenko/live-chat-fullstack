@@ -23,7 +23,7 @@ const getUsers = async (req, res) => {
     // Iterate through the keys of the query parameters to dynamically build the filter
     Object.keys(req.query).forEach((key) => req.query[key] && (filter[key] = req.query[key]));
     // Find users based on the filter
-    const users = await User.find(filter);
+    const users = await User.find(filter).collation({ locale: "en", strength: 2 });
     res.send(users).status(200);
   } catch (err) {
     res.send(err).status(400);

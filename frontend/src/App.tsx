@@ -5,56 +5,24 @@ import Header from "./components/Header/Header";
 import Main from "./components/Main/Main";
 import MessagesPane from "./components/MessagesPane/MessagesPane";
 import { ChatProps } from "./data/chats";
-import { UserProps } from "./data/users";
-import { getUserByEmail, getUserChats } from "./services/apiClient";
+import { getUserChats } from "./services/apiClient";
 import { useAuth } from "./context/AuthContext";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
-import { signOut } from "firebase/auth";
-import { auth } from "./firebase/firebaseConfig";
 
 const App: React.FC = () => {
   const { user, loading, logout } = useAuth();
   const [chatList, setChatList] = useState<ChatProps[]>([]);
   const [selectedChat, setSelectedChat] = useState<ChatProps | null>(null);
-  const [userData, setUserData] = useState<UserProps | null>(null);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
 
-  // Check for token on initial load and set Firebase user
+  // Initial request to backend to collect user's chats
   useEffect(() => {
-    let isMounted = true;
-    // Get user data from the backend
-    (async () => {
-      try {
-        if (user && user.email) {
-          const userData = await getUserByEmail(user.email);
-          if (isMounted) {
-            // Check if the user was not found in the database
-            if (!userData) {
-              // Logout from Firebase
-              await signOut(auth);
-              return;
-            }
-            // Save user data
-            setUserData(userData);
-            console.log(userData);
-          }
-        }
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-      }
-    })();
-    return () => {
-      isMounted = false;
-    };
-  }, [user]);
-
-  // Initial request to backend on first render
-  useEffect(() => {
-    if (!userData || !userData._id) return;
+    if (!isLoggedIn) return;
     let isMounted = true;
     (async () => {
       try {
-        const data = await getUserChats(userData._id);
+        const data = await getUserChats();
         if (isMounted) {
           console.log(data);
           setChatList(data);
@@ -69,7 +37,7 @@ const App: React.FC = () => {
     return () => {
       isMounted = false;
     };
-  }, [userData]);
+  }, [isLoggedIn]);
 
   const handleUpdateChats = async (updatedChat: ChatProps | null) => {
     const updatedChats = chatList.map((c) => (c._id === updatedChat?._id ? updatedChat : c));
@@ -78,7 +46,9 @@ const App: React.FC = () => {
 
   const handleLogout = async () => {
     await logout();
-    setUserData(null);
+    setIsLoggedIn(false);
+    setChatList([]);
+    setSelectedChat(null);
   };
 
   if (loading) return <div>Loading...</div>;
@@ -86,22 +56,18 @@ const App: React.FC = () => {
   return (
     <Router>
       {user ? (
-        userData ? (
-          <>
-            <Header userData={userData} onLogout={handleLogout} />
-            <Main>
-              <ChatsPane chats={chatList} selectedChatId={selectedChat?._id} setSelectedChat={setSelectedChat} />
-              <MessagesPane chat={selectedChat} onUpdateChats={handleUpdateChats} userData={userData} />
-            </Main>
-          </>
-        ) : (
-          <div>Loading...</div>
-        )
+        <>
+          <Header user={user} onLogout={handleLogout} />
+          <Main>
+            <ChatsPane chats={chatList} selectedChatId={selectedChat?._id} setSelectedChat={setSelectedChat} />
+            <MessagesPane chat={selectedChat} onUpdateChats={handleUpdateChats} user={user} />
+          </Main>
+        </>
       ) : (
         <>
           <Routes>
-            <Route path="/login" element={<LoginPage setUserData={setUserData} />} />
-            <Route path="/register" element={<RegisterPage setUserData={setUserData} />} />
+            <Route path="/login" element={<LoginPage setIsLoggedIn={setIsLoggedIn} />} />
+            <Route path="/register" element={<RegisterPage setIsLoggedIn={setIsLoggedIn} />} />
             <Route path="*" element={<Navigate to="/login" />} />
           </Routes>
         </>

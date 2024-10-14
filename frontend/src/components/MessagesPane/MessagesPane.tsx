@@ -6,7 +6,7 @@ import MessageInput from "../MessageInput/MessageInput";
 import MessageList from "../MessageList/MessageList";
 import { MessageItemProps } from "../MessageItem/MessageItem";
 import { ChatProps } from "../../data/chats";
-import { UserProps } from "../../data/users";
+import { User } from "firebase/auth";
 import { v4 as uuid } from "uuid";
 import { addMessageToChat } from "../../services/apiClient";
 import "./MessagesPane.css";
@@ -19,7 +19,7 @@ import "./MessagesPane.css";
 interface MessagePaneProps {
   chat: ChatProps | null; // Chat object containing messages and sender details
   onUpdateChats: (updatedChat: ChatProps | null) => void; // Function to update the chats array in the parent component.
-  userData: UserProps | null; // Current user data object for identifying the sender
+  user: User | null; // Current user data object for identifying the sender
 }
 
 /**
@@ -28,10 +28,10 @@ interface MessagePaneProps {
  * @param {MessagePaneProps} props - The props containing chat information.
  * @param {ChatProps} props.chat - The chat object containing messages and sender details.
  * @param {(updatedChat: ChatProps) => void} props.onUpdateChats - Function to update the chats array in the parent component.
- * @param {UserProps | null} props.userData - Current user data object for identifying the sender.
+ * @param {User | null} props.user - Current user data object for identifying the sender.
  * @returns {JSX.Element} The MessagesPane component.
  */
-const MessagesPane: React.FC<MessagePaneProps> = ({ chat, onUpdateChats, userData }: MessagePaneProps): JSX.Element => {
+const MessagesPane: React.FC<MessagePaneProps> = ({ chat, onUpdateChats, user }: MessagePaneProps): JSX.Element => {
   const [chatMessages, setChatMessages] = useState(chat?.messages);
   const [textAreaValue, setTextAreaValue] = useState("");
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
@@ -42,7 +42,7 @@ const MessagesPane: React.FC<MessagePaneProps> = ({ chat, onUpdateChats, userDat
   }, [chat?.messages]);
 
   const handleSubmit = async () => {
-    if (!chat || !chatMessages || !userData || !userData._id) return;
+    if (!chat || !chatMessages || !user) return;
     const tempId = uuid();
     const newMessage: Omit<MessageItemProps, "_id" | "status" | "sender"> = {
       text: textAreaValue,
@@ -57,7 +57,7 @@ const MessagesPane: React.FC<MessagePaneProps> = ({ chat, onUpdateChats, userDat
 
     try {
       // Add a new message to the chat with the specified ID and store added message
-      const message = await addMessageToChat(chat._id, newMessage, userData._id);
+      const message = await addMessageToChat(chat._id, newMessage);
       console.log(message);
 
       // Update the message locally to use the MongoDB _id and status

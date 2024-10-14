@@ -32,8 +32,8 @@ apiClient.interceptors.request.use(
  * @param userId - The ID of the user for whom to fetch chats.
  * @returns A promise that resolves to an array of ChatProps.
  */
-export const getUserChats = async (userId: string | null): Promise<ChatProps[]> => {
-  const response = await apiClient.get(`/chats?userId=${userId}`);
+export const getUserChats = async (): Promise<ChatProps[]> => {
+  const response = await apiClient.get(`/chats`);
   return response.data;
 };
 
@@ -46,11 +46,10 @@ export const getUserChats = async (userId: string | null): Promise<ChatProps[]> 
  */
 export const addMessageToChat = async (
   chatId: string,
-  message: Omit<MessageItemProps, "_id" | "status" | "sender">,
-  userId: string
+  message: Omit<MessageItemProps, "_id" | "status" | "sender">
 ) => {
-  const data = { ...message, sender: userId };
-  const response = await apiClient.post(`/chats/${chatId}/messages?userId=${userId}`, data);
+  const data = { ...message };
+  const response = await apiClient.post(`/chats/${chatId}/messages`, data);
   return response.data;
 };
 

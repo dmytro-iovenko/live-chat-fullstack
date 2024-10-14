@@ -6,7 +6,7 @@ import "./Avatar.css";
  * Contains the username used to generate the avatar initials.
  */
 interface AvatarProps {
-  username: string; // Username to generate initials
+  username: string | null; // Username to generate initials
 }
 
 /**
@@ -18,7 +18,7 @@ interface AvatarProps {
  */
 
 const Avatar: React.FC<AvatarProps> = ({ username }: AvatarProps): JSX.Element => {
-  const initials = getInitials(username);
+  const initials = getInitials(username ?? "Anonimous");
   const avatarClass = getAvatarClass(initials);
 
   return <div className={`avatar ${avatarClass}`}>{initials}</div>;

@@ -4,14 +4,13 @@ import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { auth } from "../firebase/firebaseConfig";
 import AuthForm from "../components/AuthForm/AuthForm";
 import { getUserByEmail } from "../services/apiClient";
-import { UserProps } from "../data/users";
 
 /**
  * Props for the LoginPage component.
- * Contains the function to set user data in the parent component.
+ * Contains the function to set the login state of the user.
  */
 interface LoginPageProps {
-  setUserData: (data: UserProps | null) => void; // Function to update user data
+    setIsLoggedIn: (data: boolean) => void; // Function to update login status
 }
 
 /**
@@ -20,7 +19,7 @@ interface LoginPageProps {
  * @param {LoginPageProps} props - The props for the LoginPage component.
  * @returns The LoginPage component.
  */
-const LoginPage: React.FC<LoginPageProps> = ({ setUserData }: LoginPageProps) => {
+const LoginPage: React.FC<LoginPageProps> = ({ setIsLoggedIn }: LoginPageProps) => {
   const navigate = useNavigate();
   const [error, setError] = useState<string | null>(null);
 
@@ -47,9 +46,9 @@ const LoginPage: React.FC<LoginPageProps> = ({ setUserData }: LoginPageProps) =>
         setError("User authenticated, but not found in the database. Please contact the administrator for assistance.");
         return;
       }
-      // Save user data
-      setUserData(user);
       console.log(user);
+      // Set flag to indicate successful login
+      setIsLoggedIn(true);
       navigate("/");
     } catch (error) {
       console.error("Error logging in:", error);

@@ -1,7 +1,7 @@
 import React from "react";
 import Avatar from "../Avatar/Avatar";
 import "./Header.css";
-import { UserProps } from "../../data/users";
+import { User } from "firebase/auth";
 
 /**
  * Props for the NavLink component.
@@ -35,7 +35,7 @@ const NavLink: React.FC<NavLinkProps> = ({ href, children, ariaLabel }: NavLinkP
  */
 interface ProfileLinkProps {
   href: string; // The URL of the profile page
-  username: string; // The name of the user for display
+  username: string | null; // The name of the user for display
 }
 
 /**
@@ -47,7 +47,7 @@ interface ProfileLinkProps {
  */
 const ProfileLink: React.FC<ProfileLinkProps> = ({ href, username }: ProfileLinkProps): JSX.Element => {
   return (
-    <a className="profile" href={href} aria-label={`Profile of ${username}`}>
+    <a className="profile" href={href} aria-label={`Profile of ${username ?? "Anonimous"}`}>
       {/* Render the avatar for the user */}
       <Avatar username={username} />
     </a>
@@ -55,7 +55,7 @@ const ProfileLink: React.FC<ProfileLinkProps> = ({ href, username }: ProfileLink
 };
 
 interface HeaderProps {
-  userData: UserProps | null; // User data
+  user: User | null; // User data
   onLogout: () => void; // Logout function
 }
 
@@ -64,7 +64,7 @@ interface HeaderProps {
  * Renders navigation links and the user's profile link.
  * @returns {JSX.Element} The Header component rendering the navigation bar.
  */
-const Header: React.FC<HeaderProps> = ({ userData, onLogout }): JSX.Element => {
+const Header: React.FC<HeaderProps> = ({ user, onLogout }): JSX.Element => {
   // Create an array of navigation links for dynamic rendering.
   const links = [
     { href: "#", label: "Chats" },
@@ -72,8 +72,8 @@ const Header: React.FC<HeaderProps> = ({ userData, onLogout }): JSX.Element => {
     { href: "/team.html", label: "Team" },
   ];
 
-  console.log(userData);
-  
+  console.log(user);
+
   return (
     <header>
       <nav>
@@ -86,14 +86,14 @@ const Header: React.FC<HeaderProps> = ({ userData, onLogout }): JSX.Element => {
         {/* Add spacer to push profile link to the right */}
         <div style={{ flexGrow: 1 }} />
         {/* Render profile link */}
-        {userData ? (
+        {user ? (
           <>
-            <ProfileLink href="/profile" username={userData.name} />
+            <ProfileLink href="/profile" username={user.displayName} />
           </>
         ) : null}
-            <button onClick={onLogout} className="logout-button">
-              Logout
-            </button>
+        <button onClick={onLogout} className="logout-button">
+          Logout
+        </button>
       </nav>
     </header>
   );

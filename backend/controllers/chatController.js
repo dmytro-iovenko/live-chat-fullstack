@@ -29,6 +29,7 @@ const createChat = async (req, res) => {
 // Asynchronous function to get all chats, filtered if necessary
 const getChats = async (req, res) => {
   try {
+    if (!req.user || !req.user._id) return res.status(400).send({ error: "User ID is required." });
     // Collect filters from req.locals.filter, if any
     const filter = (req.locals && req.locals.filter) || {};
     let chats = await Chat.find(filter).populate(["sender", "users", "messages"]).exec();
@@ -40,7 +41,7 @@ const getChats = async (req, res) => {
             if (message.sender instanceof mongoose.Types.ObjectId) {
               const sender = await User.findById(message.sender);
               if (sender) {
-                const userId = new mongoose.Types.ObjectId(`${req.query.userId}`);
+                const userId = new mongoose.Types.ObjectId(`${req.user._id}`);
                 const name = userId && userId.equals(sender._id) ? "You" : sender.name;
                 return { ...message.toObject(), sender: name };
               }
@@ -117,6 +118,7 @@ const deleteUsersFromChat = async (req, res) => {
 
 // Asynchronous function to add message to chat with the specified id
 const addMessageToChat = async (req, res) => {
+  if (!req.user || !req.user._id) return res.status(400).send({ error: "User ID is required." });
   let session;
   try {
     // Start session
@@ -124,7 +126,7 @@ const addMessageToChat = async (req, res) => {
     // Start transaction
     session.startTransaction();
     // Create new message
-    const sender = new mongoose.Types.ObjectId(`${req.body.sender}`);
+    const sender = new mongoose.Types.ObjectId(`${req.user._id}`);
     const newMessage = await Message.create([{ ...req.body, sender }], { session });
     // Find chat by ID
     const chat = await Chat.findById(req.params.id).session(session);
