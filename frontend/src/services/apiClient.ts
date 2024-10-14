@@ -3,6 +3,7 @@ import { MessageItemProps } from "../components/MessageItem/MessageItem";
 import { ChatProps } from "../data/chats";
 import { UserProps } from "../data/users";
 
+// Create an instance of axios with default configurations for API requests
 const apiClient = axios.create({
   baseURL: import.meta.env.VITE_LIVECHAT_API_URL,
   headers: {
@@ -12,6 +13,7 @@ const apiClient = axios.create({
 
 /**
  * Function to get all chats for the specified user, filtered if necessary.
+ * @param userId - The ID of the user for whom to fetch chats.
  * @returns A promise that resolves to an array of ChatProps.
  */
 export const getUserChats = async (userId: string | null): Promise<ChatProps[]> => {
@@ -23,10 +25,16 @@ export const getUserChats = async (userId: string | null): Promise<ChatProps[]> 
  * Function to add a new message to the chat with the specified ID.
  * @param chatId - The ID of the chat to which the message will be added.
  * @param message - The message object to be added.
+ * @param userId - The ID of the user sending the message.
  * @returns The response from the server containing the added message.
  */
-export const addMessageToChat = async (chatId: string, message: Omit<MessageItemProps, "_id" | "status">) => {
-  const response = await apiClient.post(`/chats/${chatId}/messages`, message);
+export const addMessageToChat = async (
+  chatId: string,
+  message: Omit<MessageItemProps, "_id" | "status" | "sender">,
+  userId: string
+) => {
+  const data = { ...message, sender: userId };
+  const response = await apiClient.post(`/chats/${chatId}/messages?userId=${userId}`, data);
   return response.data;
 };
 

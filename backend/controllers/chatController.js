@@ -38,20 +38,19 @@ const getChats = async (req, res) => {
         const messages = await Promise.all(
           chat.messages.map(async (message) => {
             if (message.sender instanceof mongoose.Types.ObjectId) {
-              const user = await User.findById(message.sender);
-              // console.log("1:", user);
-              if (user) {
-                return { ...message.toObject(), sender: user.name };
+              const sender = await User.findById(message.sender);
+              if (sender) {
+                const userId = new mongoose.Types.ObjectId(`${req.query.userId}`);
+                const name = userId && userId.equals(sender._id) ? "You" : sender.name;
+                return { ...message.toObject(), sender: name };
               }
             }
             return { ...message.toObject() };
           })
         );
-        // console.log("2:", chat.messages);
         return { ...chat.toObject(), messages };
       })
     );
-    // console.log("3: Done");
     res.send(populatedChats).status(200);
   } catch (err) {
     res.send(err).status(400);
@@ -61,7 +60,7 @@ const getChats = async (req, res) => {
 // Asynchronous function to get chat with the specified id
 const getChatById = async (req, res) => {
   try {
-    const chat = await Chat.findById(req.params.id).populate(["users", "messages"]).exec();
+    const chat = await Chat.findById(req.params.id).populate(["sender", "users", "messages"]).exec();
     res.send(chat).status(200);
   } catch (err) {
     res.send(err).status(400);
@@ -125,7 +124,8 @@ const addMessageToChat = async (req, res) => {
     // Start transaction
     session.startTransaction();
     // Create new message
-    const newMessage = await Message.create([req.body], { session });
+    const sender = new mongoose.Types.ObjectId(`${req.body.sender}`);
+    const newMessage = await Message.create([{ ...req.body, sender }], { session });
     // Find chat by ID
     const chat = await Chat.findById(req.params.id).session(session);
     // Add new message to messages array
@@ -135,7 +135,7 @@ const addMessageToChat = async (req, res) => {
     // Commit transaction
     await session.commitTransaction();
     // Populate and return the updated chat
-    const updatedChat = await Chat.findById(req.params.id).populate(["users", "messages"]).exec();
+    const updatedChat = await Chat.findById(req.params.id).populate(["sender", "users", "messages"]).exec();
     // Ensure virtual property is set on the fetched document
     updatedChat._newMessage = newMessage[0];
     res.send(updatedChat).status(200);
@@ -168,7 +168,7 @@ const deleteMessageFromChat = async (req, res) => {
     // Commit transaction
     await session.commitTransaction();
     // Populate and return the updated chat
-    const updatedChat = await Chat.findById(req.params.id).populate(["users", "messages"]).exec();
+    const updatedChat = await Chat.findById(req.params.id).populate(["sender", "users", "messages"]).exec();
     // Ensure virtual property is set on the fetched document
     updatedChat._deletedMessage = deletedMessage;
     res.send(updatedChat).status(200);

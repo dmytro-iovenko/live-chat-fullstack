@@ -19,7 +19,6 @@ const App: React.FC = () => {
 
   // Initial request to backend on first render
   useEffect(() => {
-    console.log(userData)
     if (!userData || !userData._id) return;
     let isMounted = true;
     (async () => {
@@ -60,7 +59,7 @@ const App: React.FC = () => {
           <Header userData={userData} onLogout={handleLogout} />
           <Main>
             <ChatsPane chats={chatList} selectedChatId={selectedChat?._id} setSelectedChat={setSelectedChat} />
-            <MessagesPane chat={selectedChat} onUpdateChats={handleUpdateChats} />
+            <MessagesPane chat={selectedChat} onUpdateChats={handleUpdateChats} userData={userData} />
           </Main>
         </>
       ) : (
