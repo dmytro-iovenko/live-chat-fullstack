@@ -162,7 +162,7 @@ const deleteMessageFromChat = async (req, res) => {
     // Delete message with the specified id
     const deletedMessage = await Message.findByIdAndDelete(req.params.messageId).session(session);
     // Remove message ID from messages array
-    const chatUpdateResult = await Chat.updateOne(
+    await Chat.updateOne(
       { _id: req.params.id },
       { $pull: { messages: req.params.messageId } },
       { session }

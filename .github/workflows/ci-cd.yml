@@ -1,10 +1,10 @@
-name: Live Chat CI/CD
+name: Live Chat CI/CD Pipeline
 
 on:
   push:
     branches:
       - main
-      - 'feature/*'
+      - "feature/*"
   pull_request:
     branches:
       - main
@@ -15,30 +15,43 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: List Current and Frontend Directories
-        run: |
-          ls -la .
-          ls -la frontend
-      
-      - name: Install Frontend Dependencies
+      # Cache node_modules
+      - name: Cache Node Modules
+        uses: actions/cache@v2
+        with:
+          path: |
+            frontend/node_modules
+            backend/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      # Install and Review Frontend Code
+      - name: Install and Review Frontend Code
         run: |
           cd frontend
           npm install
-          
-      - name: Review Frontend Code
-        run: |
-          cd frontend
           npx eslint .
-          
+
+      # Install and Review Backend Code
+      - name: Install and Review Backend Code
+        run: |
+          cd backend
+          npm install
+          npx eslint .
+
   deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
 
-      # Frontend Deployment to Vercel
+      # Deploy Frontend to Vercel
       - name: Deploy Frontend to Vercel
         run: |
-          cd frontend
-          npm install
-          npm run build
           vercel --prod --token ${{ secrets.VERCEL_TOKEN }}
+
+      # Deploy Backend to Render
+      - name: Deploy Backend to Render
+        run: |
+          curl -X POST https://api.render.com/v1/services/srv-cs6sm90gph6c73f99p1g/deploys \
+          -H "Authorization: Bearer ${{ secrets.RENDER_TOKEN }}"

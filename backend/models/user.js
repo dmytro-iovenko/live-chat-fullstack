@@ -24,8 +24,10 @@ const userSchema = new mongoose.Schema(
       type: String,
       trim: true,
       required: [true, "The email cannot be blank"],
-      validate: [isValidEmail, "The email must be a valid email address"],
-      validate: [isNotExampleCom, 'The email must not be from the domain "example.com"'],
+      validate: [
+        { validator: isValidEmail, message: "The email must be a valid email address" },
+        { validator: isNotExampleCom, message: "The email must not be from the domain 'example.com'" },
+      ],
       index: {
         //https://stackoverflow.com/questions/13991604/mongoose-schema-validating-unique-field-case-insensitive
         unique: true,

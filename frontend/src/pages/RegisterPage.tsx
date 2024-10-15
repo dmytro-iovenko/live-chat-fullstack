@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { FirebaseError } from "firebase/app";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from "../firebase/firebaseConfig";
 import AuthForm from "../components/AuthForm/AuthForm";
@@ -11,7 +12,7 @@ import { registerUser } from "../services/apiClient";
  * Contains the function to set user data in the parent component.
  */
 interface RegisterPageProps {
-    setIsLoggedIn: (data: boolean) => void; // Function to update user data
+  setIsLoggedIn: (data: boolean) => void; // Function to update user data
 }
 /**
  * RegisterPage component that handles user registration.
@@ -69,19 +70,23 @@ const RegisterPage: React.FC<RegisterPageProps> = ({ setIsLoggedIn }: RegisterPa
       // Set flag to indicate successful login
       setIsLoggedIn(true);
       navigate("/");
-    } catch (error) {
-      console.error("Error registering:", error);
-      // Handle specific Firebase errors
-      handleFirebaseError(error);
+    } catch (error: unknown) {
+      console.error("Error logging in:", error);
+      // Handle specific Firebase error
+      if (error instanceof FirebaseError) {
+        handleFirebaseError(error); // Now this is safe
+      } else {
+        setError("An unexpected error occurred. Please try again.");
+      }
     }
   };
 
   /**
    * Function to handle Firebase registration errors.
    * Sets appropriate error messages based on Firebase error codes.
-   * @param {any} error - The error object received from Firebase.
+   * @param {FirebaseError} error - The error object received from Firebase.
    */
-  const handleFirebaseError = (error: any) => {
+  const handleFirebaseError = (error: FirebaseError) => {
     switch (error.code) {
       case "auth/email-already-in-use":
       case "auth/credential-already-in-use":

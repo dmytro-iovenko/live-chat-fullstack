@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { FirebaseError } from "firebase/app";
 import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { auth } from "../firebase/firebaseConfig";
 import AuthForm from "../components/AuthForm/AuthForm";
@@ -10,7 +11,7 @@ import { getUserByEmail } from "../services/apiClient";
  * Contains the function to set the login state of the user.
  */
 interface LoginPageProps {
-    setIsLoggedIn: (data: boolean) => void; // Function to update login status
+  setIsLoggedIn: (data: boolean) => void; // Function to update login status
 }
 
 /**
@@ -50,19 +51,23 @@ const LoginPage: React.FC<LoginPageProps> = ({ setIsLoggedIn }: LoginPageProps) 
       // Set flag to indicate successful login
       setIsLoggedIn(true);
       navigate("/");
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("Error logging in:", error);
       // Handle specific Firebase error
-      handleFirebaseError(error);
+      if (error instanceof FirebaseError) {
+        handleFirebaseError(error); // Now this is safe
+      } else {
+        setError("An unexpected error occurred. Please try again.");
+      }
     }
   };
 
   /**
    * Helper function to handle Firebase authentication errors.
    * Sets the error state with a user-friendly message based on the error code.
-   * @param {any} error - The error object returned from Firebase.
+   * @param {FirebaseError} error - The error object returned from Firebase.
    */
-  const handleFirebaseError = (error: any) => {
+  const handleFirebaseError = (error: FirebaseError) => {
     switch (error.code) {
       case "auth/user-not-found":
         setError("No user found with this email address.");

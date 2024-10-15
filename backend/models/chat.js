@@ -80,7 +80,7 @@ chatSchema.pre("save", async function (next) {
     for (const [index, messageId] of this.messages.entries()) {
       const message = await Message.findById(messageId).session(this.$session());
       if (!message) {
-        const error = new Error(`Message does not exist`);
+        const error = new Error("Message does not exist");
         error.value = messageId;
         error.path = `messages.${index}`;
         throw error;
