@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Live Chat Client</title>
+    <link rel="stylesheet" href="src/style.css" />
+  </head>
+  <body>
+    <main>
+      <section class="container">
+        <div class="container-title">
+          <div class="btn">
+            <svg focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="ArrowBackIcon"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20z"></path></svg>
+          </div>
+          <div class="chat-title">Tina Cornell</div>
+          <div class="menu-container">
+            <input id="menu-toggle" type="checkbox" />
+            <label class="btn menu-btn" for="menu-toggle">
+              <span>&nbsp;</span>
+              <div class="overlay"></div>
+            </label>
+            <ul class="menu-box">
+              <li><a class="menu-item" href="#">Test menu #1</a></li>
+              <li><a class="menu-item" href="#">Test menu #2</a></li>
+              <li><a class="menu-item" href="#">Test menu #3</a></li>
+              <li><a class="menu-item" href="#">Test menu #4</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="container-body">
+          <div class="chat-container">
+            <template id="start-chat-template">
+              <div class="form-container">
+                <div>
+                  <!-- Start Chat Form -->
+                  <form id="start-chat">
+                    <button type="submit">Chat now</button>
+                  </form>
+                </div>
+              </div>
+            </template>
+
+            <template id="registration-template">
+              <div class="form-container">
+                <div>
+                  <p>Please fill in the form below before starting the chat.</p>
+                  <!-- Registration Form -->
+                  <form id="registration">
+                    <label for="name">Name:</label>
+                    <input name="name" type="text" required />
+                    <label for="email">E-mail:</label>
+                    <input
+                      name="email"
+                      type="email"
+                      pattern="^[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$"
+                      required
+                    />
+                    <button type="submit">Start the chat</button>
+                  </form>
+                </div>
+              </div>
+            </template>
+            <!-- <div id="chat-messages" class="chat-messages"></div> -->
+            <template id="message-container-template">
+              <div class="message-container popup">
+                <form id="message-form" class="popup-content">
+                  <div class="message-area">
+                    <a href="#" id="attach-btn" class="message-area-btn">
+                      <svg
+                        focusable="false"
+                        aria-hidden="true"
+                        viewBox="0 0 24 24"
+                        data-testid="AttachFileIcon"
+                      >
+                        <path
+                          d="M16.5 6v11.5c0 2.21-1.79 4-4 4s-4-1.79-4-4V5c0-1.38 1.12-2.5 2.5-2.5s2.5 1.12 2.5 2.5v10.5c0 .55-.45 1-1 1s-1-.45-1-1V6H10v9.5c0 1.38 1.12 2.5 2.5 2.5s2.5-1.12 2.5-2.5V5c0-2.21-1.79-4-4-4S7 2.79 7 5v12.5c0 3.04 2.46 5.5 5.5 5.5s5.5-2.46 5.5-5.5V6z"
+                        ></path>
+                      </svg>
+                    </a>
+                    <div class="grow-wrap fixed">
+                      <textarea
+                        id="message-text"
+                        class="message-area-text"
+                        name="message-text"
+                        placeholder="Type a message..."
+                      ></textarea>
+                    </div>
+                    <a href="#" id="emoji-btn" class="message-area-btn">
+                      <svg
+                        focusable="false"
+                        aria-hidden="true"
+                        viewBox="0 0 24 24"
+                        data-testid="SentimentSatisfiedAltIcon"
+                      >
+                        <circle cx="15.5" cy="9.5" r="1.5"></circle>
+                        <circle cx="8.5" cy="9.5" r="1.5"></circle>
+                        <circle cx="15.5" cy="9.5" r="1.5"></circle>
+                        <circle cx="8.5" cy="9.5" r="1.5"></circle>
+                        <path
+                          d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2M12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8m0-2.5c2.33 0 4.32-1.45 5.12-3.5h-1.67c-.69 1.19-1.97 2-3.45 2s-2.75-.81-3.45-2H6.88c.8 2.05 2.79 3.5 5.12 3.5"
+                        ></path>
+                      </svg>
+                    </a>
+                    <button
+                      id="send-btn"
+                      class="message-area-btn"
+                      type="submit"
+                      disabled
+                    >
+                      <svg
+                        focusable="false"
+                        aria-hidden="true"
+                        viewBox="0 0 24 24"
+                        data-testid="SendIcon"
+                      >
+                        <path d="M2.01 21 23 12 2.01 3 2 10l15 2-15 2z"></path>
+                      </svg>
+                    </button>
+                    <div class="message-emoji">
+                      <div class="tabs-container">
+                        <input
+                          type="radio"
+                          id="emoji-tab"
+                          name="tabs"
+                          checked
+                        />
+                        <label for="emoji-tab" class="tab-label">Emoji</label>
+                        <div class="tab-content">
+                          <div class="emoji-icon">&#128512;</div>
+                          <div class="emoji-icon">&#128513;</div>
+                          <div class="emoji-icon">&#128514;</div>
+                          <div class="emoji-icon">&#128515;</div>
+                          <div class="emoji-icon">&#128516;</div>
+                          <div class="emoji-icon">&#128517;</div>
+                          <div class="emoji-icon">&#128518;</div>
+                          <div class="emoji-icon">&#128519;</div>
+                          <div class="emoji-icon">&#128520;</div>
+                          <div class="emoji-icon">&#128521;</div>
+                          <div class="emoji-icon">&#128522;</div>
+                          <div class="emoji-icon">&#128523;</div>
+                          <div class="emoji-icon">&#128524;</div>
+                          <div class="emoji-icon">&#128525;</div>
+                          <div class="emoji-icon">&#128526;</div>
+                          <div class="emoji-icon">&#128527;</div>
+                          <div class="emoji-icon">&#128528;</div>
+                          <div class="emoji-icon">&#128529;</div>
+                          <div class="emoji-icon">&#128530;</div>
+                          <div class="emoji-icon">&#128531;</div>
+                          <div class="emoji-icon">&#128532;</div>
+                          <div class="emoji-icon">&#128533;</div>
+                          <div class="emoji-icon">&#128534;</div>
+                          <div class="emoji-icon">&#128535;</div>
+                          <div class="emoji-icon">&#128536;</div>
+                          <div class="emoji-icon">&#128537;</div>
+                          <div class="emoji-icon">&#128538;</div>
+                          <div class="emoji-icon">&#128539;</div>
+                          <div class="emoji-icon">&#128540;</div>
+                          <div class="emoji-icon">&#128541;</div>
+                          <div class="emoji-icon">&#128542;</div>
+                          <div class="emoji-icon">&#128543;</div>
+                          <div class="emoji-icon">&#128544;</div>
+                          <div class="emoji-icon">&#128545;</div>
+                          <div class="emoji-icon">&#128546;</div>
+                          <div class="emoji-icon">&#128547;</div>
+                          <div class="emoji-icon">&#128548;</div>
+                          <div class="emoji-icon">&#128549;</div>
+                          <div class="emoji-icon">&#128550;</div>
+                          <div class="emoji-icon">&#128551;</div>
+                          <div class="emoji-icon">&#128552;</div>
+                          <div class="emoji-icon">&#128553;</div>
+                          <div class="emoji-icon">&#128554;</div>
+                          <div class="emoji-icon">&#128555;</div>
+                          <div class="emoji-icon">&#128556;</div>
+                          <div class="emoji-icon">&#128557;</div>
+                          <div class="emoji-icon">&#128558;</div>
+                          <div class="emoji-icon">&#128559;</div>
+                          <div class="emoji-icon">&#128560;</div>
+                          <div class="emoji-icon">&#128561;</div>
+                          <div class="emoji-icon">&#128562;</div>
+                          <div class="emoji-icon">&#128563;</div>
+                          <div class="emoji-icon">&#128564;</div>
+                          <div class="emoji-icon">&#128565;</div>
+                          <div class="emoji-icon">&#128566;</div>
+                          <div class="emoji-icon">&#128567;</div>
+                        </div>
+                        <input type="radio" id="gifs-tab" name="tabs" />
+                        <label for="gifs-tab" class="tab-label">GIFs</label>
+                        <div class="tab-content">GIFs Content Here. Short.</div>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </template>
+          </div>
+          <!-- Error Display Container -->
+          <div id="error-display"></div>
+        </div>
+      </section>
+    </main>
+  </body>
+  <script src="src/script.js"></script>
+</html>
