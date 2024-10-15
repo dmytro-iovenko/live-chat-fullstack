@@ -6,7 +6,7 @@ import Main from "./components/Main/Main";
 import MessagesPane from "./components/MessagesPane/MessagesPane";
 import { ChatProps } from "./data/chats";
 import { getUserChats } from "./services/apiClient";
-import { useAuth } from "./context/AuthContext";
+import { useAuth } from "./hooks/useAuth";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 
