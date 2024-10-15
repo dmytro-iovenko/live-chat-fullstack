@@ -48,7 +48,7 @@ jobs:
       # Deploy Frontend to Vercel
       - name: Deploy Frontend to Vercel
         run: |
-          vercel --prod --token ${{ secrets.VERCEL_TOKEN }}
+          vercel --prod --token ${{ secrets.VERCEL_TOKEN }} --confirm
 
       # Deploy Backend to Render
       - name: Deploy Backend to Render
