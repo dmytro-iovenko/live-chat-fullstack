@@ -1,0 +1,52 @@
+[
+  {
+    "_id": { "$oid": "6708648c408ad799f1354dae" },
+    "name": "Mary Sue",
+    "email": "mary.sue@livechat.local"
+  },
+  {
+    "_id": { "$oid": "6708648c408ad799f1354daf" },
+    "name": "Emily Jones",
+    "email": "emily.jones@livechat.local"
+  },
+  {
+    "_id": { "$oid": "6708648c408ad799f1354db0" },
+    "name": "Michael Brown",
+    "email": "michael.brown@livechat.local"
+  },
+  {
+    "_id": { "$oid": "6708648c408ad799f1354db1" },
+    "name": "David Wilson",
+    "email": "david.wilson@livechat.local"
+  },
+  {
+    "_id": { "$oid": "6708648c408ad799f1354db2" },
+    "name": "Sarah Davis",
+    "email": "sarah.davis@livechat.local"
+  },
+  {
+    "_id": { "$oid": "6708648c408ad799f1354db3" },
+    "name": "Olivia Taylor",
+    "email": "olivia.taylor@livechat.local"
+  },
+  {
+    "_id": { "$oid": "6708648c408ad799f1354db4" },
+    "name": "James Moore",
+    "email": "james.moore@livechat.local"
+  },
+  {
+    "_id": { "$oid": "6708648c408ad799f1354db5" },
+    "name": "John Smith",
+    "email": "john.smith@livechat.local"
+  },
+  {
+    "_id": { "$oid": "6708648c408ad799f1354db6" },
+    "name": "Laura Miller",
+    "email": "laura.miller@livechat.local"
+  },
+  {
+    "_id": { "$oid": "6708648c408ad799f1354db7" },
+    "name": "John Doe",
+    "email": "john.doe@livechat.local"
+  }
+]

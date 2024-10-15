@@ -1,4 +1,3 @@
-import { UserProps } from "../../data/users";
 import Avatar from "../Avatar/Avatar";
 import "./MessageItem.css";
 
@@ -7,13 +6,14 @@ import "./MessageItem.css";
  * Contains the details of an individual chat message.
  */
 export interface MessageItemProps {
-  id: string; // Unique identifier for the message
+  _id: string; // Unique identifier for the message
   text?: string; // The text content of the message
   image?: {
     src: string; // URL for the message image
     alt?: string; // Alt text for the message image
   };
-  sender: UserProps | "You"; // The message sender
+  sender: string; // The message sender
+  status?: "delivered" | "seen"; // The message status, restricted to specific values
 }
 
 /**
@@ -24,14 +24,15 @@ export interface MessageItemProps {
  * @returns {JSX.Element} The MessageItem component.
  */
 const MessageItem: React.FC<{ message: MessageItemProps }> = ({ message }): JSX.Element => {
-  const username = message.sender === "You" ? message.sender : message.sender.name;
   const isYou = message.sender === "You";
 
   return (
     <div className={`chat-message ${isYou ? "message-out" : "message-in"}`}>
-      <div className="chat-message-title">{username}</div>
+      <div className="chat-message-title">
+        {message.sender} | {message.status || "sending"}
+      </div>
       <div className="chat-message-group">
-        {!isYou && <Avatar username={username}></Avatar>}
+        {!isYou && <Avatar username={message.sender}></Avatar>}
         <div className="chat-message-content">
           {message.image && (
             <div className="chat-message-image">

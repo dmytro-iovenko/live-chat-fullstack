@@ -6,7 +6,7 @@ import "./MessagesPaneHeader.css";
  * Contains the title of the chat.
  */
 interface MessagesPaneHeaderProps {
-  title: string; // The title of the chat to display
+  title?: string; // The title of the chat to display
 }
 
 /**

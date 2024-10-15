@@ -1,0 +1,487 @@
+[
+  {
+    "_id": { "$oid": "6708674a408ad799f1354db9" },
+    "text": "Hi, I'm looking for wireless noise-canceling headphones.",
+    "sender": {
+      "$oid": "6708648c408ad799f1354dae"
+    }
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354dba" },
+    "text": "Ideally white ones.",
+    "sender": { "$oid": "6708648c408ad799f1354dae" }
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354dbb" },
+    "text": "Hi Tina, sure, check these out!",
+    "sender": "You"
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354dbc" },
+    "text": "www.perfectsound.com/GTXmasterheadphones",
+    "sender": "You"
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354dbd" },
+    "image": {
+      "src": "https://images.pexels.com/photos/2080611/pexels-photo-2080611.jpeg?auto=compress&cs=tinysrgb&w=320",
+      "alt": "GT-R-6"
+    },
+    "sender": "You"
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354dbe" },
+    "text": "Customers love their durability too - just take a look at the reviews.",
+    "sender": "You"
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354dbf" },
+    "text": "Looking good! What's their battery life on a single charge? And are they foldable?",
+    "sender": { "$oid": "6708648c408ad799f1354dae" }
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354dc0" },
+    "text": "You can listen to 20 hours of music on a single charge! They are foldable and come with a travel case.",
+    "sender": "You"
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354dc1" },
+    "text": "That's perfect! Do they come with a warranty?",
+    "sender": { "$oid": "6708648c408ad799f1354dae" }
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354dc2" },
+    "text": "Yes, they come with a one-year warranty.",
+    "sender": "You"
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354dc3" },
+    "text": "Hello! I need some help with my recent order.",
+    "sender": { "$oid": "6708648c408ad799f1354daf" }
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354dc4" },
+    "text": "I ordered a laptop but haven't received it yet.",
+    "sender": { "$oid": "6708648c408ad799f1354daf" }
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354dc5" },
+    "text": "Can you provide your order number?",
+    "sender": "You"
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354dc6" },
+    "text": "Sure, it's #12345.",
+    "sender": { "$oid": "6708648c408ad799f1354daf" }
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354dc7" },
+    "text": "Thanks! Let me check that for you.",
+    "sender": "You"
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354dc8" },
+    "text": "It looks like your order was shipped yesterday.",
+    "sender": "You"
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354dc9" },
+    "text": "Awesome! When can I expect it to arrive?",
+    "sender": { "$oid": "6708648c408ad799f1354daf" }
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354dca" },
+    "text": "It should arrive within 3-5 business days.",
+    "sender": "You"
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354dcb" },
+    "text": "Great! Thanks for the help.",
+    "sender": { "$oid": "6708648c408ad799f1354daf" }
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354dcc" },
+    "text": "You're welcome! Let me know if you need anything else.",
+    "sender": "You"
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354dcd" },
+    "text": "Hi there! I have a question about my account.",
+    "sender": { "$oid": "6708648c408ad799f1354db0" }
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354dce" },
+    "text": "I forgot my password. Can you help me reset it?",
+    "sender": { "$oid": "6708648c408ad799f1354db0" }
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354dcf" },
+    "text": "I tried resetting it through email, but it didn't work.",
+    "sender": { "$oid": "6708648c408ad799f1354db0" }
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354dd0" },
+    "text": "Absolutely! I can send a reset link to your email.",
+    "sender": "You"
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354dd1" },
+    "text": "Please send it to michael.brown@livechat.local.",
+    "sender": { "$oid": "6708648c408ad799f1354db0" }
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354dd2" },
+    "text": "Done! Check your email.",
+    "sender": "You"
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354dd3" },
+    "text": "I received it! Thanks for the quick help.",
+    "sender": { "$oid": "6708648c408ad799f1354db0" }
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354dd4" },
+    "text": "You're welcome! Let me know if you need further assistance.",
+    "sender": "You"
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354dd5" },
+    "text": "Hello! I'm interested in your return policy.",
+    "sender": { "$oid": "6708648c408ad799f1354db1" }
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354dd6" },
+    "text": "Can I return an item if it's been opened?",
+    "sender": { "$oid": "6708648c408ad799f1354db1" }
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354dd7" },
+    "text": "I bought a jacket but it doesn't fit well.",
+    "sender": { "$oid": "6708648c408ad799f1354db1" }
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354dd8" },
+    "text": "Yes, as long as it's in good condition.",
+    "sender": "You"
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354dd9" },
+    "text": "Great! I have a few items to return.",
+    "sender": { "$oid": "6708648c408ad799f1354db1" }
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354dda" },
+    "text": "How do I start the return process?",
+    "sender": { "$oid": "6708648c408ad799f1354db1" }
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354ddb" },
+    "text": "Please provide your order number.",
+    "sender": "You"
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354ddc" },
+    "text": "It's #54321.",
+    "sender": { "$oid": "6708648c408ad799f1354db1" }
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354ddd" },
+    "text": "Thank you! I'll initiate the return for you.",
+    "sender": "You"
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354dde" },
+    "text": "Thanks for your help!",
+    "sender": { "$oid": "6708648c408ad799f1354db1" }
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354ddf" },
+    "text": "Hi! I'm having issues with my app subscription.",
+    "sender": { "$oid": "6708648c408ad799f1354db2" }
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354de0" },
+    "text": "I was charged twice this month.",
+    "sender": { "$oid": "6708648c408ad799f1354db2" }
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354de1" },
+    "text": "I didn't expect that, can you check?",
+    "sender": { "$oid": "6708648c408ad799f1354db2" }
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354de2" },
+    "text": "Let me look into that for you.",
+    "sender": "You"
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354de3" },
+    "text": "That would be great! What did you find?",
+    "sender": { "$oid": "6708648c408ad799f1354db2" }
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354de4" },
+    "text": "It appears there was a system error. I'll process a refund.",
+    "sender": "You"
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354de5" },
+    "text": "Thanks! When will it be reflected?",
+    "sender": { "$oid": "6708648c408ad799f1354db2" }
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354de6" },
+    "text": "You should see it within 3-5 business days.",
+    "sender": "You"
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354de7" },
+    "text": "I appreciate your help with this!",
+    "sender": { "$oid": "6708648c408ad799f1354db2" }
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354de8" },
+    "text": "You're welcome! Let me know if you need anything else.",
+    "sender": "You"
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354de9" },
+    "text": "Hello! I'm looking for information on bulk orders.",
+    "sender": { "$oid": "6708648c408ad799f1354db3" }
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354dea" },
+    "text": "Do you have a minimum order quantity?",
+    "sender": { "$oid": "6708648c408ad799f1354db3" }
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354deb" },
+    "text": "And what kind of discounts do you offer?",
+    "sender": { "$oid": "6708648c408ad799f1354db3" }
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354dec" },
+    "text": "Yes, the minimum is 50 units.",
+    "sender": "You"
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354ded" },
+    "text": "What about the pricing for larger orders?",
+    "sender": { "$oid": "6708648c408ad799f1354db3" }
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354dee" },
+    "text": "We offer tiered discounts based on quantity.",
+    "sender": "You"
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354def" },
+    "text": "That sounds good! Can I see a catalog?",
+    "sender": { "$oid": "6708648c408ad799f1354db3" }
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354df0" },
+    "text": "I can send you a link to our online catalog.",
+    "sender": "You"
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354df1" },
+    "text": "Yes, please do! I'm eager to check it out.",
+    "sender": { "$oid": "6708648c408ad799f1354db3" }
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354df2" },
+    "text": "Here's the link: www.example.com/catalog",
+    "sender": "You"
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354df3" },
+    "text": "Hi, I need support with a product I purchased.",
+    "sender": { "$oid": "6708648c408ad799f1354db4" }
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354df4" },
+    "text": "It's the wireless speaker, and it's not charging.",
+    "sender": { "$oid": "6708648c408ad799f1354db4" }
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354df5" },
+    "text": "I've tried multiple outlets without success.",
+    "sender": { "$oid": "6708648c408ad799f1354db4" }
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354df6" },
+    "text": "Have you tried using a different charging cable?",
+    "sender": "You"
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354df7" },
+    "text": "Yes, I've tried that too.",
+    "sender": { "$oid": "6708648c408ad799f1354db4" }
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354df8" },
+    "text": "Let's get this sorted out. Can I get your order number?",
+    "sender": "You"
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354df9" },
+    "text": "It's #67890.",
+    "sender": { "$oid": "6708648c408ad799f1354db4" }
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354dfa" },
+    "text": "Thank you! I'll check the warranty for you.",
+    "sender": "You"
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354dfb" },
+    "text": "Please let me know what you find.",
+    "sender": { "$oid": "6708648c408ad799f1354db4" }
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354dfc" },
+    "text": "It's under warranty! We can replace it for you.",
+    "sender": "You"
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354dfd" },
+    "text": "What are the shipping options available?",
+    "sender": { "$oid": "6708648c408ad799f1354db5" }
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354dfe" },
+    "text": "I need my order to arrive as soon as possible.",
+    "sender": { "$oid": "6708648c408ad799f1354db5" }
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354dff" },
+    "text": "Do you offer same-day delivery?",
+    "sender": { "$oid": "6708648c408ad799f1354db5" }
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354e00" },
+    "text": "Yes, we do! It's available for select items.",
+    "sender": "You"
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354e01" },
+    "text": "That's great! What about next-day delivery?",
+    "sender": { "$oid": "6708648c408ad799f1354db5" }
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354e02" },
+    "text": "Next-day delivery is also an option for most products.",
+    "sender": "You"
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354e03" },
+    "text": "Perfect! Can I select my preferred delivery time?",
+    "sender": { "$oid": "6708648c408ad799f1354db5" }
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354e04" },
+    "text": "Yes, you can choose your delivery time at checkout.",
+    "sender": "You"
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354e05" },
+    "text": "Awesome! I'll make sure to select that option.",
+    "sender": { "$oid": "6708648c408ad799f1354db5" }
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354e06" },
+    "text": "Let me know if you have any other questions!",
+    "sender": "You"
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354e07" },
+    "text": "Is there a discount for first-time buyers?",
+    "sender": { "$oid": "6708648c408ad799f1354db6" }
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354e08" },
+    "text": "I'm interested in purchasing a few items.",
+    "sender": { "$oid": "6708648c408ad799f1354db6" }
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354e09" },
+    "text": "How can I apply the discount?",
+    "sender": { "$oid": "6708648c408ad799f1354db6" }
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354e0a" },
+    "text": "Yes! You can use the code FIRSTBUY at checkout.",
+    "sender": "You"
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354e0b" },
+    "text": "Thanks! What if I have an issue with the discount?",
+    "sender": { "$oid": "6708648c408ad799f1354db6" }
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354e0c" },
+    "text": "Just reach out to us, and we'll help you out.",
+    "sender": "You"
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354e0d" },
+    "text": "Great! I'll make sure to use that code.",
+    "sender": { "$oid": "6708648c408ad799f1354db6" }
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354e0e" },
+    "text": "Let me know if you need assistance with anything else.",
+    "sender": "You"
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354e0f" },
+    "text": "Can you recommend any popular products?",
+    "sender": { "$oid": "6708648c408ad799f1354db7" }
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354e10" },
+    "text": "I'm not sure what to buy.",
+    "sender": { "$oid": "6708648c408ad799f1354db7" }
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354e11" },
+    "text": "What are some customer favorites?",
+    "sender": { "$oid": "6708648c408ad799f1354db7" }
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354e12" },
+    "text": "Sure! Our bestsellers include the XYZ gadget and ABC accessory.",
+    "sender": "You"
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354e13" },
+    "text": "Those sound interesting! What are their prices?",
+    "sender": { "$oid": "6708648c408ad799f1354db7" }
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354e14" },
+    "text": "The XYZ gadget is $99, and the ABC accessory is $49.",
+    "sender": "You"
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354e15" },
+    "text": "Do you have any special offers on these?",
+    "sender": { "$oid": "6708648c408ad799f1354db7" }
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354e16" },
+    "text": "Currently, there's a buy one get one 50% off promotion.",
+    "sender": "You"
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354e17" },
+    "text": "That's a great deal! I might go for it.",
+    "sender": { "$oid": "6708648c408ad799f1354db7" }
+  },
+  {
+    "_id": { "$oid": "6708674a408ad799f1354e18" },
+    "text": "Let me know if you need help with your order!",
+    "sender": "You"
+  }
+]

@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import Chat from "../models/chat.js";
 import Message from "../models/message.js";
+import User from "../models/user.js";
 
 // Asynchronous function to create a new chat
 const createChat = async (req, res) => {
@@ -28,9 +29,30 @@ const createChat = async (req, res) => {
 // Asynchronous function to get all chats, filtered if necessary
 const getChats = async (req, res) => {
   try {
-    const filter = req.filter;
-    const chats = await Chat.find(filter).populate(["users", "messages"]).exec();
-    res.send(chats).status(200);
+    if (!req.user || !req.user._id) return res.status(400).send({ error: "User ID is required." });
+    // Collect filters from req.locals.filter, if any
+    const filter = (req.locals && req.locals.filter) || {};
+    let chats = await Chat.find(filter).populate(["sender", "users", "messages"]).exec();
+    // Process each chat and populate sender for messages
+    const populatedChats = await Promise.all(
+      chats.map(async (chat) => {
+        const messages = await Promise.all(
+          chat.messages.map(async (message) => {
+            if (message.sender instanceof mongoose.Types.ObjectId) {
+              const sender = await User.findById(message.sender);
+              if (sender) {
+                const userId = new mongoose.Types.ObjectId(`${req.user._id}`);
+                const name = userId && userId.equals(sender._id) ? "You" : sender.name;
+                return { ...message.toObject(), sender: name };
+              }
+            }
+            return { ...message.toObject() };
+          })
+        );
+        return { ...chat.toObject(), messages };
+      })
+    );
+    res.send(populatedChats).status(200);
   } catch (err) {
     res.send(err).status(400);
   }
@@ -39,7 +61,7 @@ const getChats = async (req, res) => {
 // Asynchronous function to get chat with the specified id
 const getChatById = async (req, res) => {
   try {
-    const chat = await Chat.findById(req.params.id).populate(["users", "messages"]).exec();
+    const chat = await Chat.findById(req.params.id).populate(["sender", "users", "messages"]).exec();
     res.send(chat).status(200);
   } catch (err) {
     res.send(err).status(400);
@@ -96,6 +118,7 @@ const deleteUsersFromChat = async (req, res) => {
 
 // Asynchronous function to add message to chat with the specified id
 const addMessageToChat = async (req, res) => {
+  if (!req.user || !req.user._id) return res.status(400).send({ error: "User ID is required." });
   let session;
   try {
     // Start session
@@ -103,7 +126,8 @@ const addMessageToChat = async (req, res) => {
     // Start transaction
     session.startTransaction();
     // Create new message
-    const newMessage = await Message.create([req.body], { session });
+    const sender = new mongoose.Types.ObjectId(`${req.user._id}`);
+    const newMessage = await Message.create([{ ...req.body, sender }], { session });
     // Find chat by ID
     const chat = await Chat.findById(req.params.id).session(session);
     // Add new message to messages array
@@ -113,7 +137,7 @@ const addMessageToChat = async (req, res) => {
     // Commit transaction
     await session.commitTransaction();
     // Populate and return the updated chat
-    const updatedChat = await Chat.findById(req.params.id).populate(["users", "messages"]).exec();
+    const updatedChat = await Chat.findById(req.params.id).populate(["sender", "users", "messages"]).exec();
     // Ensure virtual property is set on the fetched document
     updatedChat._newMessage = newMessage[0];
     res.send(updatedChat).status(200);
@@ -146,7 +170,7 @@ const deleteMessageFromChat = async (req, res) => {
     // Commit transaction
     await session.commitTransaction();
     // Populate and return the updated chat
-    const updatedChat = await Chat.findById(req.params.id).populate(["users", "messages"]).exec();
+    const updatedChat = await Chat.findById(req.params.id).populate(["sender", "users", "messages"]).exec();
     // Ensure virtual property is set on the fetched document
     updatedChat._deletedMessage = deletedMessage;
     res.send(updatedChat).status(200);
