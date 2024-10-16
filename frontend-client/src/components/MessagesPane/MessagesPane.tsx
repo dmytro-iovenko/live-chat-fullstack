@@ -32,7 +32,7 @@ const MessagesPane = () => {
   return (
     <main>
       <section className="container">
-        <MessagesPaneHeader title={username} />
+        {/* <MessagesPaneHeader title={username} /> */}
         <MessagesPaneBody>
           <MessageList messages={chatMessages} />
         </MessagesPaneBody>

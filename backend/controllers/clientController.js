@@ -11,7 +11,9 @@ const JWT_SECRET = process.env.CLIENT_JWT_SECRET;
 
 // Asynchronous function to authenticate client and return JWT token
 const getToken = async (req, res) => {
+  console.log("POST /token", req.body);
   const { username, email } = req.body;
+  console.log("getToken", username, email);
 
   if (!username || !email) {
     return res.status(400).json({ message: "Username and email are required." });
@@ -27,8 +29,11 @@ const getToken = async (req, res) => {
       await client.save();
     }
 
+    console.log("client", client);
+
     // Generate JWT token (1 hour expiry)
     const token = jwt.sign({ username: client.username, email: client.email }, JWT_SECRET, { expiresIn: "1h" });
+    console.log("token", token);
 
     res.status(200).json({ token });
   } catch (error) {
@@ -48,43 +53,16 @@ const getAgents = async (req, res) => {
   }
 };
 
-// Asynchronous function to create a new chat
-const createChat = async (req, res) => {
-  try {
-    const { userId } = req.body;
-    // Validate User ID
-    if (!mongoose.Types.ObjectId.isValid(userId)) {
-      return res.send({ error: "Invalid User ID" }).status(400);
-    }
-    // Check Client ID
-    if (!req.client || !req.client._id) {
-      return res.status(400).send({ error: "Client ID is required." });
-    }
-    const client = req.client._id;
-    const user = new mongoose.Types.ObjectId(`${userId}`);
-
-    const chatData = {
-      sender: user,
-      client: client,
-      users: [user],
-      active: true, // ignore any user-provided active values, default to true
-    };
-    const newChat = await Chat.create(chatData);
-    res.send(newChat).status(201);
-  } catch (err) {
-    res.send(err).status(400);
-  }
-};
-
 // Asynchronous function to get all chats
 const getChats = async (req, res) => {
   try {
-    // Check client ID
     if (!req.client || !req.client._id) {
-      return res.status(400).send({ error: "Client ID is required." });
+      res.send([]).status(200);
     }
     const clientId = new mongoose.Types.ObjectId(`${req.client._id}`);
-    let chats = await Chat.find({ client: clientId }).populate(["client", "sender", "users", "messages"]).exec();
+    let chats = await Chat.find({ client: clientId, active: true })
+      .populate(["client", "sender", "users", "messages"])
+      .exec();
     // Process each chat and populate sender for messages
     const populatedChats = await Promise.all(
       chats.map(async (chat) => {
@@ -104,6 +82,58 @@ const getChats = async (req, res) => {
       })
     );
     res.send(populatedChats).status(200);
+  } catch (err) {
+    res.send(err).status(400);
+  }
+};
+
+// Asynchronous function to create a new chat
+const createChat = async (req, res) => {
+  try {
+    const { agentId } = req.body;
+    // Validate User ID
+    if (!mongoose.Types.ObjectId.isValid(agentId)) {
+      return res.send({ error: "Invalid Agent ID" }).status(400);
+    }
+    // Check Client ID
+    if (!req.client || !req.client._id) {
+      return res.status(400).send({ error: "Client ID is required." });
+    }
+    const client = req.client._id;
+    const user = new mongoose.Types.ObjectId(`${agentId}`);
+
+    // Check if a chat already exists for this client and agent
+    const existingChat = await Chat.findOne({ sender: user, client: client, active: true })
+      .populate(["client", "sender", "users", "messages"])
+      .exec();
+
+    if (existingChat) {
+      // Process each chat and populate sender for messages
+      const messages = await Promise.all(
+        existingChat.messages.map(async (message) => {
+          if (message.sender instanceof mongoose.Types.ObjectId) {
+            const sender = await User.findById(message.sender);
+            if (sender) {
+              const name = client && client.equals(sender._id) ? "You" : sender.name;
+              return { ...message.toObject(), sender: name };
+            }
+          }
+          return { ...message.toObject() };
+        })
+      );
+      const populatedChat = { ...existingChat.toObject(), messages };
+      return res.status(200).send(populatedChat);
+    }
+
+    // If no existing chat, create a new one
+    const chatData = {
+      sender: user,
+      client: client,
+      users: [user],
+      active: true, // ignore any user-provided active values, default to true
+    };
+    const newChat = await Chat.create(chatData);
+    res.send(newChat).status(201);
   } catch (err) {
     res.send(err).status(400);
   }
@@ -153,7 +183,6 @@ const addMessageToChat = async (req, res) => {
     session && (await session.endSession());
   }
 };
-
 
 export default {
   getToken,

@@ -6,6 +6,7 @@ import "./MessagesPaneHeader.css";
  */
 interface MessagesPaneHeaderProps {
   title?: string; // The title of the chat to display
+  onLogout: () => void;
 }
 
 /**
@@ -14,7 +15,10 @@ interface MessagesPaneHeaderProps {
  * @param {string} props.title - The title of the chat.
  * @returns {JSX.Element} The MessagesPaneHeader component.
  */
-const MessagesPaneHeader: React.FC<MessagesPaneHeaderProps> = ({ title }: MessagesPaneHeaderProps): JSX.Element => {
+const MessagesPaneHeader: React.FC<MessagesPaneHeaderProps> = ({
+  title,
+  onLogout,
+}: MessagesPaneHeaderProps): JSX.Element => {
   return (
     <div className="container-title">
       <div className="btn">
@@ -31,24 +35,9 @@ const MessagesPaneHeader: React.FC<MessagesPaneHeaderProps> = ({ title }: Messag
         </label>
         <ul className="menu-box">
           <li>
-            <a className="menu-item" href="#">
-              Test menu #1
-            </a>
-          </li>
-          <li>
-            <a className="menu-item" href="#">
-              Test menu #2
-            </a>
-          </li>
-          <li>
-            <a className="menu-item" href="#">
-              Test menu #3
-            </a>
-          </li>
-          <li>
-            <a className="menu-item" href="#">
-              Test menu #4
-            </a>
+            <button className="menu-item" onClick={onLogout}>
+              Logout
+            </button>
           </li>
         </ul>
       </div>

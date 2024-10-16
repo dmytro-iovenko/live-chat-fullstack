@@ -49,6 +49,11 @@ main {
   overflow: hidden;
 }
 
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
 .menu-container {
   position: relative;
   width: 1.6rem;
@@ -194,7 +199,7 @@ main {
   }
 }
 
-.chat-item {
+.chat-item-container {
   border-radius: 0.5rem;
   display: flex;
   align-items: end;
@@ -213,7 +218,7 @@ main {
       background-color: var(--bs-success);
       z-index: 1;
     }
-    .chat-item-avatar {
+    /* .chat-item-avatar {
       color: var(--avatar-text);
       border-radius: 0.5rem;
       border-radius: 50%;
@@ -227,10 +232,9 @@ main {
       margin-left: -0.5rem;
       svg {
         fill: currentcolor;
-        /* fill: var(--avatar-3); */
         border-radius: inherit;
       }
-    }
+    } */
   }
   .chat-item-content {
     font-size: 0.85rem;
@@ -257,12 +261,12 @@ main {
 
 /*******/
 
-.form-container {
+.chat-container {
   position: relative;
   padding: 1rem;
 }
 
-.form-container > div:not(#error-display) {
+.chat-container > div:not(#error-display):not(#chat-messages) {
   background: var(--white);
   display: flex;
   flex-direction: column;
@@ -271,20 +275,22 @@ main {
   user-select: none;
   margin-bottom: 1rem;
 }
-.form-container p {
+.chat-container p {
   padding: 0.5rem 1rem;
   margin: 0.25rem 0px;
 }
-.form-container form {
+.chat-container .chat-item,
+.chat-container form,
+.chat-container h4 {
   display: flex;
   flex-direction: column;
   position: relative;
   width: 100%;
   padding: 0.5rem 1rem;
 }
-.form-container input[type="text"],
-.form-container input[type="email"],
-.form-container button {
+.chat-container input[type="text"],
+.chat-container input[type="email"],
+.chat-container button {
   padding: 1rem;
   margin: 0.5rem 0;
   outline: 1px solid var(--border);
@@ -292,18 +298,17 @@ main {
   border-radius: 0.5rem;
   background-color: var(--highlight);
 }
-.form-container input:focus {
+.chat-container input:focus {
   background-color: var(--white);
   outline-color: var(--primary);
   box-shadow: 0 0 10px var(--primary);
 }
-.form-container button {
+.chat-container button {
   font-weight: bold;
   cursor: pointer;
 }
-.form-container button[type="submit"] {
+.chat-container button {
   outline-color: var(--primary);
   background-color: var(--primary);
   color: var(--white);
 }
-

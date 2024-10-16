@@ -9,7 +9,6 @@ import "./MessagesPaneBody.css";
 const MessagesPaneBody: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <div className="container-body">
-      <div className="chat-container">
         {children}
         {/* <template id="start-chat-template">
           <div className="form-container">
@@ -35,7 +34,6 @@ const MessagesPaneBody: React.FC<{ children: React.ReactNode }> = ({ children })
             </div>
           </div>
         </template> */}
-      </div>
       <div id="error-display"></div>
     </div>
   );

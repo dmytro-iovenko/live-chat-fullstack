@@ -1,6 +1,7 @@
 import express from "express";
 import clientController from "../controllers/clientController.js";
 import clientAuth from "../middlewares/clientAuth.js";
+import getClientId from "../middlewares/getClientId.js";
 
 // Create Express Router instance
 const router = express.Router();
@@ -18,7 +19,7 @@ router
 router
   .route("/chats")
   // Define a route to get all chats
-  .get(clientAuth, clientController.getChats)
+  .get(getClientId, clientController.getChats)
   // Define a route to create a new chat
   .post(clientAuth, clientController.createChat);
 

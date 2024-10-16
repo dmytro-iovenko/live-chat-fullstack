@@ -6,25 +6,20 @@ import "dotenv/config";
 const JWT_SECRET = process.env.CLIENT_JWT_SECRET;
 
 // Middleware to authenticate clients using Bearer token
-const clientAuth = async (req, res, next) => {
-  console.log("clientAuth!!!");
-
-  // Get the Authorization header
+const getClientId = async (req, res, next) => {
+  // Get the Authorization header, if any
   const authHeader = req.headers.authorization;
-  console.log("authHeader", authHeader);
 
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    return res.status(401).json({ message: "Authorization header missing or invalid." });
+    next();
   }
 
   // Extract the token
   const token = authHeader.split(" ")[1];
-  console.log("token", token);
 
   try {
     // Verify the token
     const decoded = jwt.verify(token, JWT_SECRET);
-    console.log("decoded", decoded);
 
     // Find the client by email
     const client = await Client.findOne({ email: decoded.email });
@@ -38,8 +33,8 @@ const clientAuth = async (req, res, next) => {
     next();
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Internal server error." });
+    return res.status(400).json({ message: error });
   }
 };
 
-export default clientAuth;
+export default getClientId;
