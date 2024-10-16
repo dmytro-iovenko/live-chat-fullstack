@@ -1,11 +1,24 @@
 import mongoose from "mongoose";
 import User from "./user.js";
 import Message from "./message.js";
+import Client from "./client.js";
 
 // Define Chat schema
 const chatSchema = new mongoose.Schema(
   {
     sender: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+    client: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Client",
+      required: true,
+      validate: {
+        validator: async (value) => {
+          const client = await Client.findById(value);
+          return !!client;
+        },
+        message: "Client ID does not exist",
+      },
+    },
     users: [
       {
         type: mongoose.Schema.Types.ObjectId,

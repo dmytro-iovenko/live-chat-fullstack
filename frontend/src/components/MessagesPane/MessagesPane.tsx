@@ -57,12 +57,12 @@ const MessagesPane: React.FC<MessagePaneProps> = ({ chat, onUpdateChats, user }:
 
     try {
       // Add a new message to the chat with the specified ID and store added message
-      const message = await addMessageToChat(chat._id, newMessage);
-      console.log(message);
+      const messages = await addMessageToChat(chat._id, newMessage);
+      console.log(messages);
 
       // Update the message locally to use the MongoDB _id and status
       const updatedChatMessages = updatedMessages.map((msg) =>
-        msg._id === tempId ? { ...msg, _id: message._id, status: message.status } : msg
+        msg._id === tempId ? { ...msg, _id: messages.newMessage._id, status: messages.newMessage.status } : msg
       );
       console.log(updatedChatMessages);
       setChatMessages(updatedChatMessages);
