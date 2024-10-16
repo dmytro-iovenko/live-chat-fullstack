@@ -1,3 +1,4 @@
+import { formatText } from "../../utils/helpers";
 import "./MessageItem.css";
 
 /**
@@ -37,7 +38,7 @@ const MessageItem: React.FC<{ message: MessageItemProps }> = ({ message }): JSX.
               <img src={message.image?.src} alt={message.image?.alt} />
             </div>
           )}
-          {message.text && <div className="chat-message-text">{message.text}</div>}
+          {message.text && <div className="chat-message-text">{formatText(message.text)}</div>}
         </div>
       </div>
     </div>

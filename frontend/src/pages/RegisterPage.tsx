@@ -6,21 +6,15 @@ import { auth } from "../firebase/firebaseConfig";
 import AuthForm from "../components/AuthForm/AuthForm";
 import { UserProps } from "../data/users";
 import { registerUser } from "../services/apiClient";
+import { handleFirebaseError } from "../utils/helpers";
 
-/**
- * Props for the RegisterPage component.
- * Contains the function to set user data in the parent component.
- */
-interface RegisterPageProps {
-  setIsLoggedIn: (data: boolean) => void; // Function to update user data
-}
 /**
  * RegisterPage component that handles user registration.
  * Manages form submission, error handling, and navigation after successful registration.
  * @param {RegisterPageProps} props - The props for the RegisterPage component.
  * @returns The RegisterPage component.
  */
-const RegisterPage: React.FC<RegisterPageProps> = ({ setIsLoggedIn }: RegisterPageProps) => {
+const RegisterPage: React.FC = () => {
   const navigate = useNavigate();
   const [error, setError] = useState<string | null>(null);
 
@@ -67,40 +61,15 @@ const RegisterPage: React.FC<RegisterPageProps> = ({ setIsLoggedIn }: RegisterPa
       };
       // Send the user data to the backend
       await registerUser(userData);
-      // Set flag to indicate successful login
-      setIsLoggedIn(true);
       navigate("/");
     } catch (error: unknown) {
       console.error("Error logging in:", error);
       // Handle specific Firebase error
       if (error instanceof FirebaseError) {
-        handleFirebaseError(error); // Now this is safe
+        handleFirebaseError(error as FirebaseError, setError, true);
       } else {
         setError("An unexpected error occurred. Please try again.");
       }
-    }
-  };
-
-  /**
-   * Function to handle Firebase registration errors.
-   * Sets appropriate error messages based on Firebase error codes.
-   * @param {FirebaseError} error - The error object received from Firebase.
-   */
-  const handleFirebaseError = (error: FirebaseError) => {
-    switch (error.code) {
-      case "auth/email-already-in-use":
-      case "auth/credential-already-in-use":
-        setError("This email is already registered. Please use a different email.");
-        break;
-      case "auth/invalid-email":
-        setError("The email address is not valid.");
-        break;
-      case "auth/weak-password":
-        setError("The password is too weak. Please use a stronger password.");
-        break;
-      default:
-        setError("Registration failed. Please try again.");
-        break;
     }
   };
 

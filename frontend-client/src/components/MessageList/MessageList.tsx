@@ -21,25 +21,10 @@ interface MessageListProps {
  */
 const MessageList: React.FC<MessageListProps> = ({ messages, chatId }: MessageListProps): JSX.Element => {
   const contentRef = useRef<HTMLDivElement>(null);
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
-  // A function to scroll content down
-  const scrollDown = (content: HTMLDivElement) => {
-    if (content.scrollHeight > content.clientHeight) {
-      content.scrollTop = content.scrollHeight;
-    }
-  };
-
-  // Run effect when messages change
   useEffect(() => {
-    // Use timer to allow DOM updates to complete
-    const timeoutId = setTimeout(() => {
-      if (contentRef.current) {
-        scrollDown(contentRef.current);
-      }
-    }, 0);
-    return () => {
-      clearTimeout(timeoutId);
-    };
+    messages && messagesEndRef.current?.scrollIntoView({ behavior: "auto" });
   }, [messages, chatId]);
 
   return (
@@ -47,6 +32,7 @@ const MessageList: React.FC<MessageListProps> = ({ messages, chatId }: MessageLi
       {messages?.map((message) => (
         <MessageItem key={message._id} message={message} />
       ))}
+      <div ref={messagesEndRef} />
     </div>
   );
 };
