@@ -22,7 +22,7 @@ const MessageTextArea: React.FC<MessageInputProps> = ({
       console.log("height", height, textarea.scrollHeight);
       textarea.style.height = `${height}px`;
     }
-  }, [textAreaValue]);
+  }, [textAreaValue, textAreaRef]);
 
   const handleClick = () => {
     if (textAreaValue.trim() !== "") {

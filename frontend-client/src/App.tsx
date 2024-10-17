@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import "./App.css";
-import { addMessageToChat, getActiveChats, getAgents, getChatById, getToken } from "./services/apiClient";
+import { addMessageToChat, getActiveChats, getAgents, getChatById } from "./services/apiClient";
 import { UserProps } from "./data/users";
 import { ChatProps } from "./data/chats";
 import ChatList from "./components/ChatList/ChatList";
@@ -70,14 +70,14 @@ function App() {
         }
         if (!storedAgentId && !storedChatId) {
           const agents = await getAgents();
-          isMounted && setAgentList(agents);
+          if (isMounted) setAgentList(agents);
         }
       } catch (error) {
         console.error("Error fetching agents:", error);
-        isMounted && setToken(null);
-        isMounted && localStorage.removeItem("token");
+        if (isMounted) setToken(null);
+        if (isMounted) localStorage.removeItem("token");
       } finally {
-        isMounted && setIsLoaded(true);
+        if (isMounted) setIsLoaded(true);
       }
     })();
 
@@ -94,13 +94,13 @@ function App() {
       (async () => {
         try {
           const agents = await getAgents();
-          isMounted && setAgentList(agents);
+          if (isMounted) setAgentList(agents);
         } catch (error) {
           console.error("Error fetching agents:", error);
-          isMounted && setToken(null);
-          isMounted && localStorage.removeItem("token");
+          if (isMounted) setToken(null);
+          if (isMounted) localStorage.removeItem("token");
         } finally {
-          isMounted && setIsLoaded(true);
+          if (isMounted) setIsLoaded(true);
         }
       })();
     }
@@ -112,7 +112,7 @@ function App() {
         try {
           if (token) {
             const chats = await getActiveChats();
-            isMounted && setChatList(chats);
+            if (isMounted) setChatList(chats);
           }
         } catch (error) {
           console.error("Error fetching chats:", error);
@@ -126,7 +126,7 @@ function App() {
         isMounted = false;
       };
     }
-  }, [selectedChat, selectedAgentId]);
+  }, [selectedChat, selectedAgentId, token]);
 
   // Effect to update localStorage when token changes
   useEffect(() => {

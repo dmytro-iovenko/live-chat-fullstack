@@ -34,18 +34,15 @@ const getChats = async (req, res) => {
     // Collect filters from req.locals.filter, if any
     const filter = (req.locals && req.locals.filter) || {};
     let chats = await Chat.find(filter).populate(["sender", "users", "messages"]).exec();
-    // console.log(chats)
     // Process each chat and populate sender for messages
     const populatedChats = await Promise.all(
       chats.map(async (chat) => {
         const messages = await Promise.all(
           chat.messages.map(async (message) => {
             if (message.sender instanceof mongoose.Types.ObjectId) {
-              // console.log(message, "1:",message.sender)
               const user = await User.findById(message.sender);
               const client = await Client.findById(message.sender);
               const sender = user ?? client;
-              console.log(message, "2:", user, "3:", client, "4:", sender)
               if (sender) {
                 const userId = new mongoose.Types.ObjectId(`${req.user._id}`);
                 const name = userId && userId.equals(sender._id) ? "You" : sender.name;

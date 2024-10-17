@@ -1,6 +1,5 @@
 import { useRef, useState } from "react";
 import MessagesPaneBody from "../MessagesPaneBody/MessagesPaneBody";
-import MessagesPaneHeader from "../MessagesPaneHeader/MessagesPaneHeader";
 import MessagesPaneFooter from "../MessagesPaneFooter/MessagesPaneFooter";
 import MessageList from "../MessageList/MessageList";
 import "./MessagesPane.css";
@@ -10,7 +9,6 @@ import { MessageItemProps } from "../MessageItem/MessageItem";
 import { v4 as uuid } from "uuid";
 
 const MessagesPane = () => {
-  const [username, _setUsername] = useState("Tina Cornell");
   const [chatMessages, setChatMessages] = useState(messages);
   const [textAreaValue, setTextAreaValue] = useState("");
   const textAreaRef = useRef<HTMLTextAreaElement>(null);

@@ -114,7 +114,9 @@ const createChat = async (req, res) => {
       const messages = await Promise.all(
         existingChat.messages.map(async (message) => {
           if (message.sender instanceof mongoose.Types.ObjectId) {
-            const sender = await User.findById(message.sender);
+            const user = await User.findById(message.sender);
+            const client = await Client.findById(message.sender);
+            const sender = user ?? client;
             if (sender) {
               const name = client && client.equals(sender._id) ? "You" : sender.name;
               return { ...message.toObject(), sender: name };
@@ -154,18 +156,12 @@ const getChatById = async (req, res) => {
     if (!chat) {
       return res.status(401).json({ message: "Chat not found." });
     }
-    console.log("0:", chat);
     const messages = await Promise.all(
       chat.messages.map(async (message) => {
-        console.log("0:", message.sender);
         if (message.sender instanceof mongoose.Types.ObjectId) {
-          console.log("1:", message.sender);
           const user = await User.findById(message.sender);
-          console.log("2:", user);
           const client = await Client.findById(message.sender);
-          console.log("3:", client);
           const sender = user ?? client;
-          console.log("4:", sender);
           if (sender) {
             const name = clientId && clientId.equals(sender._id) ? "You" : sender.name;
             return { ...message.toObject(), sender: name };

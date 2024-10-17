@@ -24,7 +24,7 @@ const MessageList: React.FC<MessageListProps> = ({ messages, chatId }: MessageLi
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    messages && messagesEndRef.current?.scrollIntoView({ behavior: "auto" });
+    if (messages) messagesEndRef.current?.scrollIntoView({ behavior: "auto" });
   }, [messages, chatId]);
 
   return (

@@ -1,5 +1,4 @@
 import { ChatProps } from "../../data/chats";
-import { UserProps } from "../../data/users";
 import "./MessagesPaneHeader.css";
 
 /**
