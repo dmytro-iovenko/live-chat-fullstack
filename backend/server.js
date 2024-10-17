@@ -1,4 +1,6 @@
 import express from "express";
+import { createServer } from "http";
+import { Server } from "socket.io";
 import connectDb from "./db/conn.js";
 import userRoutes from "./routes/userRoutes.js";
 import messageRoutes from "./routes/messageRoutes.js";
@@ -15,6 +17,10 @@ const port = process.env.PORT || 3000;
 
 // Create express instance
 const app = express();
+const server = createServer(app);
+const io = new Server(server, {
+  cors: {},
+});
 
 // Setup a cors middleware for our express app
 app.use(cors());
@@ -27,6 +33,20 @@ app.use("/users", userRoutes);
 app.use("/messages", messageRoutes);
 app.use("/chats", chatRoutes);
 app.use("/client", clientRoutes);
+
+// Listen for incoming socket connections
+io.on("connection", (socket) => {
+  console.log("🟢 User connected:", socket.id);
+
+  socket.on("sendMessage", (message) => {
+    // Broadcast the message to all clients except the sender
+    socket.broadcast.emit("newMessage", message);
+  });
+
+  socket.on("disconnect", () => {
+    console.log("🔴 User disconnected:", socket.id);
+  });
+});
 
 // Error-handling Middleware
 app.use((err, req, res, _next) => {
@@ -62,7 +82,7 @@ const serviceAccount = {
 admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
 
 // Start express server
-app.listen(port, () => {
+server.listen(port, () => {
   console.log("Server is running on port:", port);
   // Connect to MongoDb using connection string
   connectDb(connectionString);

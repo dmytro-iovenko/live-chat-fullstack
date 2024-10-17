@@ -15,6 +15,7 @@
     "live-chat-client": "file:",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "socket.io-client": "^4.8.0",
     "uuid": "^10.0.0"
   },
   "devDependencies": {

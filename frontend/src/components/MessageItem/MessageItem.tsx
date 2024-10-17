@@ -8,6 +8,7 @@ import "./MessageItem.css";
  */
 export interface MessageItemProps {
   _id: string; // Unique identifier for the message
+  chatId?: string; // Optional identifier for the chat the message belongs to, used in Soket.io logic
   text?: string; // The text content of the message
   image?: {
     src: string; // URL for the message image

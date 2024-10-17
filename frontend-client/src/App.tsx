@@ -14,6 +14,9 @@ import MessageInput from "./components/MessageInput/MessageInput";
 import FormContainer from "./components/FormContainer/FormContainer";
 import { MessageItemProps } from "./components/MessageItem/MessageItem";
 import { v4 as uuid } from "uuid";
+import { io } from "socket.io-client";
+
+const socket = io(import.meta.env.VITE_LIVECHAT_WS_URL);
 
 function App() {
   const [token, setToken] = useState<string | null>(() => localStorage.getItem("token") || null);
@@ -26,6 +29,18 @@ function App() {
   const [messages, setMessages] = useState<MessageItemProps[]>([]);
   const [textAreaValue, setTextAreaValue] = useState("");
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
+
+  // Effect to maange Socket.IO connection
+  useEffect(() => {
+    socket.on("newMessage", (message) => {
+      if (selectedChat && selectedChat._id === message.chatId) {
+        setMessages((prevMessages) => [...prevMessages, message]);
+      }
+    });
+    return () => {
+      socket.off("newMessage");
+    };
+  }, [selectedChat]);
 
   // Initial request to backend to collect chat data, if any
   useEffect(() => {
@@ -187,6 +202,9 @@ function App() {
       console.log(updatedChatMessages);
       setMessages(updatedChatMessages);
 
+      // Emit the new message to Socket.IO server
+      socket.emit("sendMessage", { ...messages.newMessage, chatId: chat._id });
+
       // Update the specific chat object in the original chats array
       const updatedChat = { ...chat, messages: updatedChatMessages };
       console.log(updatedChat);
@@ -212,7 +230,7 @@ function App() {
     }
   };
 
-  console.log(selectedChat);
+  console.log(isLoaded);
   return (
     <main>
       <section className="container">
@@ -239,7 +257,7 @@ function App() {
               onChatUpdate={handleChatUpdate}
             />
           )}
-          {selectedChat && isLoaded && <MessageList messages={selectedChat.messages} />}
+          {selectedChat && isLoaded && <MessageList messages={messages} />}
         </MessagesPaneBody>
         <MessagesPaneFooter>
           {selectedChat && (

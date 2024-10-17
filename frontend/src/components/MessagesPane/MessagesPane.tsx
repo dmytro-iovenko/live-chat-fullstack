@@ -10,6 +10,9 @@ import { User } from "firebase/auth";
 import { v4 as uuid } from "uuid";
 import { addMessageToChat } from "../../services/apiClient";
 import "./MessagesPane.css";
+import { io } from "socket.io-client";
+
+const socket = io(import.meta.env.VITE_LIVECHAT_WS_URL);
 
 /**
  * Props for the MessagesPane component.
@@ -41,6 +44,18 @@ const MessagesPane: React.FC<MessagePaneProps> = ({ chat, onUpdateChats, user }:
     setChatMessages(chat?.messages);
   }, [chat?.messages]);
 
+  // Effect to manage Socket.IO connection
+  useEffect(() => {
+    socket.on("newMessage", (message) => {
+      if (chat && chat._id === message.chatId) {
+        setChatMessages((prevMessages) => [...(prevMessages ?? []), message]);
+      }
+    });
+    return () => {
+      socket.off("newMessage");
+    };
+  }, [chat?.messages]);
+
   const handleSubmit = async () => {
     if (!chat || !chatMessages || !user) return;
     const tempId = uuid();
@@ -66,6 +81,9 @@ const MessagesPane: React.FC<MessagePaneProps> = ({ chat, onUpdateChats, user }:
       );
       console.log(updatedChatMessages);
       setChatMessages(updatedChatMessages);
+
+      // Emit the new message to Socket.IO server
+      socket.emit("sendMessage", { ...messages.newMessage, chatId: chat._id });
 
       // Update the specific chat object in the original chats array
       const updatedChat = { ...chat, messages: updatedChatMessages };
