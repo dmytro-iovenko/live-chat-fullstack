@@ -13,19 +13,20 @@ This project is a capstone project for the MERN Software Engineering bootcamp at
 - Set up Node.js with Express and configured MongoDB with Mongoose for data storage.
 - Implemented GitHub Actions for CI/CD, including automated code reviews and deployments.
 - Successfully deployed frontend to Vercel and backend to Render.
+- Implement a lightweight client app to chat with representatives.
+
+## 🌐 Live Preview
+
+You can view a live demo of the Live Chat App [here](https://live-chat-frontend-dmio.vercel.app/) and Live Chat Client [here](https://live-chat-client-dmio.vercel.app/). 
 
 ### 📋 To-Do
 
 - **Features**:
-  - Implement a lightweight client app to chat with representatives.
   - Implement real-time messaging using Socket.io.
   - Create more advanced chat history functionality.
   - Display representative availability status.
   - Enable file sharing during chats.
   - Design an admin dashboard.
-
-- **Backend Development**:
-  - Integrate additional REST API endpoints for user management.
 
 - **DevOps**:
   - Configure Docker for containerization.
@@ -76,8 +77,8 @@ This project is a capstone project for the MERN Software Engineering bootcamp at
    FIREBASE_CLIENT_X509_CERT_URL=...
    FIREBASE_UNIVERSE_DOMAIN=...
 
-   # Render deployment token
-   RENDER_TOKEN=...
+   # Secret key for JWT
+   CLIENT_JWT_SECRET=...
    ```
 5. Navigate to the frontend directory:
    ```bash
@@ -101,6 +102,19 @@ This project is a capstone project for the MERN Software Engineering bootcamp at
    VITE_FIREBASE_APP_ID=...
    VITE_FIREBASE_MEASUREMENT_ID=...
    ```
+8. Navigate to the frontend-client directory:
+   ```bash
+   cd ../frontend-client
+   ```
+9. Install frontend-client dependencies:
+   ```bash
+   npm install
+   ```
+10. Create a `.env` file in the `/frontend-client` directory and add the following environment variables:
+   ```
+   # API URL for the Live Chat Client backend
+   VITE_LIVECHAT_API_URL=...
+   ```
 
 #### 📦 Run the Application
 
@@ -116,7 +130,23 @@ cd frontend
 npm run dev
 ```
 
-Open your browser and navigate to `http://localhost:5173` to view the application.
+To run the frontend-client server:
+```bash
+cd frontend-client
+npm run dev
+```
+
+### 🖥 Usage
+
+- Open your browser and navigate to `http://localhost:5173` for the main app and/or `http://localhost:5173` for the client app.
+- The backend API will typically run on `http://localhost:3000`.
+
+### 🛠️ Common Use Cases
+
+- **Customer Support**: Users can initiate chats with representatives for immediate assistance.
+- **Technical Support**: Users can report issues and get real-time solutions.
+- **Sales Inquiries**: Users can ask questions about products or services.
+- **Feedback Collection**: After a chat session, users can provide feedback to improve service.
 
 ### 📖 Documentation
 
