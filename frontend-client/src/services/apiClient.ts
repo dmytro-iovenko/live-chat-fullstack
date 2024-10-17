@@ -29,12 +29,12 @@ apiClient.interceptors.request.use(
 
 /**
  * Function to get a JWT token from the server.
- * @param {string} username - The username of the client.
+ * @param {string} name - The name of the client.
  * @param {string} email - The email of the client.
  * @returns {Promise<string>} - The JWT token.
  */
-export const getToken = async (username: string, email: string): Promise<string> => {
-  const response = await apiClient.post("/token", { username, email });
+export const getToken = async (name: string, email: string): Promise<string> => {
+  const response = await apiClient.post("/token", { name, email });
   return response.data.token;
 };
 

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import "./App.css";
-import { getActiveChats, getAgents } from "./services/apiClient";
+import { addMessageToChat, getActiveChats, getAgents } from "./services/apiClient";
 import { UserProps } from "./data/users";
 import { ChatProps } from "./data/chats";
 import ChatList from "./components/ChatList/ChatList";
@@ -21,6 +21,7 @@ function App() {
   const [chatList, setChatList] = useState<ChatProps[]>([]);
   const [selectedChat, setSelectedChat] = useState<ChatProps | null>(null);
   const [selectedAgentId, setSelectedAgentId] = useState<string | null>(null);
+  const [isLoaded, setIsLoaded] = useState<boolean>(false);
 
   const [messages, setMessages] = useState<MessageItemProps[]>([]);
   const [textAreaValue, setTextAreaValue] = useState("");
@@ -40,8 +41,10 @@ function App() {
         }
       } catch (error) {
         console.error("Error fetching chats:", error);
-        setToken(null);
-        localStorage.removeItem("token");
+        isMounted && setToken(null);
+        isMounted && localStorage.removeItem("token");
+      } finally {
+        isMounted && setIsLoaded(true);
       }
     })();
     return () => {
@@ -79,33 +82,61 @@ function App() {
   };
 
   const handleSubmit = async () => {
+    console.log("handleSubmit");
+    const chat = selectedChat;
+    if (!chat) return;
     const tempId = uuid();
     const newMessage: Omit<MessageItemProps, "_id" | "status" | "sender"> = {
       text: textAreaValue,
     };
+    console.log("newMessage", newMessage);
 
     // Update the current messages array with the new message
     const updatedMessages = [
       ...messages,
       { ...newMessage, sender: "You", _id: tempId }, // Use temporary ID for local display
     ];
+    console.log("updatedMessages", updatedMessages);
     setMessages(updatedMessages);
+
+    try {
+      // Add a new message to the chat with the specified ID and store added message
+      const messages = await addMessageToChat(chat._id, newMessage);
+      console.log(messages);
+
+      // Update the message locally to use the MongoDB _id and status
+      const updatedChatMessages = updatedMessages.map((msg) =>
+        msg._id === tempId ? { ...msg, _id: messages.newMessage._id, status: messages.newMessage.status } : msg
+      );
+      console.log(updatedChatMessages);
+      setMessages(updatedChatMessages);
+
+      // Update the specific chat object in the original chats array
+      const updatedChat = { ...chat, messages: updatedChatMessages };
+      console.log(updatedChat);
+      setSelectedChat(updatedChat);
+    } catch (error) {
+      console.error("Error updating chats:", error);
+    }
   };
 
   const handleLogout = async () => {
     setToken(null);
   };
 
-  console.log(selectedChat)
+  console.log(selectedChat);
   return (
     <main>
       <section className="container">
         <MessagesPaneHeader title={token ? "Chat" : "Select an Agent"} onLogout={handleLogout} />
         <MessagesPaneBody>
-          {!selectedChat && !selectedAgentId && (
+          {!selectedChat && !selectedAgentId && isLoaded && (
             <>
-              {/* {chatList.length > 0 && <ChatList chats={chatList} onChatSelect={handleChatSelect} />} */}
-              {agentList.length > 0 && <AgentList agents={agentList} onAgentSelect={handleAgentSelect} />}
+              {chatList.length > 0 ? (
+                <ChatList chats={chatList} onChatSelect={handleChatUpdate} />
+              ) : (
+                agentList.length > 0 && <AgentList agents={agentList} onAgentSelect={handleAgentSelect} />
+              )}
             </>
           )}
           {!selectedChat && selectedAgentId && (

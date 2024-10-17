@@ -7,8 +7,7 @@ import { UserProps } from "./users";
  */
 export interface ChatPropsCommon {
   chats: ChatProps[]; // Array of chat objects to display
-  setSelectedChat: (chat: ChatProps) => void; // Function to set the selected chat
-  selectedChatId?: string; // ID of the currently selected chat
+  onChatSelect: (newChat: ChatProps) => void; // Function for selecting an agent
 }
 
 /**

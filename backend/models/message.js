@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import User from "./user.js";
+import Client from "./client.js";
 
 // Define Message schema
 const messageSchema = new mongoose.Schema(
@@ -39,8 +40,13 @@ const messageSchema = new mongoose.Schema(
           if (typeof value === "string") {
             return value === "You"; // Allow the string "You"
           } else if (value instanceof mongoose.Types.ObjectId) {
+            // Check if it's a valid User
             const user = await User.findById(value);
-            return !!user; // Returns true if the user exists
+            if (user) return true; // Returns true if the user exists
+
+            // Check if it's a valid Client
+            const client = await Client.findById(value);
+            return !!client; // Returns true if the client exists
           }
           return false; // If it's neither, return false
         },

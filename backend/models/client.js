@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 // Define Client schema
 const ClientSchema = new mongoose.Schema({
-  username: { type: String, required: true },
+  name: { type: String, required: true },
   email: { type: String },
   createdAt: { type: Date, default: Date.now },
 });

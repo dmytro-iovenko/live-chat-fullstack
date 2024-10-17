@@ -12,11 +12,11 @@ const JWT_SECRET = process.env.CLIENT_JWT_SECRET;
 // Asynchronous function to authenticate client and return JWT token
 const getToken = async (req, res) => {
   console.log("POST /token", req.body);
-  const { username, email } = req.body;
-  console.log("getToken", username, email);
+  const { name, email } = req.body;
+  console.log("getToken", name, email);
 
-  if (!username || !email) {
-    return res.status(400).json({ message: "Username and email are required." });
+  if (!name || !email) {
+    return res.status(400).json({ message: "Name and email are required." });
   }
 
   try {
@@ -25,14 +25,14 @@ const getToken = async (req, res) => {
 
     // If client does not exist, create a new one
     if (!client) {
-      client = new Client({ username, email });
+      client = new Client({ name, email });
       await client.save();
     }
 
     console.log("client", client);
 
     // Generate JWT token (1 hour expiry)
-    const token = jwt.sign({ username: client.username, email: client.email }, JWT_SECRET, { expiresIn: "1h" });
+    const token = jwt.sign({ name: client.name, email: client.email }, JWT_SECRET, { expiresIn: "1h" });
     console.log("token", token);
 
     res.status(200).json({ token });
@@ -69,7 +69,9 @@ const getChats = async (req, res) => {
         const messages = await Promise.all(
           chat.messages.map(async (message) => {
             if (message.sender instanceof mongoose.Types.ObjectId) {
-              const sender = await User.findById(message.sender);
+              const user = await User.findById(message.sender);
+              const client = await Client.findById(message.sender);
+              const sender = user ?? client;
               if (sender) {
                 const name = clientId && clientId.equals(sender._id) ? "You" : sender.name;
                 return { ...message.toObject(), sender: name };
@@ -151,7 +153,7 @@ const getChatById = async (req, res) => {
 
 // Asynchronous function to add message to chat with the specified id
 const addMessageToChat = async (req, res) => {
-  if (!req.user || !req.user._id) return res.status(400).send({ error: "User ID is required." });
+  if (!req.client || !req.client._id) return res.status(400).send({ error: "Client ID is required." });
   let session;
   try {
     // Start session
@@ -159,7 +161,7 @@ const addMessageToChat = async (req, res) => {
     // Start transaction
     session.startTransaction();
     // Create new message
-    const sender = new mongoose.Types.ObjectId(`${req.user._id}`);
+    const sender = new mongoose.Types.ObjectId(`${req.client._id}`);
     const newMessage = await Message.create([{ ...req.body, sender }], { session });
     // Find chat by ID
     const chat = await Chat.findById(req.params.id).session(session);

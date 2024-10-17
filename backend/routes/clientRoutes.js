@@ -31,6 +31,6 @@ router
 router
   .route("/chats/:id/messages")
   // Define a route to add message to chat with the specified id
-  .post(clientController.addMessageToChat);
+  .post(clientAuth, clientController.addMessageToChat);
 
 export default router;
