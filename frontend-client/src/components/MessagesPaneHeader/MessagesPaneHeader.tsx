@@ -1,3 +1,5 @@
+import { ChatProps } from "../../data/chats";
+import { UserProps } from "../../data/users";
 import "./MessagesPaneHeader.css";
 
 /**
@@ -5,8 +7,10 @@ import "./MessagesPaneHeader.css";
  * Contains the title of the chat.
  */
 interface MessagesPaneHeaderProps {
-  title?: string; // The title of the chat to display
+  selectedChat: ChatProps | null;
+  agentId: string | null;
   onLogout: () => void;
+  onBackButtonClick: () => void;
 }
 
 /**
@@ -16,16 +20,22 @@ interface MessagesPaneHeaderProps {
  * @returns {JSX.Element} The MessagesPaneHeader component.
  */
 const MessagesPaneHeader: React.FC<MessagesPaneHeaderProps> = ({
-  title,
+  selectedChat,
+  agentId,
   onLogout,
+  onBackButtonClick,
 }: MessagesPaneHeaderProps): JSX.Element => {
+  const title = selectedChat && agentId ? selectedChat.sender.name : "Welcome to Live Chat";
+
   return (
     <div className="container-title">
-      <div className="btn">
-        <svg focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="ArrowBackIcon">
-          <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20z"></path>
-        </svg>
-      </div>
+      {(selectedChat || agentId) && (
+        <div className="btn" onClick={onBackButtonClick}>
+          <svg focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="ArrowBackIcon">
+            <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20z"></path>
+          </svg>
+        </div>
+      )}
       <div className="chat-title">{title}</div>
       <div className="menu-container">
         <input id="menu-toggle" type="checkbox" />

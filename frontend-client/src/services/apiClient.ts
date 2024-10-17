@@ -57,6 +57,15 @@ export const getActiveChats = async (): Promise<ChatProps[]> => {
 };
 
 /**
+ * Function to get a chat with the specified id.
+ * @returns A promise that resolves to ChatProps.
+ */
+export const getChatById = async (chatId: string): Promise<ChatProps> => {
+  const response = await apiClient.get(`/chats/${chatId}`);
+  return response.data;
+};
+
+/**
  * Function to create a chat with the specified agent ID.
  * @param {string} agentId - The ID of the agent.
  * @returns {Promise<ChatProps>} - The created chat object.

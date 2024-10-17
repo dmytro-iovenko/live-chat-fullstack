@@ -26,7 +26,7 @@ router
 router
   .route("/chats/:id")
   // Define a route to get chat with the specified id
-  .get(clientController.getChatById);
+  .get(clientAuth, clientController.getChatById);
 
 router
   .route("/chats/:id/messages")

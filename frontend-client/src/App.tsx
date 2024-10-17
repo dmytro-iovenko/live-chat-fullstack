@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import "./App.css";
-import { addMessageToChat, getActiveChats, getAgents } from "./services/apiClient";
+import { addMessageToChat, getActiveChats, getAgents, getChatById, getToken } from "./services/apiClient";
 import { UserProps } from "./data/users";
 import { ChatProps } from "./data/chats";
 import ChatList from "./components/ChatList/ChatList";
@@ -27,30 +27,106 @@ function App() {
   const [textAreaValue, setTextAreaValue] = useState("");
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
-  // Initial request to backend to collect client's chats
+  // Initial request to backend to collect chat data, if any
   useEffect(() => {
     let isMounted = true;
-    const token = localStorage.getItem("token");
+    const storedChatId = localStorage.getItem("selectedChatId");
+    const storedAgentId = localStorage.getItem("selectedAgentId");
+    const storedClientName = localStorage.getItem("selectedClientName");
+    const storedClientEmail = localStorage.getItem("selectedClientEmail");
+
+    console.log("storedChatId", storedChatId);
+    console.log("storedAgentId", storedAgentId);
+    console.log("storedClientName", storedClientName);
+    console.log("storedClientEmail", storedClientEmail);
+
     (async () => {
+      if (storedAgentId) {
+        setSelectedAgentId(storedAgentId);
+      }
+      // try {
+      // if (storedClientName && storedClientEmail) {
+      //   const token = await getToken(storedClientName, storedClientEmail);
+      //   if (isMounted) {
+      //     setToken(token);
+      //     localStorage.setItem("token", token);
+      //     console.log("Token saved:", token);
+      //   }
+      // }
+      // } catch (error) {
+      //   console.error("Error fetching token:", error);
+      // }
       try {
-        const agents = await getAgents();
-        isMounted && setAgentList(agents);
-        if (token) {
-          const chats = await getActiveChats();
-          isMounted && setChatList(chats);
+        const token = localStorage.getItem("token");
+        console.log("TOKEN!", token);
+        if (token && storedChatId) {
+          const chat = await getChatById(storedChatId);
+          console.log("CHAT!", chat);
+          if (isMounted && chat) {
+            setSelectedChat(chat);
+            setMessages(chat.messages);
+            setSelectedAgentId(chat.sender._id);
+          }
+        }
+        if (!storedAgentId && !storedChatId) {
+          const agents = await getAgents();
+          isMounted && setAgentList(agents);
         }
       } catch (error) {
-        console.error("Error fetching chats:", error);
+        console.error("Error fetching agents:", error);
         isMounted && setToken(null);
         isMounted && localStorage.removeItem("token");
       } finally {
         isMounted && setIsLoaded(true);
       }
     })();
+
     return () => {
       isMounted = false;
     };
   }, []);
+
+  useEffect(() => {
+    let isMounted = true;
+    if (selectedAgentId) {
+      localStorage.setItem("selectedAgentId", selectedAgentId);
+    } else {
+      (async () => {
+        try {
+          const agents = await getAgents();
+          isMounted && setAgentList(agents);
+        } catch (error) {
+          console.error("Error fetching agents:", error);
+          isMounted && setToken(null);
+          isMounted && localStorage.removeItem("token");
+        } finally {
+          isMounted && setIsLoaded(true);
+        }
+      })();
+    }
+    if (selectedChat) {
+      localStorage.setItem("selectedChatId", selectedChat._id);
+      setMessages(selectedChat.messages);
+    } else {
+      (async () => {
+        try {
+          if (token) {
+            const chats = await getActiveChats();
+            isMounted && setChatList(chats);
+          }
+        } catch (error) {
+          console.error("Error fetching chats:", error);
+          if (isMounted) {
+            setToken(null);
+            localStorage.removeItem("token");
+          }
+        }
+      })();
+      return () => {
+        isMounted = false;
+      };
+    }
+  }, [selectedChat, selectedAgentId]);
 
   // Effect to update localStorage when token changes
   useEffect(() => {
@@ -62,12 +138,12 @@ function App() {
   }, [token]);
 
   // Effect to update chat messages when chat changes
-  useEffect(() => {
-    if (selectedChat) {
-      const chatMessages = selectedChat.messages;
-      setMessages(chatMessages);
-    }
-  }, [selectedChat]);
+  // useEffect(() => {
+  //   if (selectedChat) {
+  //     const chatMessages = selectedChat.messages;
+  //     setMessages(chatMessages);
+  //   }
+  // }, [selectedChat]);
 
   const handleAgentSelect = (agentId: string) => {
     setSelectedAgentId(agentId);
@@ -124,11 +200,28 @@ function App() {
     setToken(null);
   };
 
+  const handleBackButtonClick = () => {
+    if (!selectedChat && selectedAgentId) {
+      setSelectedAgentId(null);
+      localStorage.removeItem("selectedAgentId");
+      console.log("2:");
+    } else if (selectedChat) {
+      setSelectedChat(null);
+      localStorage.removeItem("selectedChatId");
+      console.log("1:");
+    }
+  };
+
   console.log(selectedChat);
   return (
     <main>
       <section className="container">
-        <MessagesPaneHeader title={token ? "Chat" : "Select an Agent"} onLogout={handleLogout} />
+        <MessagesPaneHeader /*title={token ? "Chat" : "Select an Agent"} */
+          selectedChat={selectedChat}
+          agentId={selectedAgentId}
+          onLogout={handleLogout}
+          onBackButtonClick={handleBackButtonClick}
+        />
         <MessagesPaneBody>
           {!selectedChat && !selectedAgentId && isLoaded && (
             <>
@@ -139,14 +232,14 @@ function App() {
               )}
             </>
           )}
-          {!selectedChat && selectedAgentId && (
+          {!selectedChat && selectedAgentId && isLoaded && (
             <FormContainer
               agentId={selectedAgentId}
               onTokenUpdate={handleTokenUpdate}
               onChatUpdate={handleChatUpdate}
             />
           )}
-          {selectedChat && <MessageList messages={selectedChat.messages} />}
+          {selectedChat && isLoaded && <MessageList messages={selectedChat.messages} />}
         </MessagesPaneBody>
         <MessagesPaneFooter>
           {selectedChat && (

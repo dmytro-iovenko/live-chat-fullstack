@@ -144,8 +144,38 @@ const createChat = async (req, res) => {
 // Asynchronous function to get chat with the specified id
 const getChatById = async (req, res) => {
   try {
+    // Check Client ID
+    if (!req.client || !req.client._id) {
+      return res.status(400).send({ error: "Client ID is required." });
+    }
+    const clientId = req.client._id;
+    console.log("0:", clientId);
     const chat = await Chat.findById(req.params.id).populate(["sender", "users", "messages"]).exec();
-    res.send(chat).status(200);
+    if (!chat) {
+      return res.status(401).json({ message: "Chat not found." });
+    }
+    console.log("0:", chat);
+    const messages = await Promise.all(
+      chat.messages.map(async (message) => {
+        console.log("0:", message.sender);
+        if (message.sender instanceof mongoose.Types.ObjectId) {
+          console.log("1:", message.sender);
+          const user = await User.findById(message.sender);
+          console.log("2:", user);
+          const client = await Client.findById(message.sender);
+          console.log("3:", client);
+          const sender = user ?? client;
+          console.log("4:", sender);
+          if (sender) {
+            const name = clientId && clientId.equals(sender._id) ? "You" : sender.name;
+            return { ...message.toObject(), sender: name };
+          }
+        }
+        return { ...message.toObject() };
+      })
+    );
+    const populatedChat = { ...chat.toObject(), messages };
+    res.send(populatedChat).status(200);
   } catch (err) {
     res.send(err).status(400);
   }
