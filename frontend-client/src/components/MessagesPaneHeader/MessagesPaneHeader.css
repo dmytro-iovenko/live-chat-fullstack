@@ -1,0 +1,16 @@
+.container-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  padding: 1rem;
+  background-color: var(--white);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.chat-title {
+  flex: 1;
+  text-align: center;
+}

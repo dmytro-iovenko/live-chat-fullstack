@@ -21,26 +21,32 @@ const ChatList: React.FC<ChatPropsCommon> = ({
   //     { id: 1, name: "Tina Cornell", message: "The test message", time: "15s" },
   //     { id: 2, name: "Collete Aicart", message: "Long messages should end with ellipses.", time: "35m" },
   //   ];
-console.log(chats)
   return (
     <div className="container-body">
-      {chats && <div className="tab">
-        <input type="checkbox" id="cb1" defaultChecked />
-        <div className="section-title">
-          <label htmlFor="cb1" className="tab-label">
-            My chats ({chats.length})
-          </label>
-        </div>
-        <div className="tab-content">
-          <div className="section-content">
-            <div className="section-column">
-              {chats.map((chat) => (
-                <ChatItem key={chat._id} {...chat} setSelectedChat={setSelectedChat} selectedChatId={selectedChatId} />
-              ))}
+      {chats && (
+        <div className="tab">
+          <input type="checkbox" id="cb1" defaultChecked />
+          <div className="section-title">
+            <label htmlFor="cb1" className="tab-label">
+              My chats ({chats.length})
+            </label>
+          </div>
+          <div className="tab-content">
+            <div className="section-content">
+              <div className="section-column">
+                {chats.map((chat) => (
+                  <ChatItem
+                    key={chat._id}
+                    {...chat}
+                    setSelectedChat={setSelectedChat}
+                    selectedChatId={selectedChatId}
+                  />
+                ))}
+              </div>
             </div>
           </div>
         </div>
-      </div>}
+      )}
     </div>
   );
 };

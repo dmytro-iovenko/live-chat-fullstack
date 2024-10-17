@@ -5,22 +5,14 @@ import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { auth } from "../firebase/firebaseConfig";
 import AuthForm from "../components/AuthForm/AuthForm";
 import { getUserByEmail } from "../services/apiClient";
-
-/**
- * Props for the LoginPage component.
- * Contains the function to set the login state of the user.
- */
-interface LoginPageProps {
-  setIsLoggedIn: (data: boolean) => void; // Function to update login status
-}
+import { handleFirebaseError } from "../utils/helpers";
 
 /**
  * LoginPage component that handles user login.
  * Manages form submission, error handling, and navigation after successful login.
- * @param {LoginPageProps} props - The props for the LoginPage component.
  * @returns The LoginPage component.
  */
-const LoginPage: React.FC<LoginPageProps> = ({ setIsLoggedIn }: LoginPageProps) => {
+const LoginPage: React.FC = () => {
   const navigate = useNavigate();
   const [error, setError] = useState<string | null>(null);
 
@@ -47,43 +39,15 @@ const LoginPage: React.FC<LoginPageProps> = ({ setIsLoggedIn }: LoginPageProps) 
         setError("User authenticated, but not found in the database. Please contact the administrator for assistance.");
         return;
       }
-      console.log(user);
-      // Set flag to indicate successful login
-      setIsLoggedIn(true);
       navigate("/");
     } catch (error: unknown) {
       console.error("Error logging in:", error);
       // Handle specific Firebase error
       if (error instanceof FirebaseError) {
-        handleFirebaseError(error); // Now this is safe
+        handleFirebaseError(error as FirebaseError, setError, false);
       } else {
         setError("An unexpected error occurred. Please try again.");
       }
-    }
-  };
-
-  /**
-   * Helper function to handle Firebase authentication errors.
-   * Sets the error state with a user-friendly message based on the error code.
-   * @param {FirebaseError} error - The error object returned from Firebase.
-   */
-  const handleFirebaseError = (error: FirebaseError) => {
-    switch (error.code) {
-      case "auth/user-not-found":
-        setError("No user found with this email address.");
-        break;
-      case "auth/wrong-password":
-        setError("Incorrect password. Please try again.");
-        break;
-      case "auth/invalid-email":
-        setError("The email address is not valid. Please check and try again.");
-        break;
-      case "auth/invalid-credential":
-        setError("The credentials provided are invalid. Please check and try again.");
-        break;
-      default:
-        setError("Login failed. Please try again.");
-        break;
     }
   };
 

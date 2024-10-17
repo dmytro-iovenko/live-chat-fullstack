@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import Chat from "../models/chat.js";
 import Message from "../models/message.js";
 import User from "../models/user.js";
+import Client from "../models/client.js";
 
 // Asynchronous function to create a new chat
 const createChat = async (req, res) => {
@@ -39,7 +40,9 @@ const getChats = async (req, res) => {
         const messages = await Promise.all(
           chat.messages.map(async (message) => {
             if (message.sender instanceof mongoose.Types.ObjectId) {
-              const sender = await User.findById(message.sender);
+              const user = await User.findById(message.sender);
+              const client = await Client.findById(message.sender);
+              const sender = user ?? client;
               if (sender) {
                 const userId = new mongoose.Types.ObjectId(`${req.user._id}`);
                 const name = userId && userId.equals(sender._id) ? "You" : sender.name;

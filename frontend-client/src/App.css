@@ -1,0 +1,314 @@
+/* Avatars: START */
+.avatar-1 {
+  background-color: var(--avatar-1);
+}
+.avatar-2 {
+  background-color: var(--avatar-2);
+}
+.avatar-3 {
+  background-color: var(--avatar-3);
+}
+.avatar-4 {
+  background-color: var(--avatar-4);
+}
+.avatar-5 {
+  background-color: var(--avatar-5);
+}
+.avatar-6 {
+  background-color: var(--avatar-6);
+}
+.avatar-7 {
+  background-color: var(--avatar-7);
+}
+.avatar-8 {
+  background-color: var(--avatar-8);
+}
+.avatar-9 {
+  background-color: var(--avatar-9);
+}
+.avatar-0 {
+  background-color: var(--avatar-0);
+}
+/* Avatars: END */
+
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: var(--background);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+main {
+  position: relative;
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+.menu-container {
+  position: relative;
+  width: 1.6rem;
+  height: 1.6rem;
+}
+.btn {
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  user-select: none;
+  outline: none;
+}
+.btn:has(> svg) {
+  position: relative;
+  width: 1.6rem;
+  height: 1.6rem;
+  svg {
+    fill: var(--button);
+  }
+}
+.btn:hover {
+  background-color: var(--bs-light);
+  outline: 0.5rem solid var(--bs-light);
+  transition: outline-width 0.25s;
+  border-radius: 50%;
+}
+#menu-toggle {
+  display: none;
+}
+#menu-toggle:checked + .menu-btn > span,
+#menu-toggle:checked + .menu-btn > span::before,
+#menu-toggle:checked + .menu-btn > span::after {
+  width: 100%;
+  height: 0.2rem;
+  border-radius: 0;
+  margin: 0;
+}
+#menu-toggle:checked + .menu-btn > span {
+  top: 0;
+  background-color: transparent;
+  height: 1.6rem;
+}
+#menu-toggle:checked + .menu-btn > span::before {
+  top: 50%;
+  transform: rotate(135deg);
+}
+#menu-toggle:checked + .menu-btn > span::after {
+  top: 50%;
+  transform: rotate(-135deg);
+}
+#menu-toggle:checked + .menu-btn .overlay {
+  display: block;
+}
+#menu-toggle:checked ~ .menu-box {
+  right: 0 !important;
+}
+#menu-toggle:checked + .menu-btn {
+  outline-width: 1rem;
+}
+.menu-btn > span {
+  position: relative;
+  top: calc(50% - 0.2rem);
+}
+.menu-btn > span,
+.menu-btn > span::before,
+.menu-btn > span::after {
+  margin: 0 calc(50% - 0.2rem);
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 50%;
+  background-color: var(--button);
+  display: inline-block;
+  z-index: 1003;
+  transition: all 0.2s;
+}
+.menu-btn > span::before,
+.menu-btn > span::after {
+  content: "";
+  position: absolute;
+  left: 0;
+}
+.menu-btn > span::before {
+  top: -0.5rem;
+}
+.menu-btn > span::after {
+  top: 0.5rem;
+}
+.menu-btn .overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--bs-dark);
+  overflow-x: hidden;
+  overflow-y: auto;
+  outline: 0;
+  cursor: default;
+  z-index: 1001;
+  opacity: 0.4;
+  transition: opacity 0.25s linear;
+}
+.menu-box {
+  display: block;
+  position: fixed;
+  top: 0;
+  right: -100%;
+  width: auto;
+  height: 100%;
+  margin: 0;
+  padding: 3rem 0;
+  list-style: none;
+  background-color: var(--white);
+  transition-duration: 0.25s;
+  z-index: 1002;
+}
+.menu-item {
+  display: block;
+  padding: 1rem 4rem 1rem 2rem;
+  color: var(--text);
+  font-size: 1rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition-duration: 0.25s;
+}
+.menu-item:hover {
+  background-color: var(--highlight);
+}
+
+@keyframes slide-in-bottom {
+  from {
+    transform: translateY(100%);
+  }
+}
+
+@keyframes message-scale-out {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+.chat-item-container {
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: end;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  margin: 0.5rem 0;
+  .chat-item-wrapper {
+    display: flex;
+    .chat-item-status {
+      width: 1rem;
+      height: 1rem;
+      border-radius: 50%;
+      border: 2px solid var(--white);
+      background-color: var(--bs-warning);
+      background-color: var(--bs-danger);
+      background-color: var(--bs-success);
+      z-index: 1;
+    }
+    /* .chat-item-avatar {
+      color: var(--avatar-text);
+      border-radius: 0.5rem;
+      border-radius: 50%;
+      width: 2.5rem;
+      height: 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+      font-weight: 600;
+      margin-left: -0.5rem;
+      svg {
+        fill: currentcolor;
+        border-radius: inherit;
+      }
+    } */
+  }
+  .chat-item-content {
+    font-size: 0.85rem;
+    flex-grow: 1;
+    overflow: hidden;
+    > * {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    > p {
+      margin: 0;
+      padding: 0;
+    }
+    .chat-item-title {
+      font-weight: bold;
+    }
+  }
+  .chat-item-info {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+/*******/
+
+.chat-container {
+  position: relative;
+  padding: 1rem;
+}
+
+.chat-container > div:not(#error-display):not(#chat-messages) {
+  background: var(--white);
+  display: flex;
+  flex-direction: column;
+  box-shadow: 5px 5px 10px var(--border);
+  border-radius: 0.5rem;
+  user-select: none;
+  margin-bottom: 1rem;
+}
+.chat-container p {
+  padding: 0.5rem 1rem;
+  margin: 0.25rem 0px;
+}
+.chat-container .chat-item,
+.chat-container form,
+.chat-container h4 {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+  padding: 0.5rem 1rem;
+}
+.chat-container input[type="text"],
+.chat-container input[type="email"],
+.chat-container button {
+  padding: 1rem;
+  margin: 0.5rem 0;
+  outline: 1px solid var(--border);
+  border: none;
+  border-radius: 0.5rem;
+  background-color: var(--highlight);
+}
+.chat-container input:focus {
+  background-color: var(--white);
+  outline-color: var(--primary);
+  box-shadow: 0 0 10px var(--primary);
+}
+.chat-container button {
+  font-weight: bold;
+  cursor: pointer;
+}
+.chat-container button {
+  outline-color: var(--primary);
+  background-color: var(--primary);
+  color: var(--white);
+}

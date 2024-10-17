@@ -3,6 +3,7 @@ import connectDb from "./db/conn.js";
 import userRoutes from "./routes/userRoutes.js";
 import messageRoutes from "./routes/messageRoutes.js";
 import chatRoutes from "./routes/chatRoutes.js";
+import clientRoutes from "./routes/clientRoutes.js";
 import cors from "cors";
 import admin from "firebase-admin";
 import "dotenv/config";
@@ -25,6 +26,7 @@ app.use(express.json());
 app.use("/users", userRoutes);
 app.use("/messages", messageRoutes);
 app.use("/chats", chatRoutes);
+app.use("/client", clientRoutes);
 
 // Error-handling Middleware
 app.use((err, req, res, _next) => {

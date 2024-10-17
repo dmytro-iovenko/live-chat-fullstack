@@ -1,0 +1,128 @@
+/* all messages in the chat */
+.chat-message {
+  display: flex;
+  flex-direction: column;
+  box-shadow: 5px 5px 10px var(--border);
+  animation: message-scale-out 0.1s ease-out;
+  .chat-message-title {
+    display: none;
+    font-size: 0.85rem;
+    color: var(--text-grey);
+  }
+  .chat-message-content {
+    padding: 0.5rem;
+    min-height: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    .chat-message-image {
+      display: flex;
+      img {
+        max-width: 18rem;
+        border-radius: 0.5rem;
+      }
+      + .chat-message-text {
+        max-width: 18rem;
+      }
+    }
+    .chat-message-text {
+      overflow-wrap: anywhere;
+    }
+  }
+}
+
+/* all messages in the inbound group */
+.message-in {
+  align-self: flex-start;
+  margin-right: 4rem;
+  transform-origin: bottom left;
+  .chat-message-title {
+    margin-left: 2.75rem;
+    display: none;
+  }
+  .chat-message-content {
+    background-color: var(--message-in);
+    border-top-right-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+  }
+}
+/* the first message in the inbound group */
+.message-in:first-child,
+.message-out + :not(.message-out) {
+  .chat-message-content {
+    border-top-left-radius: 0.5rem;
+  }
+  .chat-message-title {
+    /* display: block; */
+    display: none;
+  }
+  /* .chat-message-avatar {
+      display: none;
+    } */
+}
+/* the last message in the inbound group */
+.message-in:last-child,
+.message-in:has(+ :not(.message-in)) {
+  margin-bottom: 0.5rem;
+  .chat-message-content {
+    position: relative;
+  }
+  .chat-message-content:before {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: -1rem;
+    height: 0.75rem;
+    width: 1rem;
+    border-bottom-right-radius: 1rem;
+    box-shadow: 0.5rem 0 0 0 var(--message-in);
+  }
+}
+/* all messages in the outbound group */
+.message-out {
+  align-self: flex-end;
+  margin-left: 4rem;
+  transform-origin: bottom right;
+  .chat-message-title {
+    margin-right: 2.75rem;
+    text-align: end;
+    display: none;
+  }
+  /* .chat-message-group {
+      flex-direction: row-reverse;
+    } */
+  .chat-message-content {
+    background-color: var(--message-out);
+    border-top-left-radius: 0.5rem;
+    border-bottom-left-radius: 0.5rem;
+  }
+}
+/* the first message in the outbound group */
+.message-out:first-child,
+.message-in + :not(.message-in) {
+  .chat-message-content {
+    border-top-right-radius: 0.5rem;
+  }
+  .chat-message-title {
+    /* display: block; */
+    display: none;
+  }
+}
+/* the last message in the outbound group */
+.message-out:last-child,
+.message-out:has(+ :not(.message-out)) {
+  margin-bottom: 0.5rem;
+  .chat-message-content {
+    position: relative;
+  }
+  .chat-message-content:before {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    right: -1rem;
+    height: 0.75rem;
+    width: 1rem;
+    border-bottom-left-radius: 1rem;
+    box-shadow: -0.5rem 0 0 0 var(--message-out);
+  }
+}

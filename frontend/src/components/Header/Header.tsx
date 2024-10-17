@@ -72,8 +72,6 @@ const Header: React.FC<HeaderProps> = ({ user, onLogout }): JSX.Element => {
     { href: "/team.html", label: "Team" },
   ];
 
-  console.log(user);
-
   return (
     <header>
       <nav>
