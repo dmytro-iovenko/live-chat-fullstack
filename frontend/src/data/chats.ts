@@ -13,11 +13,13 @@ export interface ChatPropsCommon {
 
 /**
  * Represents a chat object within the application.
- * Contains details about the chat, including its ID, sender, and messages exchanged.
+ * Contains details about the chat, including its ID, agent, client, users, and messages exchanged.
  */
 export interface ChatProps {
   _id: string; // Unique identifier for the chat
-  sender: UserProps; // The user who initiated the chat
+  agent: UserProps; // The agent managing the chat
+  client: UserProps; // The client involved in the chat
+  users: UserProps[]; // Array of users participating in the chat
   messages: MessageItemProps[]; // Array of messages exchanged in the chat
 }
 

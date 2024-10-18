@@ -47,8 +47,11 @@ const MessagesPane: React.FC<MessagePaneProps> = ({ chat, onUpdateChats, user }:
   // Effect to manage Socket.IO connection
   useEffect(() => {
     socket.on("newMessage", (message) => {
+      console.log(chat, chat?._id, message);
       if (chat && chat._id === message.chatId) {
-        setChatMessages((prevMessages) => [...(prevMessages ?? []), message]);
+        // Update message with sender's name
+        const updatedMessage = { ...message, sender: message.sender };
+        setChatMessages((prevMessages) => [...(prevMessages ?? []), updatedMessage]);
       }
     });
     return () => {
@@ -83,7 +86,7 @@ const MessagesPane: React.FC<MessagePaneProps> = ({ chat, onUpdateChats, user }:
       setChatMessages(updatedChatMessages);
 
       // Emit the new message to Socket.IO server
-      socket.emit("sendMessage", { ...messages.newMessage, chatId: chat._id });
+      socket.emit("sendMessage", { ...messages.newMessage, chatId: chat._id, sender: user.displayName });
 
       // Update the specific chat object in the original chats array
       const updatedChat = { ...chat, messages: updatedChatMessages };
@@ -100,7 +103,7 @@ const MessagesPane: React.FC<MessagePaneProps> = ({ chat, onUpdateChats, user }:
 
   return (
     <section id="main" className="container">
-      <MessagesPaneHeader title={chat?.sender.name} />
+      <MessagesPaneHeader title={chat?.client.name} />
       <MessagesPaneBody>
         <MessageList messages={chatMessages} chatId={chat?._id} />
       </MessagesPaneBody>

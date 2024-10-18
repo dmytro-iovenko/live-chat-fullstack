@@ -6,7 +6,7 @@ import Client from "./client.js";
 // Define Chat schema
 const chatSchema = new mongoose.Schema(
   {
-    sender: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+    agent: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     client: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Client",
@@ -19,16 +19,36 @@ const chatSchema = new mongoose.Schema(
         message: "Client ID does not exist",
       },
     },
+    // users: [
+    //   {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: "User",
+    //     validate: {
+    //       validator: async (value) => {
+    //         const user = await User.findById(value);
+    //         return !!user; // Returns true if the user exists, false otherwise
+    //       },
+    //       message: "User does not exist",
+    //     },
+    //   },
+    // ],
     users: [
       {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
+        type: mongoose.Schema.Types.Mixed, // Allows for both User and Client
         validate: {
           validator: async (value) => {
-            const user = await User.findById(value);
-            return !!user; // Returns true if the user exists, false otherwise
+            if (value instanceof mongoose.Types.ObjectId) {
+              // Check if it's a valid User
+              const user = await User.findById(value);
+              if (user) return true; // Returns true if the user exists
+
+              // Check if it's a valid Client
+              const client = await Client.findById(value);
+              return !!client; // Returns true if the client exists
+            }
+            return false; // If it's neither, return false
           },
-          message: "User does not exist",
+          message: "Invalid user: Must be a valid User ID or Client ID",
         },
       },
     ],
@@ -57,10 +77,17 @@ const chatSchema = new mongoose.Schema(
     toJSON: {
       virtuals: true,
       transform: (doc, ret) => {
-        const newMessage = ret.newMessage;
-        const deletedMessage = ret.deletedMessage;
-        delete ret.newMessage;
-        delete ret.deletedMessage;
+        // const { _newMessage, _deletedMessage, ...rest } = ret; 
+        // return {
+        //   _id: doc._id,
+        //   newMessage: _newMessage,
+        //   deletedMessage: _deletedMessage,
+        //   ...rest,
+        // };
+        const newMessage = ret._newMessage;
+        const deletedMessage = ret._deletedMessage;
+        delete ret._newMessage;
+        delete ret._deletedMessage;
         delete ret.id;
         const reordered = {
           _id: doc._id,

@@ -30,11 +30,18 @@ function App() {
   const [textAreaValue, setTextAreaValue] = useState("");
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
-  // Effect to maange Socket.IO connection
+  // Effect to manage Socket.IO connection
   useEffect(() => {
     socket.on("newMessage", (message) => {
+      console.log("socket.on: newMessage", selectedChat, selectedChat?._id, message.chatId);
       if (selectedChat && selectedChat._id === message.chatId) {
-        setMessages((prevMessages) => [...prevMessages, message]);
+        // Find the user that matches the sender id
+        const user = selectedChat.users.find((user) => user._id === message.sender);
+        // Get the relevant name
+        const sender = user ? user.name : "Anonimous";
+        // Update message with sender's name
+        const updatedMessage = { ...message, sender };
+        setMessages((prevMessages) => [...(prevMessages ?? []), updatedMessage]);
       }
     });
     return () => {
@@ -73,14 +80,12 @@ function App() {
       // }
       try {
         const token = localStorage.getItem("token");
-        console.log("TOKEN!", token);
         if (token && storedChatId) {
           const chat = await getChatById(storedChatId);
-          console.log("CHAT!", chat);
           if (isMounted && chat) {
             setSelectedChat(chat);
             setMessages(chat.messages);
-            setSelectedAgentId(chat.sender._id);
+            setSelectedAgentId(chat.agent._id);
           }
         }
         if (!storedAgentId && !storedChatId) {
@@ -193,17 +198,18 @@ function App() {
     try {
       // Add a new message to the chat with the specified ID and store added message
       const messages = await addMessageToChat(chat._id, newMessage);
-      console.log(messages);
+      console.log("socket.emit:messages:", messages);
 
       // Update the message locally to use the MongoDB _id and status
+      console.log("socket.emit:updatedChatMessages:", updatedMessages);
       const updatedChatMessages = updatedMessages.map((msg) =>
         msg._id === tempId ? { ...msg, _id: messages.newMessage._id, status: messages.newMessage.status } : msg
       );
-      console.log(updatedChatMessages);
       setMessages(updatedChatMessages);
 
       // Emit the new message to Socket.IO server
-      socket.emit("sendMessage", { ...messages.newMessage, chatId: chat._id });
+      console.log("socket.emit:sendMessage", chat);
+      socket.emit("sendMessage", { ...messages.newMessage, chatId: chat._id, sender: selectedChat.client.name });
 
       // Update the specific chat object in the original chats array
       const updatedChat = { ...chat, messages: updatedChatMessages };
@@ -230,7 +236,6 @@ function App() {
     }
   };
 
-  console.log(isLoaded);
   return (
     <main>
       <section className="container">

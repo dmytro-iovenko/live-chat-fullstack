@@ -11,7 +11,9 @@ import { UserProps } from "../../data/users";
  */
 interface ChatItemProps {
   _id: string; // Unique identifier for the chat item
-  sender: UserProps; // The user who sent the messages in the chat
+  agent: UserProps; // The agent managing the chat
+  client: UserProps; // The client involved in the chat
+  users: UserProps[]; // Array of users participating in the chat
   messages: MessageItemProps[]; // Array of messages exchanged in the chat
   selectedChatId?: string; // ID of the currently selected chat for highlighting (optional)
   setSelectedChat: (chat: ChatProps) => void; // Function to update the selected chat when a chat item is clicked
@@ -27,18 +29,18 @@ interface ChatItemProps {
  * @returns {JSX.Element} The ChatItem component displaying chat information.
  */
 const ChatItem: React.FC<ChatItemProps> = (props: ChatItemProps): JSX.Element => {
-  const { _id, sender, messages, selectedChatId, setSelectedChat } = props;
+  const { _id, client, agent, users, messages, selectedChatId, setSelectedChat } = props;
   const selected = selectedChatId === _id ? " selected" : "";
   const lastMessage = messages[messages.length - 1]?.text || "";
   return (
     <div
       className={"chat-item".concat(selected)}
       onClick={() => {
-        setSelectedChat({ _id, sender, messages });
+        setSelectedChat({ _id, client, agent, users, messages });
       }}>
-      <Avatar username={sender.name} />
+      <Avatar username={client.name} />
       <div className="chat-item-content">
-        <p className="chat-item-title">{sender.name}</p>
+        <p className="chat-item-title">{client.name}</p>
         <p className="chat-item-text">{lastMessage}</p>
       </div>
       <div className="chat-item-info">

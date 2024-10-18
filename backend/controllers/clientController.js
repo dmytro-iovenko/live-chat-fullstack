@@ -60,18 +60,25 @@ const getChats = async (req, res) => {
       res.send([]).status(200);
     }
     const clientId = new mongoose.Types.ObjectId(`${req.client._id}`);
-    let chats = await Chat.find({ client: clientId, active: true })
-      .populate(["client", "sender", "users", "messages"])
-      .exec();
-    // Process each chat and populate sender for messages
+    let chats = await Chat.find({ client: clientId, active: true }).populate(["client", "agent", "messages"]).exec();
+    // Process each chat and populate users and messages senders
     const populatedChats = await Promise.all(
       chats.map(async (chat) => {
+        // Manually populate the users array to get agent or client data
+        const users = await Promise.all(
+          chat.users.map(async (userId) => {
+            const agent = await User.findById(userId);
+            const client = await Client.findById(userId);
+            return agent || client;
+          })
+        );
+        // Manually populate the messages array to get sender data
         const messages = await Promise.all(
           chat.messages.map(async (message) => {
             if (message.sender instanceof mongoose.Types.ObjectId) {
-              const user = await User.findById(message.sender);
+              const agent = await User.findById(message.sender);
               const client = await Client.findById(message.sender);
-              const sender = user ?? client;
+              const sender = agent ?? client;
               if (sender) {
                 const name = clientId && clientId.equals(sender._id) ? "You" : sender.name;
                 return { ...message.toObject(), sender: name };
@@ -80,7 +87,7 @@ const getChats = async (req, res) => {
             return { ...message.toObject() };
           })
         );
-        return { ...chat.toObject(), messages };
+        return { ...chat.toObject(), users, messages };
       })
     );
     res.send(populatedChats).status(200);
@@ -101,42 +108,74 @@ const createChat = async (req, res) => {
     if (!req.client || !req.client._id) {
       return res.status(400).send({ error: "Client ID is required." });
     }
-    const client = req.client._id;
+    const clientId = req.client._id;
     const user = new mongoose.Types.ObjectId(`${agentId}`);
 
     // Check if a chat already exists for this client and agent
-    const existingChat = await Chat.findOne({ sender: user, client: client, active: true })
-      .populate(["client", "sender", "users", "messages"])
+    const existingChat = await Chat.findOne({ agent: user, client: clientId, active: true })
+      .populate(["client", "agent", "messages"])
       .exec();
 
     if (existingChat) {
-      // Process each chat and populate sender for messages
+      // Manually populate the users array to get agent or client data
+      const users = await Promise.all(
+        existingChat.users.map(async (userId) => {
+          const agent = await User.findById(userId);
+          const client = await Client.findById(userId);
+          return agent || client;
+        })
+      );
+      // Manually populate the messages array to get sender data
       const messages = await Promise.all(
         existingChat.messages.map(async (message) => {
           if (message.sender instanceof mongoose.Types.ObjectId) {
-            const user = await User.findById(message.sender);
+            const agent = await User.findById(message.sender);
             const client = await Client.findById(message.sender);
-            const sender = user ?? client;
+            const sender = agent ?? client;
             if (sender) {
-              const name = client && client.equals(sender._id) ? "You" : sender.name;
+              const name = clientId && clientId.equals(sender._id) ? "You" : sender.name;
               return { ...message.toObject(), sender: name };
             }
           }
           return { ...message.toObject() };
         })
       );
-      const populatedChat = { ...existingChat.toObject(), messages };
+      const populatedChat = { ...existingChat.toObject(), users, messages };
       return res.status(200).send(populatedChat);
     }
 
     // If no existing chat, create a new one
     const chatData = {
-      sender: user,
-      client: client,
-      users: [user],
+      agent: user,
+      client: clientId,
+      users: [user, clientId],
       active: true, // ignore any user-provided active values, default to true
     };
     const newChat = await Chat.create(chatData);
+    // Manually populate the users array to get agent or client data
+    const users = await Promise.all(
+      newChat.users.map(async (userId) => {
+        const agent = await User.findById(userId);
+        const client = await Client.findById(userId);
+        return agent || client;
+      })
+    );
+    // Manually populate the messages array to get sender data
+    const messages = await Promise.all(
+      newChat.messages.map(async (message) => {
+        if (message.sender instanceof mongoose.Types.ObjectId) {
+          const agent = await User.findById(message.sender);
+          const client = await Client.findById(message.sender);
+          const sender = agent ?? client;
+          if (sender) {
+            const name = clientId && clientId.equals(sender._id) ? "You" : sender.name;
+            return { ...message.toObject(), sender: name };
+          }
+        }
+        return { ...message.toObject() };
+      })
+    );
+    const populatedChat = { ...newChat.toObject(), users, messages };
     res.send(newChat).status(201);
   } catch (err) {
     res.send(err).status(400);
@@ -152,16 +191,25 @@ const getChatById = async (req, res) => {
     }
     const clientId = req.client._id;
     console.log("0:", clientId);
-    const chat = await Chat.findById(req.params.id).populate(["sender", "users", "messages"]).exec();
+    const chat = await Chat.findById(req.params.id).populate(["agent", "client", "messages"]).exec();
     if (!chat) {
       return res.status(401).json({ message: "Chat not found." });
     }
+    // Manually populate the users array to get agent or client data
+    const users = await Promise.all(
+      chat.users.map(async (user) => {
+        const agent = await User.findById(user);
+        const client = await Client.findById(user);
+        return agent || client;
+      })
+    );
+    // Manually populate the messages array to get sender data
     const messages = await Promise.all(
       chat.messages.map(async (message) => {
         if (message.sender instanceof mongoose.Types.ObjectId) {
-          const user = await User.findById(message.sender);
+          const agent = await User.findById(message.sender);
           const client = await Client.findById(message.sender);
-          const sender = user ?? client;
+          const sender = agent ?? client;
           if (sender) {
             const name = clientId && clientId.equals(sender._id) ? "You" : sender.name;
             return { ...message.toObject(), sender: name };
@@ -170,7 +218,7 @@ const getChatById = async (req, res) => {
         return { ...message.toObject() };
       })
     );
-    const populatedChat = { ...chat.toObject(), messages };
+    const populatedChat = { ...chat.toObject(), users, messages };
     res.send(populatedChat).status(200);
   } catch (err) {
     res.send(err).status(400);
@@ -180,6 +228,7 @@ const getChatById = async (req, res) => {
 // Asynchronous function to add message to chat with the specified id
 const addMessageToChat = async (req, res) => {
   if (!req.client || !req.client._id) return res.status(400).send({ error: "Client ID is required." });
+  const clientId = req.client._id;
   let session;
   try {
     // Start session
@@ -187,7 +236,7 @@ const addMessageToChat = async (req, res) => {
     // Start transaction
     session.startTransaction();
     // Create new message
-    const sender = new mongoose.Types.ObjectId(`${req.client._id}`);
+    const sender = new mongoose.Types.ObjectId(`${clientId}`);
     const newMessage = await Message.create([{ ...req.body, sender }], { session });
     // Find chat by ID
     const chat = await Chat.findById(req.params.id).session(session);
@@ -197,11 +246,36 @@ const addMessageToChat = async (req, res) => {
     await chat.save({ session });
     // Commit transaction
     await session.commitTransaction();
-    // Populate and return the updated chat
-    const updatedChat = await Chat.findById(req.params.id).populate(["sender", "users", "messages"]).exec();
+    // Populate updated chat
+    const updatedChat = await Chat.findById(req.params.id).populate(["agent", "client", "messages"]).exec();
     // Ensure virtual property is set on the fetched document
     updatedChat._newMessage = newMessage[0];
-    res.send(updatedChat).status(200);
+    // Manually populate the users array to get agent or client data
+    const users = await Promise.all(
+      updatedChat.users.map(async (user) => {
+        const agent = await User.findById(user);
+        const client = await Client.findById(user);
+        return agent || client;
+      })
+    );
+    // Manually populate the messages array to get sender data
+    const messages = await Promise.all(
+      updatedChat.messages.map(async (message) => {
+        if (message.sender instanceof mongoose.Types.ObjectId) {
+          const agent = await User.findById(message.sender);
+          const client = await Client.findById(message.sender);
+          const sender = agent ?? client;
+          if (sender) {
+            const name = clientId && clientId.equals(sender._id) ? "You" : sender.name;
+            return { ...message.toObject(), sender: name };
+          }
+        }
+        return { ...message.toObject() };
+      })
+    );
+    const populatedChat = { ...updatedChat.toJSON(), users, messages };
+    // console.log(populatedChat)
+    res.send(populatedChat).status(200);
   } catch (err) {
     // Abort transaction and rollback changes
     session && (await session.abortTransaction());

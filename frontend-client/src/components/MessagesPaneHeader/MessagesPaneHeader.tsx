@@ -24,7 +24,7 @@ const MessagesPaneHeader: React.FC<MessagesPaneHeaderProps> = ({
   onLogout,
   onBackButtonClick,
 }: MessagesPaneHeaderProps): JSX.Element => {
-  const title = selectedChat && agentId ? selectedChat.sender.name : "Welcome to Live Chat";
+  const title = selectedChat && agentId ? selectedChat.agent.name : "Welcome to Live Chat";
 
   return (
     <div className="container-title">
