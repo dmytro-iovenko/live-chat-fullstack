@@ -1,0 +1,369 @@
+{
+	"info": {
+		"_postman_id": "f3c77e5e-6fa3-450c-8939-a47637b42039",
+		"name": "Live Chat API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "31927442"
+	},
+	"item": [
+		{
+			"name": "Obtain Firebase Token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.environment.set('authToken', pm.response.json().idToken);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"{{userEmail}}\",\r\n    \"password\": \"{{userPassword}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key={{firebaseApiKey}}",
+					"protocol": "https",
+					"host": [
+						"identitytoolkit",
+						"googleapis",
+						"com"
+					],
+					"path": [
+						"v1",
+						"accounts:signInWithPassword"
+					],
+					"query": [
+						{
+							"key": "key",
+							"value": "{{firebaseApiKey}}"
+						}
+					]
+				},
+				"description": "Obtains a Firebase token."
+			},
+			"response": []
+		},
+		{
+			"name": "Create Chat",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.environment.set('chatId', pm.response.json()._id);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{firebaseToken}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"client\": \"{{clientId}}\"\r\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/chats",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"chats"
+					]
+				},
+				"description": "Creates a new chat."
+			},
+			"response": []
+		},
+		{
+			"name": "Get Chats",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{firebaseToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://{{baseUrl}}/chats",
+					"protocol": "https",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"chats"
+					]
+				},
+				"description": "Retrieves all chats."
+			},
+			"response": []
+		},
+		{
+			"name": "Get Chat by ID",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{firebaseToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/chats/{{chatId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"chats",
+						"{{chatId}}"
+					]
+				},
+				"description": "Retrieves a chat by its ID."
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Chat by ID",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{firebaseToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/chats/{{chatId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"chats",
+						"{{chatId}}"
+					]
+				},
+				"description": "Deletes a chat by its ID."
+			},
+			"response": []
+		},
+		{
+			"name": "Add Users to Chat",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.environment.set('userId2', pm.response.json()._id);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{firebaseToken}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"users\": [\r\n        \"{{userId}}\"\r\n    ]\r\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/chats/{{chatId}}/users",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"chats",
+						"{{chatId}}",
+						"users"
+					]
+				},
+				"description": "Adds users to a chat."
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Users from Chat",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{firebaseToken}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"users\": [\r\n        \"{{userId}}\"\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/chats/{{chatId}}/users",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"chats",
+						"{{chatId}}",
+						"users"
+					]
+				},
+				"description": "Deletes users from a chat."
+			},
+			"response": []
+		},
+		{
+			"name": "Add Message to Chat",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.environment.set('messageId', pm.response.json().newMessage._id);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{firebaseToken}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"text\":\"Hello World!\"}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/chats/{{chatId}}/messages",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"chats",
+						"{{chatId}}",
+						"messages"
+					]
+				},
+				"description": "Adds a message to a chat."
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Message from Chat",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{firebaseToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/chats/{{chatId}}/messages/{{messageId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"chats",
+						"{{chatId}}",
+						"messages",
+						"{{messageId}}"
+					]
+				},
+				"description": "Deletes a message from a chat."
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "your-api-base-url"
+		},
+		{
+			"key": "firebaseEmail",
+			"value": "your-email@example.com"
+		},
+		{
+			"key": "firebasePassword",
+			"value": "your-password"
+		},
+		{
+			"key": "apiKey",
+			"value": "your-firebase-api-key"
+		},
+		{
+			"key": "firebaseToken",
+			"value": ""
+		},
+		{
+			"key": "chatId",
+			"value": ""
+		},
+		{
+			"key": "userId",
+			"value": ""
+		},
+		{
+			"key": "messageId",
+			"value": ""
+		}
+	]
+}

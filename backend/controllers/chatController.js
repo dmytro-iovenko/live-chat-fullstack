@@ -97,11 +97,9 @@ const addUsersToChat = async (req, res) => {
       return res.status(400).send({ error: "Invalid users array" });
     }
 
-    // const user = await User.findById(`${users[0]}`)
-    console.log(req.params.id, users[0])
     const updatedChat = await Chat.findByIdAndUpdate(
       req.params.id,
-      { $addToSet: { users: { $each: users } } },
+      { $addToSet: { users: { $each: users.map((userId) => new mongoose.Types.ObjectId(`${userId}`)) } } },
       { new: true, runValidators: true }
     );
 
@@ -127,7 +125,7 @@ const deleteUsersFromChat = async (req, res) => {
 
     const updatedChat = await Chat.findByIdAndUpdate(
       req.params.id,
-      { $pullAll: { users: users } },
+      { $pullAll: { users: users.map((userId) => new mongoose.Types.ObjectId(`${userId}`)) } },
       { new: true, runValidators: true }
     );
 
