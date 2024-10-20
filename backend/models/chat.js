@@ -6,7 +6,18 @@ import Client from "./client.js";
 // Define Chat schema
 const chatSchema = new mongoose.Schema(
   {
-    agent: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+    agent: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+      validate: {
+        validator: async (value) => {
+          const agent = await User.findById(value);
+          return !!agent;
+        },
+        message: "Agent ID does not exist",
+      },
+    },
     client: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Client",
@@ -19,19 +30,6 @@ const chatSchema = new mongoose.Schema(
         message: "Client ID does not exist",
       },
     },
-    // users: [
-    //   {
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: "User",
-    //     validate: {
-    //       validator: async (value) => {
-    //         const user = await User.findById(value);
-    //         return !!user; // Returns true if the user exists, false otherwise
-    //       },
-    //       message: "User does not exist",
-    //     },
-    //   },
-    // ],
     users: [
       {
         type: mongoose.Schema.Types.Mixed, // Allows for both User and Client
@@ -77,7 +75,7 @@ const chatSchema = new mongoose.Schema(
     toJSON: {
       virtuals: true,
       transform: (doc, ret) => {
-        // const { _newMessage, _deletedMessage, ...rest } = ret; 
+        // const { _newMessage, _deletedMessage, ...rest } = ret;
         // return {
         //   _id: doc._id,
         //   newMessage: _newMessage,

@@ -11,7 +11,7 @@ router
   // Define a route to get all chats, filtered if necessary
   .get(userAuth, filterChatsByActive, chatController.getChats)
   // Define a route to create a new chat
-  .post(chatController.createChat);
+  .post(userAuth, chatController.createChat);
 
 router
   .route("/:id")

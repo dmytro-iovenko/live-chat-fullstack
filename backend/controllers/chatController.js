@@ -1,72 +1,51 @@
 import mongoose from "mongoose";
 import Chat from "../models/chat.js";
 import Message from "../models/message.js";
+import { populateUsers, populateMessages } from "../utils/chatUtils.js";
 import User from "../models/user.js";
-import Client from "../models/client.js";
 
 // Asynchronous function to create a new chat
 const createChat = async (req, res) => {
   try {
-    const { users, messages } = req.body;
-    // Validate users and messages
-    if (!Array.isArray(users) || !users.every((id) => mongoose.Types.ObjectId.isValid(id))) {
-      return res.send({ error: "Invalid users array" }).status(400);
+    const { client } = req.body;
+
+    if (!mongoose.Types.ObjectId.isValid(client)) {
+      return res.status(400).send({ error: "Invalid Client ID" });
     }
-    if (!Array.isArray(messages) || !messages.every((id) => mongoose.Types.ObjectId.isValid(id))) {
-      return res.send({ error: "Invalid messages array" }).status(400);
-    }
+
     const data = {
-      users,
-      messages,
+      agent: req.user._id,
+      client,
+      users: [req.user._id, client],
       active: true, // ignore any user-provided active values, default to true
     };
+
     const newChat = await Chat.create(data);
-    res.send(newChat).status(201);
+    const populatedChat = await Chat.populate(newChat, ["agent", "client"]);
+    const users = await populateUsers(populatedChat.users);
+    const finalChat = { ...populatedChat.toObject(), users };
+
+    res.status(201).send(finalChat);
   } catch (err) {
-    res.send(err).status(400);
+    res.status(400).send({ error: "An error occurred while creating the chat.", details: err.message });
   }
 };
 
 // Asynchronous function to get all chats, filtered if necessary
 const getChats = async (req, res) => {
   try {
-    if (!req.user || !req.user._id) return res.status(400).send({ error: "User ID is required." });
-    // Collect filters from req.locals.filter, if any
     const filter = (req.locals && req.locals.filter) || {};
     let chats = await Chat.find(filter).populate(["agent", "client", "messages"]).exec();
-    // Process each chat and populate users and messages senders
     const populatedChats = await Promise.all(
       chats.map(async (chat) => {
-        // Manually populate the users array to get agent or client data
-        const users = await Promise.all(
-          chat.users.map(async (userId) => {
-            const agent = await User.findById(userId);
-            const client = await Client.findById(userId);
-            return agent || client;
-          })
-        );
-        // Manually populate the messages array to get sender data
-        const messages = await Promise.all(
-          chat.messages.map(async (message) => {
-            if (message.sender instanceof mongoose.Types.ObjectId) {
-              const user = await User.findById(message.sender);
-              const client = await Client.findById(message.sender);
-              const sender = user ?? client;
-              if (sender) {
-                const userId = new mongoose.Types.ObjectId(`${req.user._id}`);
-                const name = userId && userId.equals(sender._id) ? "You" : sender.name;
-                return { ...message.toObject(), sender: name };
-              }
-            }
-            return { ...message.toObject() };
-          })
-        );
+        const users = await populateUsers(chat.users);
+        const messages = await populateMessages(chat.messages, req.user._id);
         return { ...chat.toObject(), users, messages };
       })
     );
-    res.send(populatedChats).status(200);
+    res.status(200).send(populatedChats);
   } catch (err) {
-    res.send(err).status(400);
+    res.status(400).send({ error: "An error occurred while retrieving chats.", details: err.message });
   }
 };
 
@@ -74,44 +53,38 @@ const getChats = async (req, res) => {
 const getChatById = async (req, res) => {
   try {
     const chat = await Chat.findById(req.params.id).populate(["agent", "client", "messages"]).exec();
-    // Manually populate the users array to get agent or client data
-    const users = await Promise.all(
-      chat.users.map(async (userId) => {
-        const agent = await User.findById(userId);
-        const client = await Client.findById(userId);
-        return agent || client;
-      })
-    );
-    // Manually populate the messages array to get sender data
-    const messages = await Promise.all(
-      chat.messages.map(async (message) => {
-        if (message.sender instanceof mongoose.Types.ObjectId) {
-          const agent = await User.findById(message.sender);
-          const client = await Client.findById(message.sender);
-          const sender = agent ?? client;
-          if (sender) {
-            const userId = new mongoose.Types.ObjectId(`${req.user._id}`);
-            const name = userId && userId.equals(sender._id) ? "You" : sender.name;
-            return { ...message.toObject(), sender: name };
-          }
-        }
-        return { ...message.toObject() };
-      })
-    );
+
+    if (!chat) {
+      return res.status(404).send({ error: "Chat not found." });
+    }
+
+    const users = await populateUsers(chat.users);
+    const messages = await populateMessages(chat.messages, req.user._id);
     const populatedChat = { ...chat.toObject(), users, messages };
-    res.send(populatedChat).status(200);
+    res.status(200).send(populatedChat);
   } catch (err) {
-    res.send(err).status(400);
+    res.status(400).send({ error: "An error occurred while retrieving the chat.", details: err.message });
   }
 };
 
 // Asynchronous function to delete message with the specified id
 const deleteChatById = async (req, res) => {
   try {
-    const deletedChat = await Chat.findByIdAndDelete(req.params.id);
-    res.send(deletedChat).status(200);
+    const chatToDelete = await Chat.findById(req.params.id).populate(["agent", "client", "messages"]);
+
+    if (!chatToDelete) {
+      return res.status(404).send({ error: "Chat not found." });
+    }
+
+    await Chat.findByIdAndDelete(req.params.id);
+
+    const users = await populateUsers(chatToDelete.users);
+    const messages = await populateMessages(chatToDelete.messages, req.user._id);
+    const finalChat = { ...chatToDelete.toObject(), users, messages };
+
+    res.status(200).send(finalChat);
   } catch (err) {
-    res.send(err).status(400);
+    res.status(400).send({ error: "An error occurred while deleting the chat.", details: err.message });
   }
 };
 
@@ -119,18 +92,27 @@ const deleteChatById = async (req, res) => {
 const addUsersToChat = async (req, res) => {
   try {
     const { users } = req.body;
-    // Validate users
+
     if (!Array.isArray(users) || !users.every((id) => mongoose.Types.ObjectId.isValid(id))) {
-      return res.send({ error: "Invalid users array" }).status(400);
+      return res.status(400).send({ error: "Invalid users array" });
     }
+
+    // const user = await User.findById(`${users[0]}`)
+    console.log(req.params.id, users[0])
     const updatedChat = await Chat.findByIdAndUpdate(
       req.params.id,
       { $addToSet: { users: { $each: users } } },
       { new: true, runValidators: true }
     );
-    res.send(updatedChat).status(200);
+
+    const populatedChat = await Chat.populate(updatedChat, ["agent", "client", "messages"]);
+    const populatedUsers = await populateUsers(populatedChat.users);
+    const populatedMessages = await populateMessages(populatedChat.messages, req.user._id);
+    const finalChat = { ...populatedChat.toObject(), users: populatedUsers, messages: populatedMessages };
+
+    res.status(200).send(finalChat);
   } catch (err) {
-    res.send(err).status(400);
+    res.status(400).send({ error: "An error occurred while adding users to the chat.", details: err.message });
   }
 };
 
@@ -138,78 +120,57 @@ const addUsersToChat = async (req, res) => {
 const deleteUsersFromChat = async (req, res) => {
   try {
     const { users } = req.body;
-    // Validate users
+
     if (!Array.isArray(users) || !users.every((id) => mongoose.Types.ObjectId.isValid(id))) {
-      return res.send({ error: "Invalid users array" }).status(400);
+      return res.status(400).send({ error: "Invalid users array" });
     }
+
     const updatedChat = await Chat.findByIdAndUpdate(
       req.params.id,
       { $pullAll: { users: users } },
       { new: true, runValidators: true }
     );
-    res.send(updatedChat).status(200);
+
+    const populatedChat = await Chat.populate(updatedChat, ["agent", "client", "messages"]);
+    const populatedUsers = await populateUsers(populatedChat.users);
+    const populatedMessages = await populateMessages(populatedChat.messages, req.user._id);
+    const finalChat = { ...populatedChat.toObject(), users: populatedUsers, messages: populatedMessages };
+
+    res.status(200).send(finalChat);
   } catch (err) {
-    res.send(err).status(400);
+    res.status(400).send({ error: "An error occurred while deleting users from the chat.", details: err.message });
   }
 };
 
 // Asynchronous function to add message to chat with the specified id
 const addMessageToChat = async (req, res) => {
-  if (!req.user || !req.user._id) return res.status(400).send({ error: "User ID is required." });
-  const userId = req.user._id;
   let session;
   try {
-    // Start session
     session = await mongoose.startSession();
-    // Start transaction
     session.startTransaction();
-    // Create new message
-    const sender = new mongoose.Types.ObjectId(`${userId}`);
+
+    const sender = new mongoose.Types.ObjectId(`${req.user._id}`);
     const newMessage = await Message.create([{ ...req.body, sender }], { session });
-    // Find chat by ID
+
     const chat = await Chat.findById(req.params.id).session(session);
-    // Add new message to messages array
     chat.messages.push(newMessage[0]._id);
-    // Save updated chat
     await chat.save({ session });
-    // Commit transaction
+
     await session.commitTransaction();
-    // Populate and return the updated chat
+
     const updatedChat = await Chat.findById(req.params.id).populate(["agent", "client", "messages"]).exec();
-    // Ensure virtual property is set on the fetched document
     updatedChat._newMessage = { ...newMessage[0].toObject(), sender: "You" };
-    // Manually populate the users array to get agent or client data
-    const users = await Promise.all(
-      updatedChat.users.map(async (user) => {
-        const agent = await User.findById(user);
-        const client = await Client.findById(user);
-        return agent || client;
-      })
-    );
-    // Manually populate the messages array to get sender data
-    const messages = await Promise.all(
-      updatedChat.messages.map(async (message) => {
-        if (message.sender instanceof mongoose.Types.ObjectId) {
-          const agent = await User.findById(message.sender);
-          const client = await Client.findById(message.sender);
-          const sender = agent ?? client;
-          if (sender) {
-            const name = userId && userId.equals(sender._id) ? "You" : sender.name;
-            return { ...message.toObject(), sender: name };
-          }
-        }
-        return { ...message.toObject() };
-      })
-    );
+
+    const users = await populateUsers(updatedChat.users);
+    const messages = await populateMessages(updatedChat.messages, req.user._id);
     const populatedChat = { ...updatedChat.toJSON(), users, messages };
-    res.send(populatedChat).status(200);
+
+    res.status(200).send(populatedChat);
   } catch (err) {
-    // Abort transaction and rollback changes
-    session && (await session.abortTransaction());
-    res.send(err).status(400);
+    if (session) await session.abortTransaction();
+    res.status(400).send({ error: "An error occurred while adding the message.", details: err.message });
   } finally {
-    // End session
-    session && (await session.endSession());
+    if (session) await session.endSession();
   }
 };
 
@@ -217,28 +178,31 @@ const addMessageToChat = async (req, res) => {
 const deleteMessageFromChat = async (req, res) => {
   let session;
   try {
-    // Start session
     session = await mongoose.startSession();
-    // Start transaction
     session.startTransaction();
-    // Delete message with the specified id
+
     const deletedMessage = await Message.findByIdAndDelete(req.params.messageId).session(session);
-    // Remove message ID from messages array
+
+    if (!deletedMessage) {
+      return res.status(404).send({ error: "Message not found." });
+    }
+
     await Chat.updateOne({ _id: req.params.id }, { $pull: { messages: req.params.messageId } }, { session });
-    // Commit transaction
     await session.commitTransaction();
-    // Populate and return the updated chat
+
     const updatedChat = await Chat.findById(req.params.id).populate(["agent", "users", "messages"]).exec();
-    // Ensure virtual property is set on the fetched document
     updatedChat._deletedMessage = deletedMessage;
-    res.send(updatedChat).status(200);
+
+    const users = await populateUsers(updatedChat.users);
+    const messages = await populateMessages(updatedChat.messages, req.user._id);
+    const populatedChat = { ...updatedChat.toJSON(), users, messages };
+
+    res.status(200).send(populatedChat);
   } catch (err) {
-    // Abort transaction and rollback changes
-    session && (await session.abortTransaction());
-    res.send(err).status(400);
+    if (session) await session.abortTransaction();
+    res.status(400).send({ error: "An error occurred while deleting the message.", details: err.message });
   } finally {
-    // End session
-    session && (await session.endSession());
+    if (session) await session.endSession();
   }
 };
 
