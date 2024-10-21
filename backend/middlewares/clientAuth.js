@@ -7,38 +7,33 @@ const JWT_SECRET = process.env.CLIENT_JWT_SECRET;
 
 // Middleware to authenticate clients using Bearer token
 const clientAuth = async (req, res, next) => {
-  console.log("clientAuth!!!");
-
-  // Get the Authorization header
-  const authHeader = req.headers.authorization;
-  console.log("authHeader", authHeader);
-
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    return res.status(401).json({ message: "Authorization header missing or invalid." });
-  }
-
-  // Extract the token
-  const token = authHeader.split(" ")[1];
-  console.log("token", token);
-
   try {
+    const token = req.headers.authorization?.split(" ")[1];
+    if (!token) {
+      return res.status(401).send({ error: "Authorization token is required." });
+    }
+
     // Verify the token
     const decoded = jwt.verify(token, JWT_SECRET);
-    console.log("decoded", decoded);
+    const email = decoded.email;
 
-    // Find the client by email
-    const client = await Client.findOne({ email: decoded.email });
+    // Validate email
+    if (!email || typeof email !== "string" || email.trim() === "") {
+      return res.status(400).send({ error: "Email is required." });
+    }
 
+    // Find client by email and check if client exists
+    const client = await Client.findOne({ email }).collation({ locale: "en", strength: 2 });
     if (!client) {
-      return res.status(401).json({ message: "Client not found." });
+      return res.status(404).send({ error: "Client not found." });
     }
 
     // Attach client info to the request
     req.client = client;
     next();
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Internal server error." });
+    console.error(err);
+    res.status(401).send({ error: "Invalid token." });
   }
 };
 

@@ -1,22 +1,21 @@
 import mongoose from "mongoose";
 import Chat from "../models/chat.js";
-import Message from "../models/message.js";
-import { populateUsers, populateMessages } from "../utils/chatUtils.js";
-import User from "../models/user.js";
+import { populateUsers, populateChatData, deleteMessage, addMessage } from "../utils/chatUtils.js";
 
 // Asynchronous function to create a new chat
 const createChat = async (req, res) => {
   try {
-    const { client } = req.body;
+    const { clientId } = req.body;
 
-    if (!mongoose.Types.ObjectId.isValid(client)) {
+    if (!mongoose.Types.ObjectId.isValid(clientId)) {
       return res.status(400).send({ error: "Invalid Client ID" });
     }
-
+    const agent = req.user._id;
+    const client = new mongoose.Types.ObjectId(`${clientId}`);
     const data = {
-      agent: req.user._id,
+      agent,
       client,
-      users: [req.user._id, client],
+      users: [agent, client],
       active: true, // ignore any user-provided active values, default to true
     };
 
@@ -38,9 +37,8 @@ const getChats = async (req, res) => {
     let chats = await Chat.find(filter).populate(["agent", "client", "messages"]).exec();
     const populatedChats = await Promise.all(
       chats.map(async (chat) => {
-        const users = await populateUsers(chat.users);
-        const messages = await populateMessages(chat.messages, req.user._id);
-        return { ...chat.toObject(), users, messages };
+        const populatedChatData = await populateChatData(chat, req.user._id);
+        return { ...chat.toObject(), ...populatedChatData };
       })
     );
     res.status(200).send(populatedChats);
@@ -58,9 +56,8 @@ const getChatById = async (req, res) => {
       return res.status(404).send({ error: "Chat not found." });
     }
 
-    const users = await populateUsers(chat.users);
-    const messages = await populateMessages(chat.messages, req.user._id);
-    const populatedChat = { ...chat.toObject(), users, messages };
+    const populatedChatData = await populateChatData(chat, req.user._id);
+    const populatedChat = { ...chat.toObject(), ...populatedChatData };
     res.status(200).send(populatedChat);
   } catch (err) {
     res.status(400).send({ error: "An error occurred while retrieving the chat.", details: err.message });
@@ -78,9 +75,8 @@ const deleteChatById = async (req, res) => {
 
     await Chat.findByIdAndDelete(req.params.id);
 
-    const users = await populateUsers(chatToDelete.users);
-    const messages = await populateMessages(chatToDelete.messages, req.user._id);
-    const finalChat = { ...chatToDelete.toObject(), users, messages };
+    const populatedChatData = await populateChatData(chatToDelete, req.user._id);
+    const finalChat = { ...chatToDelete.toObject(), ...populatedChatData };
 
     res.status(200).send(finalChat);
   } catch (err) {
@@ -104,9 +100,8 @@ const addUsersToChat = async (req, res) => {
     );
 
     const populatedChat = await Chat.populate(updatedChat, ["agent", "client", "messages"]);
-    const populatedUsers = await populateUsers(populatedChat.users);
-    const populatedMessages = await populateMessages(populatedChat.messages, req.user._id);
-    const finalChat = { ...populatedChat.toObject(), users: populatedUsers, messages: populatedMessages };
+    const populatedChatData = await populateChatData(populatedChat, req.user._id);
+    const finalChat = { ...populatedChat.toObject(), ...populatedChatData };
 
     res.status(200).send(finalChat);
   } catch (err) {
@@ -130,9 +125,8 @@ const deleteUsersFromChat = async (req, res) => {
     );
 
     const populatedChat = await Chat.populate(updatedChat, ["agent", "client", "messages"]);
-    const populatedUsers = await populateUsers(populatedChat.users);
-    const populatedMessages = await populateMessages(populatedChat.messages, req.user._id);
-    const finalChat = { ...populatedChat.toObject(), users: populatedUsers, messages: populatedMessages };
+    const populatedChatData = await populateChatData(populatedChat, req.user._id);
+    const finalChat = { ...populatedChat.toObject(), ...populatedChatData };
 
     res.status(200).send(finalChat);
   } catch (err) {
@@ -142,65 +136,33 @@ const deleteUsersFromChat = async (req, res) => {
 
 // Asynchronous function to add message to chat with the specified id
 const addMessageToChat = async (req, res) => {
-  let session;
   try {
-    session = await mongoose.startSession();
-    session.startTransaction();
-
-    const sender = new mongoose.Types.ObjectId(`${req.user._id}`);
-    const newMessage = await Message.create([{ ...req.body, sender }], { session });
-
-    const chat = await Chat.findById(req.params.id).session(session);
-    chat.messages.push(newMessage[0]._id);
-    await chat.save({ session });
-
-    await session.commitTransaction();
-
+    const newMessage = await addMessage(req.params.id, req.body, req.user._id);
     const updatedChat = await Chat.findById(req.params.id).populate(["agent", "client", "messages"]).exec();
-    updatedChat._newMessage = { ...newMessage[0].toObject(), sender: "You" };
+    updatedChat._newMessage = { ...newMessage.toObject(), sender: "You" };
 
-    const users = await populateUsers(updatedChat.users);
-    const messages = await populateMessages(updatedChat.messages, req.user._id);
-    const populatedChat = { ...updatedChat.toJSON(), users, messages };
+    const populatedChatData = await populateChatData(updatedChat, req.user._id);
+    const populatedChat = { ...updatedChat.toJSON(), ...populatedChatData };
 
     res.status(200).send(populatedChat);
   } catch (err) {
-    if (session) await session.abortTransaction();
     res.status(400).send({ error: "An error occurred while adding the message.", details: err.message });
-  } finally {
-    if (session) await session.endSession();
   }
 };
 
 // Asynchronous function to delete message from chat with the specified id
 const deleteMessageFromChat = async (req, res) => {
-  let session;
   try {
-    session = await mongoose.startSession();
-    session.startTransaction();
-
-    const deletedMessage = await Message.findByIdAndDelete(req.params.messageId).session(session);
-
-    if (!deletedMessage) {
-      return res.status(404).send({ error: "Message not found." });
-    }
-
-    await Chat.updateOne({ _id: req.params.id }, { $pull: { messages: req.params.messageId } }, { session });
-    await session.commitTransaction();
-
+    const deletedMessage = await deleteMessage(req.params.id, req.params.messageId);
     const updatedChat = await Chat.findById(req.params.id).populate(["agent", "users", "messages"]).exec();
     updatedChat._deletedMessage = deletedMessage;
 
-    const users = await populateUsers(updatedChat.users);
-    const messages = await populateMessages(updatedChat.messages, req.user._id);
-    const populatedChat = { ...updatedChat.toJSON(), users, messages };
+    const populatedChatData = await populateChatData(updatedChat, req.user._id);
+    const populatedChat = { ...updatedChat.toJSON(), ...populatedChatData };
 
     res.status(200).send(populatedChat);
   } catch (err) {
-    if (session) await session.abortTransaction();
     res.status(400).send({ error: "An error occurred while deleting the message.", details: err.message });
-  } finally {
-    if (session) await session.endSession();
   }
 };
 
